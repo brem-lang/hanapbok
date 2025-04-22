@@ -22,7 +22,8 @@ class EditUser extends EditRecord
             Action::make('reject')
                 ->icon('heroicon-o-arrow-path')
                 ->form([
-                    Textarea::make('notes'),
+                    Textarea::make('notes')
+                        ->default('pls recheck uploaded id'),
                 ])
                 ->action(function ($data, Model $record) {
                     $record->update(
@@ -63,13 +64,11 @@ class EditUser extends EditRecord
                 ->sendToDatabase(User::where('id', $record->id)->get());
         }
 
-        $record->update(
-            [
-                'notes' => null,
-                'status' => 'validated',
-                'is_validated' => $data['is_validated'],
-            ]
-        );
+        $data['notes'] = null;
+        $data['status'] = 'validated';
+        $data['is_validated'] = $data['is_validated'];
+
+        $record->update($data);
 
         return $record;
     }

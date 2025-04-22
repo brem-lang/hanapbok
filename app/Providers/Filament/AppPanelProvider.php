@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -54,13 +55,31 @@ class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->navigationItems(
+                [
+                    NavigationItem::make('Booking Platform')
+                        ->sort(2)
+                        ->visible(fn () => auth()->user()->isGuest() && auth()->user()->is_validated)
+                        // ->url($this->urlChecker().'/app/booking')
+                        ->url("javascript:window.open('".$this->urlChecker()."/app/booking', '_blank');")
+                        ->icon('heroicon-o-document-text')
+                        ->activeIcon('heroicon-s-document-text'),
+                ]
+            )
             ->spa()
             ->databaseNotifications()
-            ->databaseNotificationsPolling('10s')
-            ->brandName('HANAPBOK')
+            // ->databaseNotificationsPolling('10s')
+            ->brandName('Test App')
             ->renderHook(
                 'panels::auth.login.form.after',
                 fn () => view('auth.socialite.google')
             );
+    }
+
+    public function urlChecker()
+    {
+        $url = config('app.env') == 'local' ? url('/') : config('app.url');
+
+        return $url;
     }
 }

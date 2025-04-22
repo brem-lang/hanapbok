@@ -25,6 +25,11 @@ class Dashboard extends Page implements HasForms
 
     protected static string $view = 'filament.pages.dashboard';
 
+    // public static function canAccess(): bool
+    // {
+    //     return ! auth()->user()->isGuest();
+    // }
+
     public function mount()
     {
         $this->record = auth()->user();

@@ -3,15 +3,19 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ResortResource\Pages;
+use App\Filament\Resources\ResortResource\RelationManagers\ItemsRelationManager;
 use App\Filament\Resources\ResortResource\RelationManagers\RoomsRelationManager;
 use App\Models\Resort;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -40,16 +44,10 @@ class ResortResource extends Resource
                             ->label('Description')
                             ->required()
                             ->maxLength(255),
-                        TextInput::make('price')
-                            ->label('Price')
-                            ->required()
-                            ->numeric()
-                            ->inputMode('decimal')
-                            ->maxLength(255),
                         FileUpload::make('image')
                             ->openable()
                             ->label('Image')
-                            ->required()
+                            // ->required()
                             ->maxSize(1024)
                             ->disk('public_uploads_resorts')
                             ->directory('/')
@@ -58,6 +56,14 @@ class ResortResource extends Resource
                         Toggle::make('is_active')
                             ->default(true)
                             ->inline(false),
+                        Repeater::make('details')
+                            ->columnSpanFull()
+                            ->schema([
+                                Textarea::make('details')
+                                    ->label('Details')
+                                    ->required()
+                                    ->maxLength(255),
+                            ]),
                     ])
                     ->columns(2),
             ]);
@@ -68,9 +74,12 @@ class ResortResource extends Resource
         return $table
             ->paginated([10, 25, 50])
             ->columns([
+                // ImageColumn::make('image')
+                //     ->square()
+                //     ->disk('public_uploads_resorts'),
                 TextColumn::make('name')->searchable(),
+                TextColumn::make('barangay')->searchable(),
                 TextColumn::make('description')->searchable()->limit(20),
-                TextColumn::make('price')->searchable()->money('PHP'),
                 TextColumn::make('is_active')
                     ->label('Active')
                     ->badge()
@@ -101,7 +110,8 @@ class ResortResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RoomsRelationManager::class,
+            // RoomsRelationManager::class,
+            ItemsRelationManager::class,
         ];
     }
 

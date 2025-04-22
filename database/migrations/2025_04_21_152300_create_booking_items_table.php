@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('resorts', function (Blueprint $table) {
+        Schema::create('booking_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('description')->nullable();
-            $table->string('image')->nullable();
-            $table->string('barangay')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->json('details')->nullable();
+            $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
+            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
+            $table->double('amount')->default(0);
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('resorts');
+        Schema::dropIfExists('booking_items');
     }
 };

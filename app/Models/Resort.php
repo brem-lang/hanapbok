@@ -9,8 +9,12 @@ class Resort extends Model
 {
     protected $guarded = [];
 
-    public function rooms(): HasMany
+    protected $casts = [
+        'details' => 'array',
+    ];
+
+    public function items(): HasMany
     {
-        return $this->hasMany(Room::class);
+        return $this->hasMany(Item::class);
     }
 }

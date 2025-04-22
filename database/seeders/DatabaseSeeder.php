@@ -28,5 +28,9 @@ class DatabaseSeeder extends Seeder
             'role' => 'guest',
             'password' => bcrypt('password'),
         ]);
+
+        $this->call([
+            ResrortSeeder::class,
+        ]);
     }
 }

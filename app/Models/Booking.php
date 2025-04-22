@@ -7,4 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     protected $guarded = [];
+
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
 }
