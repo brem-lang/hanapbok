@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    @if (auth()->user()->isGuest())
+    {{-- @if (auth()->user()->isGuest())
         @if (!$record->is_validated)
             <h1 class="font-bold">To continue, upload a valid ID for account verification.</h1>
 
@@ -77,8 +77,8 @@
                     @endif
                 </div>
             </div>
-        @endif
-        {{-- <div wire:loading wire:target="getResorts" class="flex w-full items-center justify-center px-2 py-4">
+        @endif --}}
+    {{-- <div wire:loading wire:target="getResorts" class="flex w-full items-center justify-center px-2 py-4">
         <span>Loading...</span>
     </div>
     <div x-data="{ resorts: @entangle('resorts').live, imagePath: '{{ asset('resorts-photo') }}' }" x-init="$wire.getResorts()" wire:loading.remove wire:target="getResorts">
@@ -185,6 +185,6 @@
             </template>
         </template>
     </div> --}}
-    @else
-    @endif
+    {{-- @else
+    @endif --}}
 </x-filament-panels::page>

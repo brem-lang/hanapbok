@@ -10,7 +10,7 @@ class Resort extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'details' => 'array',
+        'others' => 'array',
     ];
 
     public function items(): HasMany

@@ -25,6 +25,10 @@ class ResortResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Resorts Management';
+
+    protected static ?int $navigationSort = 2;
+
     public static function canAccess(): bool
     {
         return auth()->user()->isAdmin();
@@ -40,10 +44,9 @@ class ResortResource extends Resource
                             ->label('Name')
                             ->required()
                             ->maxLength(255),
-                        TextInput::make('description')
+                        Textarea::make('description')
                             ->label('Description')
-                            ->required()
-                            ->maxLength(255),
+                            ->required(),
                         FileUpload::make('image')
                             ->openable()
                             ->label('Image')
@@ -56,14 +59,18 @@ class ResortResource extends Resource
                         Toggle::make('is_active')
                             ->default(true)
                             ->inline(false),
-                        Repeater::make('details')
-                            ->columnSpanFull()
+                        Repeater::make('others')
+                            ->label('Other Details')
                             ->schema([
-                                Textarea::make('details')
-                                    ->label('Details')
-                                    ->required()
-                                    ->maxLength(255),
-                            ]),
+                                Textarea::make('name')->required(),
+                            ])
+                            ->columns(1),
+                        Repeater::make('others')
+                            ->label('Other Details')
+                            ->schema([
+                                Textarea::make('name')->required(),
+                            ])
+                            ->columns(1),
                     ])
                     ->columns(2),
             ]);

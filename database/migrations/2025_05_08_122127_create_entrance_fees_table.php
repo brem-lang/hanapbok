@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('resorts', function (Blueprint $table) {
+        Schema::create('entrance_fees', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('resort_id')->constrained('resorts')->cascadeOnDelete();
             $table->string('name')->nullable();
-            $table->longText('description')->nullable();
-            $table->string('image')->nullable();
-            $table->string('barangay')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->string('type')->nullable();
+            $table->double('price')->default(0);
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('resorts');
+        Schema::dropIfExists('entrance_fees');
     }
 };
