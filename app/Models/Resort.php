@@ -17,4 +17,9 @@ class Resort extends Model
     {
         return $this->hasMany(Item::class);
     }
+
+    public function entranceFees(): HasMany
+    {
+        return $this->hasMany(EntranceFee::class);
+    }
 }

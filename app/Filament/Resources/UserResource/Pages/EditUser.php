@@ -19,32 +19,32 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('reject')
-                ->icon('heroicon-o-arrow-path')
-                ->form([
-                    Textarea::make('notes')
-                        ->default('pls recheck uploaded id'),
-                ])
-                ->action(function ($data, Model $record) {
-                    $record->update(
-                        [
-                            'notes' => $data['notes'],
-                            'status' => 'rejected',
-                        ]
-                    );
+            // Action::make('reject')
+            //     ->icon('heroicon-o-arrow-path')
+            //     ->form([
+            //         Textarea::make('notes')
+            //             ->default('pls recheck uploaded id'),
+            //     ])
+            //     ->action(function ($data, Model $record) {
+            //         $record->update(
+            //             [
+            //                 'notes' => $data['notes'],
+            //                 'status' => 'rejected',
+            //             ]
+            //         );
 
-                    Notification::make()
-                        ->warning()
-                        ->title('Rejected')
-                        ->icon('heroicon-o-check-circle')
-                        ->body($data['notes'])
-                        ->actions([
-                            ActionsAction::make('view')
-                                ->label('View')
-                                ->url('dashboard'),
-                        ])
-                        ->sendToDatabase(User::where('id', $record->id)->get());
-                }),
+            //         Notification::make()
+            //             ->warning()
+            //             ->title('Rejected')
+            //             ->icon('heroicon-o-check-circle')
+            //             ->body($data['notes'])
+            //             ->actions([
+            //                 ActionsAction::make('view')
+            //                     ->label('View')
+            //                     ->url('dashboard'),
+            //             ])
+            //             ->sendToDatabase(User::where('id', $record->id)->get());
+            //     }),
             Actions\DeleteAction::make(),
         ];
     }

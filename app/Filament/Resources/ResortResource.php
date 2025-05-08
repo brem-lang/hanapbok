@@ -3,8 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ResortResource\Pages;
+use App\Filament\Resources\ResortResource\RelationManagers\EntranceFeesRelationManager;
 use App\Filament\Resources\ResortResource\RelationManagers\ItemsRelationManager;
-use App\Filament\Resources\ResortResource\RelationManagers\RoomsRelationManager;
 use App\Models\Resort;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -65,12 +65,6 @@ class ResortResource extends Resource
                                 Textarea::make('name')->required(),
                             ])
                             ->columns(1),
-                        Repeater::make('others')
-                            ->label('Other Details')
-                            ->schema([
-                                Textarea::make('name')->required(),
-                            ])
-                            ->columns(1),
                     ])
                     ->columns(2),
             ]);
@@ -117,7 +111,7 @@ class ResortResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // RoomsRelationManager::class,
+            EntranceFeesRelationManager::class,
             ItemsRelationManager::class,
         ];
     }

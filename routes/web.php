@@ -5,6 +5,7 @@ use App\Http\Controllers\SocialiteController;
 use App\Livewire\Booking;
 use App\Livewire\GuestBook;
 use App\Livewire\GuestPage;
+use App\Livewire\ValidationPage;
 use App\Livewire\ViewResort;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,7 @@ Route::get('/index', GuestPage::class)->name('index')->middleware('auth');
 Route::get('/guest-booking', GuestBook::class)->name('guest-booking')->middleware('auth');
 
 Route::get('view-resort/{id}', ViewResort::class)->name('view-resort')->middleware('auth');
+
+Route::get('validate', ValidationPage::class)->name('validate')->middleware('auth');
 
 // Route::get('resorts', [ResortController::class, 'getResorts'])->name('resorts')->middleware('auth');

@@ -2,12 +2,12 @@
 
     <body>
         <!-- Spinner Start -->
-        <div id="spinner"
+        {{-- <div id="spinner"
             class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-        </div>
+        </div> --}}
         <!-- Spinner End -->
 
         <!-- Navbar & Hero Start -->
@@ -16,8 +16,7 @@
                 <a href="" class="navbar-brand p-0">
                     <h1 class="text-primary m-0"><i class="fa fa-map-marker-alt me-3"></i>HANAPBOK</h1>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarCollapse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars"></span>
                 </button>
                 <div class="navbar-nav ms-auto py-0">
@@ -48,78 +47,61 @@
         <!-- Navbar & Hero End -->
 
 
-        <!-- About Start -->
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class="row g-5">
-                    <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
-                        <div class="position-relative h-100">
-                            <img class="img-fluid position-absolute w-100 h-100"
-                                src="{{ $record->image ? asset('resorts-photo/' . $record->image) : asset('img/about.jpg') }}"
-                                alt="" style="object-fit: cover;">
+        @if ($this->activePage == 'view')
+            <!-- About Start -->
+            <div class="container-xxl py-5">
+                <div class="container">
+                    <div class="row g-5">
+                        <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
+                            <div class="position-relative h-100">
+                                <img class="img-fluid position-absolute w-100 h-100"
+                                    src="{{ $record->image ? asset('resorts-photo/' . $record->image) : asset('img/about.jpg') }}"
+                                    alt="" style="object-fit: cover;">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-                        <h6 class="section-title bg-white text-start text-primary pe-3">INFORMATION</h6>
-                        {{-- <h1 class="mb-4">Welcome to <span class="text-primary">HANAPBOK</span></h1> --}}
-                        <p class="mb-4" style="font-size: 18px;">{{ $record->description }}</p>
-                        {{-- <p class="mb-4">With an easy-to-use interface, verified listings, and real-time availability,
-                            HanapBok allows you to browse, compare, and book your ideal resort — all in one place. No
-                            more guessing or time-consuming calls. Just pure convenience at your fingertips.</p> --}}
-                        <div class="row gy-2 gx-4 mb-4">
-                            {{-- <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>First Class
-                                    Flights</p>
+                        <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                            <h6 class="section-title bg-white text-start text-primary pe-3">INFORMATION</h6>
+                            <p class="mb-2" style="font-size: 16px;">{{ $record->description }}</p>
+                            <h6 class="section-title bg-white text-start text-primary pe-3">Other Details</h6>
+                            <div class="row gy-2 gx-4 mb-2">
+                                @foreach ($record?->others ?? [] as $other)
+                                    <div class="col-sm-6">
+                                        <p class="mb-0" style="font-size: 13px;"><i
+                                                class="fa fa-arrow-right text-primary me-2"></i>{{ $other['name'] }}</p>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Handpicked Hotels
-                                </p>
+                            <h6 class="section-title bg-white text-start text-primary pe-3">Entrance Fees</h6>
+                            <div class="row gy-2 gx-4 mb-2">
+                                @foreach ($record?->entranceFees ?? [] as $entranceFee)
+                                    <div class="col-sm-6">
+                                        <p class="mb-0" style="font-size: 13px;"><i
+                                                class="fa fa-arrow-right text-primary me-2"></i>
+                                            {{ $entranceFee['name'] }} -
+                                            {{ $entranceFee['type'] === 'night_tour' ? 'Night Tour' : ($entranceFee['type'] === 'day_tour' ? 'Day Tour' : 'Free') }}
+                                            -
+                                            ₱{{ $entranceFee['price'] }}
+                                        </p>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>5 Star
-                                    Accommodations</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Latest Model
-                                    Vehicles</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>150 Premium City
-                                    Tours</p>
-                            </div> --}}
-                            {{-- <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>24/7 Service</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Good
-                                    Accommodations</p>
-                            </div> --}}
-                        </div>
-                        {{-- <a class="btn btn-primary py-3 px-5 mt-2" href="">Read More</a> --}}
-                        <h6 class="section-title bg-white text-start text-primary pe-3">Other Details</h6>
-                        <div class="row gy-2 gx-4 mb-4">
-                            @foreach ($record?->others ?? [] as $other)
-                                <div class="col-sm-6">
-                                    <p class="mb-0"><i
-                                            class="fa fa-arrow-right text-primary me-2"></i>{{ $other['name'] }}</p>
-                                </div>
-                            @endforeach
+                            <a href="" class="btn btn-primary py-1 px-3 mt-2" wire:click.prevent="book">Book
+                                Now</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- About End -->
+            <!-- About End -->
 
-        <!-- Package Start -->
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                    <h6 class="section-title bg-white text-center text-primary px-3">ACCOMODATIONS</h6>
-                    <h1 class="mb-5">Rooms & Cottages</h1>
-                </div>
-                <div class="row g-4 justify-content-center">
-                    {{-- <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <!-- Package Start -->
+            <div class="container-xxl py-5">
+                <div class="container">
+                    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                        <h6 class="section-title bg-white text-center text-primary px-3">ACCOMODATIONS</h6>
+                        <h1 class="mb-5">Rooms & Cottages</h1>
+                    </div>
+                    <div class="row g-4 justify-content-center">
+                        {{-- <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="package-item">
                             <div class="overflow-hidden">
                                 <img class="img-fluid" src="{{ asset('img/package-1.jpg') }}" alt="">
@@ -151,7 +133,7 @@
                             </div>
                         </div>
                     </div> --}}
-                    {{-- <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        {{-- <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                         <div class="package-item">
                             <div class="overflow-hidden">
                                 <img class="img-fluid" src="img/package-2.jpg" alt="">
@@ -185,10 +167,10 @@
                         </div>
                     </div> --}}
 
-                    @foreach ($record->items ?? [] as $item)
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="package-item">
-                                {{-- <div class="overflow-hidden">
+                        @foreach ($record->items ?? [] as $item)
+                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                                <div class="package-item">
+                                    {{-- <div class="overflow-hidden">
                                     <img class="img-fluid" src="img/package-3.jpg" alt="">
                                 </div>
                                 <div class="d-flex border-bottom">
@@ -200,35 +182,42 @@
                                             class="fa fa-user text-primary me-2"></i>2
                                         Person</small>
                                 </div> --}}
-                                <div class="text-center p-4">
-                                    <h3 class="mb-0">₱ {{ $item['price'] }}</h3>
-                                    {{-- <div class="mb-3">
+                                    <div class="text-center p-4">
+                                        <h3 class="mb-0">₱ {{ $item['price'] }}</h3>
+                                        {{-- <div class="mb-3">
                                         <small class="fa fa-star text-primary"></small>
                                         <small class="fa fa-star text-primary"></small>
                                         <small class="fa fa-star text-primary"></small>
                                         <small class="fa fa-star text-primary"></small>
                                         <small class="fa fa-star text-primary"></small>
                                     </div> --}}
-                                    <p>{{ $item['name'] }}</p>
-                                    <p style="font-size: 12px;">
-                                        {{ isset($item['type']) ? ($item['type'] == 'day_tour' ? 'Day Tour' : 'Night Tour') : '---' }}
-                                    </p>
-                                    {{-- <div class="d-flex justify-content-center mb-2">
+                                        <p>{{ $item['name'] }}</p>
+                                        <p style="font-size: 12px;">
+                                            {{ isset($item['type']) ? ($item['type'] == 'day_tour' ? 'Day Tour' : 'Night Tour') : '---' }}
+                                        </p>
+                                        {{-- <div class="d-flex justify-content-center mb-2">
                                         <a href="#" class="btn btn-sm btn-primary px-3 border-end"
                                             style="border-radius: 30px 0 0 30px;">Read More</a>
                                         <a href="#" class="btn btn-sm btn-primary px-3"
                                             style="border-radius: 0 30px 30px 0;">Book Now</a>
                                     </div> --}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Package End -->
+            <!-- Package End -->
+        @endif
 
-
+        {{-- @if ($this->activePage == 'validation')
+            <div class="container-xxl py-5">
+                <div class="container">
+                    <livewire:validate-page />
+                </div>
+            </div>
+        @endif --}}
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 

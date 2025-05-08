@@ -135,7 +135,7 @@
                                             style="border-radius: 30px 0 0 30px;">Read More</a> --}}
                                         <a href="#" class="btn btn-sm btn-primary px-3"
                                             style="border-radius: 30px 30px 30px 30px;"
-                                            wire:click.prevent="bookResort({{ $resort->id }})">Book Now</a>
+                                            wire:click.prevent="bookResort({{ $resort->id }})">Visit Resort</a>
                                     </div>
                                 </div>
                             </div>
