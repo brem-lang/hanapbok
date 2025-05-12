@@ -22,6 +22,8 @@
                 <div class="navbar-nav ms-auto py-0">
                     <a href="{{ route('index') }}" class="nav-item nav-link">Home</a>
                     <a class="nav-item nav-link active">Book Now</a>
+                    <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
+                    <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost Items</a>
                 </div>
                 <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a>
             </nav>
@@ -92,16 +94,165 @@
                 </div>
             </div>
             <!-- About End -->
+        @endif
 
-            <!-- Package Start -->
-            <div class="container-xxl py-5">
+        @if ($this->activePage == 'booking')
+            <!-- Booking Start -->
+            <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="container">
-                    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                        <h6 class="section-title bg-white text-center text-primary px-3">ACCOMODATIONS</h6>
-                        <h1 class="mb-5">Rooms & Cottages</h1>
+                    <div class="booking p-5">
+                        <div class="row g-5 align-items-center">
+                            <div class="col-md-6 text-white">
+                                {{-- <h6 class="text-white text-uppercase">Booking</h6> --}}
+                                <h1 class="text-white mb-4">Online Booking</h1>
+                                <p class="mb-4">{{ $record->description }}</p>
+                                <a class="btn btn-outline-light py-3 px-5 mt-2" href=""
+                                    wire:click.prevent="viewInformation">View
+                                    Information</a>
+                            </div>
+                            <div class="col-md-6">
+                                <h1 class="text-white mb-4">List of Person</h1>
+                                <div>
+                                    {{-- <form wire:submit.prevent="submitEntranceFees"> --}}
+                                    @foreach ($items as $index => $item)
+                                        <div class="row g-3 mb-3" wire:key="item-{{ $index }}">
+                                            <div class="{{ count($items) > 1 ? 'col-md-5' : 'col-md-6' }}">
+                                                <div class="form-floating">
+                                                    <select class="form-select" id="select-{{ $index }}"
+                                                        wire:model="items.{{ $index }}.entrance_fee_id">
+                                                        <option value="">Select Type</option>
+                                                        @foreach ($entranceFees as $entranceFee)
+                                                            @if (
+                                                                !collect($items)->where('entrance_fee_id', $entranceFee->id)->where(function ($i, $key) use ($index) {
+                                                                        // Check if the current item in the $items collection is NOT the current row
+                                                                        return $key !== $index;
+                                                                    })->isNotEmpty())
+                                                                <option value="{{ $entranceFee->id }}">
+                                                                    {{ $entranceFee->name }} -
+                                                                    {{ $entranceFee->type }} -
+                                                                    ₱{{ $entranceFee->price }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                    <label for="select-{{ $index }}">Type</label>
+                                                </div>
+                                                @error('items.' . $index . '.entrance_fee_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="{{ count($items) > 1 ? 'col-md-5' : 'col-md-6' }}">
+                                                <div class="form-floating">
+                                                    <input type="number" class="form-control"
+                                                        id="quantity-{{ $index }}" placeholder="Quantity"
+                                                        wire:model="items.{{ $index }}.quantity" min="1">
+                                                    <label for="quantity-{{ $index }}">Quantity</label>
+                                                </div>
+                                                @error('items.' . $index . '.quantity')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            @if (count($items) > 1)
+                                                <div class="col-md-2 d-flex align-items-end">
+                                                    <button type="button" class="btn btn-danger"
+                                                        wire:click="removeItem({{ $index }})">
+                                                        X
+                                                    </button>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <button type="button" class="btn btn-primary rounded-pill py-1 px-3 mt-2"
+                                            wire:click="addItem">
+                                            Add Item
+                                        </button>
+                                    </div>
+                                    {{-- </form> --}}
+                                </div>
+
+                                <h1 class="text-white mb-4">Accomodation</h1>
+                                <div>
+                                    {{-- <form wire:submit.prevent="submitEntranceFees"> --}}
+                                    @foreach ($cottageRooms as $index => $item)
+                                        <div class="row g-3 mb-3" wire:key="item-{{ $index }}">
+                                            <div class="{{ count($cottageRooms) > 1 ? 'col-md-5' : 'col-md-6' }}">
+                                                <div class="form-floating">
+                                                    <select class="form-select" id="select-{{ $index }}"
+                                                        wire:model="cottageRooms.{{ $index }}.cottage_id">
+                                                        <option value="">Select Cottage</option>
+                                                        @foreach ($resort as $cottage)
+                                                            @if (
+                                                                !collect($cottageRooms)->where('cottage_id', $cottage->id)->where(function ($i, $key) use ($index) {
+                                                                        // Check if the current item in the $cottageRooms collection is NOT the current row
+                                                                        return $key !== $index;
+                                                                    })->isNotEmpty())
+                                                                <option value="{{ $cottage->id }}">
+                                                                    {{ $cottage->name }} -
+                                                                    {{ $cottage->type }} -
+                                                                    ₱{{ $cottage->price }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                    <label for="select-{{ $index }}">Cottage</label>
+                                                </div>
+                                                @error('cottageRooms.' . $index . '.cottage_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="{{ count($cottageRooms) > 1 ? 'col-md-5' : 'col-md-6' }}">
+                                                <div class="form-floating">
+                                                    <input type="number" class="form-control"
+                                                        id="quantity-{{ $index }}" placeholder="Quantity"
+                                                        wire:model="cottageRooms.{{ $index }}.quantity"
+                                                        min="1">
+                                                    <label for="quantity-{{ $index }}">Quantity</label>
+                                                </div>
+                                                @error('cottageRooms.' . $index . '.quantity')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            @if (count($cottageRooms) > 1)
+                                                <div class="col-md-2 d-flex align-items-end">
+                                                    <button type="button" class="btn btn-danger"
+                                                        wire:click="removeResortItem({{ $index }})">
+                                                        X
+                                                    </button>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                    <div class="d-flex justify-content-end align-items-center">
+                                        <button type="button" class="btn btn-primary rounded-pill py-1 px-3 mt-2"
+                                            wire:click="addResortItem">
+                                            Add Item
+                                        </button>
+                                    </div>
+                                    {{-- </form> --}}
+                                </div>
+
+                                <div class="col-12 mt-4">
+                                    <button class="btn btn-outline-light w-100 py-3" wire:click.prevent='submit'>Book
+                                        Now</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="row g-4 justify-content-center">
-                        {{-- <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                </div>
+            </div>
+            <!-- Booking Start -->
+        @endif
+
+        <!-- Package Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h6 class="section-title bg-white text-center text-primary px-3">ACCOMODATIONS</h6>
+                    <h1 class="mb-5">Rooms & Cottages</h1>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    {{-- <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="package-item">
                             <div class="overflow-hidden">
                                 <img class="img-fluid" src="{{ asset('img/package-1.jpg') }}" alt="">
@@ -133,7 +284,7 @@
                             </div>
                         </div>
                     </div> --}}
-                        {{-- <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    {{-- <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                         <div class="package-item">
                             <div class="overflow-hidden">
                                 <img class="img-fluid" src="img/package-2.jpg" alt="">
@@ -167,10 +318,10 @@
                         </div>
                     </div> --}}
 
-                        @foreach ($record->items ?? [] as $item)
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="package-item">
-                                    {{-- <div class="overflow-hidden">
+                    @foreach ($record->items ?? [] as $item)
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                            <div class="package-item">
+                                {{-- <div class="overflow-hidden">
                                     <img class="img-fluid" src="img/package-3.jpg" alt="">
                                 </div>
                                 <div class="d-flex border-bottom">
@@ -182,42 +333,35 @@
                                             class="fa fa-user text-primary me-2"></i>2
                                         Person</small>
                                 </div> --}}
-                                    <div class="text-center p-4">
-                                        <h3 class="mb-0">₱ {{ $item['price'] }}</h3>
-                                        {{-- <div class="mb-3">
+                                <div class="text-center p-4">
+                                    <h3 class="mb-0">₱ {{ $item['price'] }}</h3>
+                                    {{-- <div class="mb-3">
                                         <small class="fa fa-star text-primary"></small>
                                         <small class="fa fa-star text-primary"></small>
                                         <small class="fa fa-star text-primary"></small>
                                         <small class="fa fa-star text-primary"></small>
                                         <small class="fa fa-star text-primary"></small>
                                     </div> --}}
-                                        <p>{{ $item['name'] }}</p>
-                                        <p style="font-size: 12px;">
-                                            {{ isset($item['type']) ? ($item['type'] == 'day_tour' ? 'Day Tour' : 'Night Tour') : '---' }}
-                                        </p>
-                                        {{-- <div class="d-flex justify-content-center mb-2">
+                                    <p>{{ $item['name'] }}</p>
+                                    <p style="font-size: 12px;">
+                                        {{ isset($item['type']) ? ($item['type'] == 'day_tour' ? 'Day Tour' : 'Night Tour') : '---' }}
+                                    </p>
+                                    {{-- <div class="d-flex justify-content-center mb-2">
                                         <a href="#" class="btn btn-sm btn-primary px-3 border-end"
                                             style="border-radius: 30px 0 0 30px;">Read More</a>
                                         <a href="#" class="btn btn-sm btn-primary px-3"
                                             style="border-radius: 0 30px 30px 0;">Book Now</a>
                                     </div> --}}
-                                    </div>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-            <!-- Package End -->
-        @endif
+        </div>
+        <!-- Package End -->
 
-        {{-- @if ($this->activePage == 'validation')
-            <div class="container-xxl py-5">
-                <div class="container">
-                    <livewire:validate-page />
-                </div>
-            </div>
-        @endif --}}
+
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 

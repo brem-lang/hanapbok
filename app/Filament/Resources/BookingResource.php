@@ -7,6 +7,8 @@ use App\Models\Booking;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class BookingResource extends Resource
@@ -35,20 +37,55 @@ class BookingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->paginated([10, 25, 50])
             ->columns([
-                //
+                TextColumn::make('resort.name')
+                    ->label('Resort')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('user.name')
+                    ->label('User')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('created_at')
+                    ->label('Booking Date')
+                    ->dateTime()
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
+                    ->color(
+                        fn ($state) => match ($state) {
+                            'pending' => 'warning',
+                            'confirmed' => 'success',
+                            'cancelled' => 'danger',
+                        }
+                    )
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
+                Action::make('view')
+                    ->label('View')
+                    ->icon('heroicon-o-eye')
+                    ->color('success')
+                    ->url(fn ($record) => BookingResource::getUrl('view', ['record' => $record->id])),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
+            ])
+            ->modifyQueryUsing(function ($query) {
+
+                return $query->latest();
+            });
     }
 
     public static function getRelations(): array
@@ -62,8 +99,9 @@ class BookingResource extends Resource
     {
         return [
             'index' => Pages\ListBookings::route('/'),
-            'create' => Pages\CreateBooking::route('/create'),
-            'edit' => Pages\EditBooking::route('/{record}/edit'),
+            'view' => Pages\ViewBookings::route('/{record}'),
+            // 'create' => Pages\CreateBooking::route('/create'),
+            // 'edit' => Pages\EditBooking::route('/{record}/edit'),
         ];
     }
 }

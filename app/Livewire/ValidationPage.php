@@ -10,6 +10,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class ValidationPage extends Component implements HasForms
@@ -92,5 +93,14 @@ class ValidationPage extends Component implements HasForms
     public function render()
     {
         return view('livewire.validation-page');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+
+        return redirect()->to('/');
     }
 }

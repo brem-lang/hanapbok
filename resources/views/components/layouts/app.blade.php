@@ -16,7 +16,7 @@
         }
     </style>
 
-    {{-- <style>
+    <style>
         body {
             width: 100%;
             height: 100%;
@@ -26,7 +26,7 @@
             top: 0;
             left: 0;
         }
-    </style> --}}
+    </style>
 
     @filamentStyles
     @vite('resources/css/app.css')

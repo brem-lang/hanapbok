@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\ResortController;
 use App\Http\Controllers\SocialiteController;
 use App\Livewire\Booking;
 use App\Livewire\GuestBook;
 use App\Livewire\GuestPage;
+use App\Livewire\MyBookings;
+use App\Livewire\ReportLostItems;
 use App\Livewire\ValidationPage;
+use App\Livewire\ViewBooking;
 use App\Livewire\ViewResort;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +29,8 @@ Route::get('view-resort/{id}', ViewResort::class)->name('view-resort')->middlewa
 
 Route::get('validate', ValidationPage::class)->name('validate')->middleware('auth');
 
-// Route::get('resorts', [ResortController::class, 'getResorts'])->name('resorts')->middleware('auth');
+Route::get('my-bookings', MyBookings::class)->name('my-bookings')->middleware('auth');
+
+Route::get('view-booking/{id}', ViewBooking::class)->name('view-booking')->middleware('auth');
+
+Route::get('lost-items', ReportLostItems::class)->name('lost-items')->middleware('auth');

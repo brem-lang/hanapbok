@@ -12,4 +12,19 @@ class Booking extends Model
     {
         return $this->hasMany(Item::class);
     }
+
+    public function bookingItems()
+    {
+        return $this->hasMany(BookingItem::class);
+    }
+
+    public function resort()
+    {
+        return $this->belongsTo(Resort::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

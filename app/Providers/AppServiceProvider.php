@@ -38,5 +38,6 @@ class AppServiceProvider extends ServiceProvider
         );
 
         Livewire::component('validate-page', \App\Livewire\ValidationPage::class);
+        Livewire::component('book-resort', \App\Livewire\BookResort::class);
     }
 }

@@ -76,6 +76,14 @@ return [
             'throw' => false,
         ],
 
+        'public_uploads_payments' => [
+            'driver' => 'local',
+            'root' => public_path('payments-photo'),
+            'url' => env('APP_URL').'/payments-photo',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*

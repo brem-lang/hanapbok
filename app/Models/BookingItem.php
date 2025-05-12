@@ -7,4 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class BookingItem extends Model
 {
     protected $guarded = [];
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    public function entranceFee()
+    {
+        return $this->belongsTo(EntranceFee::class);
+    }
 }

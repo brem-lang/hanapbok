@@ -2,12 +2,12 @@
 
     <body>
         <!-- Spinner Start -->
-        <div id="spinner"
+        {{-- <div id="spinner"
             class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
-        </div>
+        </div> --}}
         <!-- Spinner End -->
 
 
@@ -48,14 +48,15 @@
                     <h1 class="text-primary m-0"><i class="fa fa-map-marker-alt me-3"></i>HANAPBOK</h1>
                     <!-- <img src="img/logo.png" alt="Logo"> -->
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarCollapse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars"></span>
                 </button>
                 {{-- <div class="collapse navbar-collapse" id="navbarCollapse"> --}}
                 <div class="navbar-nav ms-auto py-0">
                     <a class="nav-item nav-link active">Home</a>
                     <a href="{{ route('guest-booking') }}" class="nav-item nav-link">Book Now</a>
+                    <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
+                    <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost Items</a>
                     {{-- <a href="about.html" class="nav-item nav-link">About</a> --}}
                     {{-- <a href="service.html" class="nav-item nav-link">Services</a>
                     <a href="package.html" class="nav-item nav-link">Packages</a>
