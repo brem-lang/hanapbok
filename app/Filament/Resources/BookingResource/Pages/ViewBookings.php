@@ -6,6 +6,8 @@ use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 
@@ -41,6 +43,30 @@ class ViewBookings extends Page
             ])
             ->columns(2)
             ->statePath('formData');
+    }
+
+    public function infoList(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->record($this->record)
+            ->schema([
+                TextEntry::make('user.name'),
+                TextEntry::make('user.contact_number')
+                    ->label('Contact Number'),
+                TextEntry::make('status')
+                    ->label('')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'gray',
+                        'confirmed' => 'success',
+                        'cancelled' => 'danger',
+                    })
+                    ->formatStateUsing(fn (string $state): string => __(ucfirst($state))),
+                TextEntry::make('date')->dateTime()->label('Date'),
+                TextEntry::make('amount_to_pay')->label('Payment')->prefix('₱ '),
+                TextEntry::make('resort.name')->label('Resort'),
+            ])
+            ->columns(3);
     }
 
     public function confirm()

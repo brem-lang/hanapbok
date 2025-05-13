@@ -34,7 +34,9 @@ class ViewResort extends Component implements HasForms
 
     public $resort;
 
-    public $activePage = 'view';
+    public $date;
+
+    public $activePage = 'booking';
 
     public function mount($id)
     {
@@ -124,9 +126,16 @@ class ViewResort extends Component implements HasForms
     {
         $entranceFeesData = $this->items ?? [];
         $accomodationData = $this->cottageRooms ?? [];
+        $date = $this->date;
 
         $entranceFeeAmount = 0;
         $accomodationAmount = 0;
+
+        if (! $date) {
+            $this->addError('date', 'Please select a date.');
+
+            return;
+        }
 
         if (! empty($this->items)) {
             $lastIndex = count($this->items) - 1;
@@ -181,6 +190,7 @@ class ViewResort extends Component implements HasForms
             'resort_id' => $this->record->id,
             'status' => 'pending',
             'amount_to_pay' => $entranceFeeAmount + $accomodationAmount,
+            'date' => $date,
         ]);
 
         foreach ($entranceFeesData as $feeSelection) {
