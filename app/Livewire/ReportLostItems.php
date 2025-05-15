@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\LostItem;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class ReportLostItems extends Component
@@ -34,5 +35,14 @@ class ReportLostItems extends Component
         $this->description = '';
         $this->location = '';
         $this->date = '';
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+
+        return redirect()->to('/');
     }
 }
