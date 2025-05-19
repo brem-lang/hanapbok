@@ -7,6 +7,7 @@ use App\Models\BookingItem;
 use App\Models\EntranceFee;
 use App\Models\Item;
 use App\Models\Resort;
+use Carbon\Carbon;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -36,7 +37,11 @@ class ViewResort extends Component implements HasForms
 
     public $date;
 
-    public $activePage = 'booking';
+    public $date_to;
+
+    public $payment_type;
+
+    public $activePage = 'view';
 
     public function mount($id)
     {
@@ -127,12 +132,19 @@ class ViewResort extends Component implements HasForms
         $entranceFeesData = $this->items ?? [];
         $accomodationData = $this->cottageRooms ?? [];
         $date = $this->date;
+        $date_to = $this->date_to;
 
         $entranceFeeAmount = 0;
         $accomodationAmount = 0;
 
         if (! $date) {
-            $this->addError('date', 'Please select a date.');
+            $this->addError('date', 'Please select start date.');
+
+            return;
+        }
+
+        if (! $date_to) {
+            $this->addError('date_to', 'Please select end date.');
 
             return;
         }
@@ -184,13 +196,16 @@ class ViewResort extends Component implements HasForms
                 $accomodationAmount += $availableAccommodations[$accomodationId]->price * $quantity;
             }
         }
+        $total_amount = $entranceFeeAmount + $accomodationAmount;
 
         $book = Booking::create([
             'user_id' => auth()->user()->id,
             'resort_id' => $this->record->id,
             'status' => 'pending',
-            'amount_to_pay' => $entranceFeeAmount + $accomodationAmount,
+            'amount_to_pay' => $total_amount * $this->dayCount(),
             'date' => $date,
+            'date_to' => $date_to,
+            'payment_type' => $this->payment_type,
         ]);
 
         foreach ($entranceFeesData as $feeSelection) {
@@ -224,6 +239,16 @@ class ViewResort extends Component implements HasForms
         }
 
         return redirect('/view-booking/'.$book->id);
+    }
+
+    public function dayCount()
+    {
+        $date = $this->date;
+        $date_to = $this->date_to;
+
+        $diff = Carbon::parse($date)->diffInDays(Carbon::parse($date_to)) + 1;
+
+        return $diff;
     }
 
     public function logout()

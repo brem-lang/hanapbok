@@ -46,6 +46,22 @@
                         <div class="mt-4">
                             <div>
                                 <div class="form-floating">
+                                    <select class="form-select" wire:model="selectResort" required>
+                                        <option value="">Select Resort</option>
+                                        @foreach ($resorts as $resort)
+                                            <option value="{{ $resort->id }}">{{ $resort->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label>Resort</label>
+                                </div>
+                                @error('resort')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div>
+                                <div class="form-floating">
                                     <input type="text" class="form-control" wire:model="description" required>
                                     <label>Description</label>
                                 </div>
@@ -57,7 +73,8 @@
                         <div class="mt-4">
                             <div>
                                 <div class="form-floating">
-                                    <input type="date" class="form-control" wire:model="date" required>
+                                    <input type="date" class="form-control" wire:model="date" required
+                                        min="{{ \Carbon\Carbon::today()->toDateString() }}">
                                     <label>Date</label>
                                 </div>
                                 @error('date')
@@ -74,6 +91,31 @@
                                 @error('location')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div>
+
+                                <label for="formFile" class="form-label">Upload Image (Optional)</label>
+                                <input class="form-control @error('uploadPhoto') is-invalid @enderror" type="file"
+                                    id="formFile" accept="image/*" wire:model="uploadPhoto">
+
+                                @error('uploadPhoto')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <div id="uploading-indicator" class="mt-2 text-info" style="display: none;">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true"></span>
+                                    Uploading image...
+                                </div>
+                                <div id="upload-error" class="mt-2 text-danger" style="display: none;"></div>
+                                <div id="upload-success" class="mt-2 text-success" style="display: none;"></div>
+                                <div id="image-preview" class="mt-3">
+                                    @if ($uploadPhoto)
+                                        <img src="{{ $uploadPhoto->temporaryUrl() }}" alt="Payment Preview"
+                                            style="max-width: 100%; height: auto;">
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         <div class="col-12 mt-4">

@@ -35,7 +35,7 @@ class SocialiteController extends Controller
                 'name' => $response->getName(),
                 'email' => $response->getEmail(),
                 'role' => 'guest',
-                'password' => 'password',
+                'password' => bcrypt('password'),
             ]);
         }
 
@@ -43,7 +43,7 @@ class SocialiteController extends Controller
 
         // auth()->user()->generateCode();
 
-        return redirect('/app');
+        return redirect('/index');
     }
 
     protected function validateProvider(string $provider): array

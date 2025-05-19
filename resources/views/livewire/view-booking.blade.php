@@ -136,7 +136,24 @@
                         <div class="col-sm-6">
                             <p class="mb-0" style="font-size: 13px;"><i
                                     class="fa fa-arrow-right text-primary me-2"></i>
-                                {{ \Carbon\Carbon::parse($record->date)->format('F j, Y') }}
+                                {{ \Carbon\Carbon::parse($record->date)->format('F j, Y') }} ---
+                                {{ \Carbon\Carbon::parse($record->date_to)->format('F j, Y') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <h6 class=" bg-white text-start text-primary pe-3">Payment Type</h6>
+                    <div class="row gy-2 gx-4 mb-2">
+                        <div class="col-sm-6">
+                            <p class="mb-0" style="font-size: 13px;"><i
+                                    class="fa fa-arrow-right text-primary me-2"></i>
+                                {{ $record->payment_type == 'gcash' ? 'GCash' : 'Walk In' }}
+
+                                @if ($record->payment_type == 'walk_in')
+                                    <br>
+                                    <p style="font-size: 12px;">To secure your booking, please make a partial payment.
+                                    </p>
+                                @endif
                             </p>
                         </div>
                     </div>
@@ -151,6 +168,12 @@
                             class="btn btn-primary py-1 px-3 mt-2 @if (!$payment_image) disabled @endif"
                             wire:click.prevent="confirm">Confirm Payment</a>
                     @endif
+
+                    <div class="row gy-2 gx-4 mb-2" style="margin-top: 10px;">
+                        @if ($record->is_partial)
+                            You paid partial amount pls pay full amount on upcoming check in
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

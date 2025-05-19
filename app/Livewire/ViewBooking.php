@@ -22,6 +22,15 @@ class ViewBooking extends Component
     public function mount($id)
     {
         $booking = Booking::with(['resort', 'bookingItems', 'bookingItems.item', 'bookingItems.entranceFee'])->find($id);
+
+        if (! $booking) {
+            abort(404);
+        }
+
+        if ($booking->user_id != auth()->user()->id) {
+            abort(404);
+        }
+
         $this->record = $booking;
     }
 

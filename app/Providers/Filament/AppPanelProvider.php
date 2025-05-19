@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Livewire\Register;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -11,6 +12,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -67,9 +69,10 @@ class AppPanelProvider extends PanelProvider
                 ]
             )
             ->spa()
+            ->registration(Register::class)
+            ->maxContentWidth(MaxWidth::Full)
             ->databaseNotifications()
-            // ->databaseNotificationsPolling('10s')
-            ->brandName('Test App')
+            ->brandLogo(fn () => view('filament.logo'))
             ->renderHook(
                 'panels::auth.login.form.after',
                 fn () => view('auth.socialite.google')

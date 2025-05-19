@@ -4,7 +4,10 @@ namespace App\Filament\Resources\BookingResource\Pages;
 
 use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -25,7 +28,47 @@ class ViewBookings extends Page
     {
         $this->form->fill([
             'proof_of_payment' => $record->proof_of_payment,
+            'is_partial' => $record->is_partial,
         ]);
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('edit-status')
+                ->icon('heroicon-o-pencil')
+                ->label('Edit Booking')
+                ->action(function ($data) {
+
+                    $this->record->status = $data['status'];
+
+                    $this->record->is_partial = $data['is_partial'];
+
+                    $this->record->save();
+
+                    Notification::make()
+                        ->success()
+                        ->title('Booking Updated')
+                        ->icon('heroicon-o-check-circle')
+                        ->send();
+
+                    redirect(BookingResource::getUrl('view', ['record' => $this->record->id]));
+                })
+                ->form([
+                    Select::make('status')
+                        ->label('Status')
+                        ->options([
+                            'pending' => 'Pending',
+                            'confirmed' => 'Confirmed',
+                            'cancelled' => 'Cancelled',
+                            'moved' => 'Moved',
+                        ])
+                        ->default('pending')
+                        ->required(),
+                    Toggle::make('is_partial')
+                        ->label('Partial Payment'),
+                ]),
+        ];
     }
 
     public function form(Form $form): Form
@@ -33,6 +76,7 @@ class ViewBookings extends Page
         return $form
             ->schema([
                 FileUpload::make('proof_of_payment')
+                    ->dehydrated(false)
                     ->openable()
                     ->columnSpanFull()
                     ->label('Proof of Payment')
@@ -40,6 +84,9 @@ class ViewBookings extends Page
                     ->disk('public_uploads_payments')
                     ->directory('/')
                     ->hint('Please upload the proof of payment for gcash.'),
+
+                Toggle::make('is_partial')
+                    ->label('Partial Payment'),
             ])
             ->columns(2)
             ->statePath('formData');
@@ -60,11 +107,15 @@ class ViewBookings extends Page
                         'pending' => 'gray',
                         'confirmed' => 'success',
                         'cancelled' => 'danger',
+                        'moved' => 'warning',
                     })
                     ->formatStateUsing(fn (string $state): string => __(ucfirst($state))),
-                TextEntry::make('date')->dateTime()->label('Date'),
+                TextEntry::make('date')->dateTime('F j, Y')->label('Date From'),
+                TextEntry::make('date_to')->dateTime('F j, Y')->label('Date To'),
                 TextEntry::make('amount_to_pay')->label('Payment')->prefix('₱ '),
                 TextEntry::make('resort.name')->label('Resort'),
+                TextEntry::make('payment_type')->label('Payment Type')
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
             ])
             ->columns(3);
     }
@@ -72,6 +123,8 @@ class ViewBookings extends Page
     public function confirm()
     {
         $this->record->status = 'confirmed';
+
+        $this->record->is_partial = $this->formData['is_partial'];
 
         $this->record->save();
 

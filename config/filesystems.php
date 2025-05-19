@@ -84,6 +84,14 @@ return [
             'throw' => false,
         ],
 
+        'public_uploads_lost_item' => [
+            'driver' => 'local',
+            'root' => public_path('lost-item-photo'),
+            'url' => env('APP_URL').'/lost-item-photo',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*

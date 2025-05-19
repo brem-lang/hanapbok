@@ -44,6 +44,7 @@
                     <tr>
                         <th>Resort</th>
                         <th>Booking Date</th>
+                        <th>Payment Type</th>
                         <th>Status</th>
                         <th>Amount to Pay</th>
                         <th class="text-end">Action</th>
@@ -54,11 +55,19 @@
                         <tr>
                             <td>{{ $item->resort->name }}</td>
                             <td>{{ $item->created_at->format('F j, Y') }}</td>
+                            <td>{{ $item->is_partial ? 'Partial Payment' : 'Full Payment' }} -
+                                {{ $item->payment_type == 'gcash' ? 'GCash' : 'Walk In' }}
+                            </td>
                             <td>{{ ucfirst($item->status) }}</td>
                             <td>{{ $item->amount_to_pay }}</td>
                             <td class="text-end">
                                 <a href="{{ route('view-booking', $item->id) }}"
                                     class="btn btn-sm btn-primary me-2">View</a>
+
+                                @if ($item->status === 'confirmed')
+                                    <a class="btn btn-sm btn-danger me-2"
+                                        wire:click.prevent="cancelBooking({{ $item->id }})">Cancel</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

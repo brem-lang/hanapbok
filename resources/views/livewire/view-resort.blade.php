@@ -218,32 +218,65 @@
                                         Add Item
                                     </button>
                                 </div>
-                                {{-- </form> --}}
                             </div>
 
                             <div class="mt-4">
-                                {{-- <input type="date" class="form-control" wire:model="date" required> --}}
                                 <div>
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control" wire:model="date" required>
-                                        <label>Date</label>
+                                    <div class="row g-3 mb-3" wire:key="item-{{ $index }}">
+                                        <div class='col-md-6'>
+                                            <div class="form-floating">
+                                                <input type="date" class="form-control" wire:model="date" required
+                                                    min="{{ \Carbon\Carbon::today()->toDateString() }}">
+                                                <label>Date From</label>
+                                            </div>
+                                            @error('date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class='col-md-6'>
+                                            <div class="form-floating">
+                                                <input type="date" class="form-control" wire:model="date_to"
+                                                    required min="{{ \Carbon\Carbon::today()->toDateString() }}">
+                                                <label>Date To</label>
+                                            </div>
+                                            @error('date_to')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
                                     </div>
-                                    @error('date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
                                 </div>
-                            </div>
 
-                            <div class="col-12 mt-4">
-                                <button class="btn btn-outline-light w-100 py-3" wire:click.prevent='submit'>Book
-                                    Now</button>
+                                <div class="mt-4">
+                                    <div>
+                                        <div class="row g-3 mb-3" wire:key="item-{{ $index }}">
+                                            <div class='col-md-12'>
+                                                <div class="form-floating">
+                                                    <select class="form-select" wire:model="payment_type">
+                                                        <option value="">Select Payment Type</option>
+                                                        <option value="gcash">GCash</option>
+                                                        <option value="walk_in">Walk In</option>
+                                                    </select>
+                                                    <label>Payment Type</label>
+                                                </div>
+                                                @error('payment_type')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mt-4">
+                                        <button class="btn btn-outline-light w-100 py-3"
+                                            wire:click.prevent='submit'>Book
+                                            Now</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Booking Start -->
+                <!-- Booking Start -->
     @endif
 
     <!-- Package Start -->

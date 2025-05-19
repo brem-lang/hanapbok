@@ -20,6 +20,17 @@ class MyBookings extends Component
         return view('livewire.my-bookings');
     }
 
+    public function cancelBooking($id)
+    {
+        $booking = Booking::find($id);
+
+        $booking->status = 'cancelled';
+
+        $booking->save();
+
+        return redirect('/my-bookings');
+    }
+
     public function logout()
     {
         Auth::logout();

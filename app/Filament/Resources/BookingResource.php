@@ -47,9 +47,14 @@ class BookingResource extends Resource
                     ->label('User')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->label('Booking Date')
-                    ->dateTime()
+                TextColumn::make('date')
+                    ->label('Date From')
+                    ->dateTime('F j, Y')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('date_to')
+                    ->label('Date To')
+                    ->dateTime('F j, Y')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
@@ -61,10 +66,21 @@ class BookingResource extends Resource
                             'pending' => 'warning',
                             'confirmed' => 'success',
                             'cancelled' => 'danger',
+                            'moved' => 'warning',
                         }
                     )
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('payment_type')
+                    ->label('Payment Type')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color(
+                        fn ($state) => match ($state) {
+                            'gcash' => 'success',
+                            'walk_in' => 'warning',
+                        }
+                    ),
             ])
             ->filters([
                 //
@@ -76,6 +92,7 @@ class BookingResource extends Resource
                     ->icon('heroicon-o-eye')
                     ->color('success')
                     ->url(fn ($record) => BookingResource::getUrl('view', ['record' => $record->id])),
+
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([

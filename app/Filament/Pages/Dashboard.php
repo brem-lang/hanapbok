@@ -32,6 +32,11 @@ class Dashboard extends Page implements HasForms
 
     public function mount()
     {
+
+        if (auth()->user()->isGuest()) {
+            abort(404);
+        }
+
         $this->record = auth()->user();
 
         $this->userValidateIDForm->fill([
