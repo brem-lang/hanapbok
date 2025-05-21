@@ -73,8 +73,7 @@
                         <div class="mt-4">
                             <div>
                                 <div class="form-floating">
-                                    <input type="date" class="form-control" wire:model="date" required
-                                        min="{{ \Carbon\Carbon::today()->toDateString() }}">
+                                    <input type="date" class="form-control" wire:model="date" required>
                                     <label>Date</label>
                                 </div>
                                 @error('date')
