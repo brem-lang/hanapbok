@@ -26,9 +26,13 @@ class ReportLostItems extends Component
 
     public $uploadPhoto;
 
+    public $activePage = 'list';
+
     public function mount()
     {
         $this->resorts = Resort::get();
+
+        $this->record = LostItem::with('resort')->where('user_id', auth()->user()->id)->latest()->get();
     }
 
     public function render()
@@ -41,7 +45,7 @@ class ReportLostItems extends Component
         $this->validate([
             'description' => 'required|string|max:255',
             'location' => 'required|string|max:255',
-            'date' => 'required|date|after_or_equal:today',
+            'date' => 'required|date',
             'selectResort' => 'required|exists:resorts,id',
             'uploadPhoto' => 'image|max:2048',
         ]);
@@ -55,11 +59,17 @@ class ReportLostItems extends Component
             'date' => $this->date,
             'resort_id' => $this->selectResort,
             'photo' => $path,
+            'status' => 'not_found',
         ]);
 
         $this->dispatch('swal:modal');
 
         return redirect('/lost-items');
+    }
+
+    public function createReport()
+    {
+        $this->activePage = 'create';
     }
 
     public function logout()

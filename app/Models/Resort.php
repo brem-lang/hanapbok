@@ -22,4 +22,9 @@ class Resort extends Model
     {
         return $this->hasMany(EntranceFee::class);
     }
+
+    public function userAdmin()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

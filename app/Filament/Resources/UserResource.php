@@ -58,14 +58,16 @@ class UserResource extends Resource
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                             ->dehydrated(fn ($state) => filled($state))
                             ->required(fn (string $context): bool => $context === 'create'),
-                        Select::make('role')
-                            ->label('Role')
-                            ->options([
-                                'admin' => 'Admin',
-                                'guest' => 'Guest',
-                            ])
-                            ->required(),
+                        // Select::make('role')
+                        //     ->label('Role')
+                        //     ->options([
+                        //         'guest' => 'Guest',
+                        //         'resorts_admin' => 'Resorts Admin',
+                        //     ])
+                        //     ->required(),
+                        Toggle::make('is_validated'),
                         FileUpload::make('front_id')
+                            ->columnSpanFull()
                             ->hint('Please avoid to upload blurry images.')
                             ->openable()
                             ->label('Front ID')
@@ -76,6 +78,7 @@ class UserResource extends Resource
                             ->image()
                             ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
                         FileUpload::make('back_id')
+                            ->columnSpanFull()
                             ->hint('Please avoid to upload blurry images.')
                             ->label('Back ID')
                             ->openable()
@@ -85,7 +88,6 @@ class UserResource extends Resource
                             ->directory('/')
                             ->image()
                             ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
-                        Toggle::make('is_validated'),
                     ])
                     ->columns(2),
             ]);
@@ -100,7 +102,8 @@ class UserResource extends Resource
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('role')
                     ->badge()->color(fn (string $state): string => match ($state) {
-                        'admin' => 'success',
+                        'resorts_admin' => 'success',
+                        'admin' => 'warning',
                         'guest' => 'gray',
                     })->formatStateUsing(fn (string $state): string => __(ucfirst($state)))
                     ->searchable(),
@@ -127,7 +130,10 @@ class UserResource extends Resource
                 // Tables\Actions\BulkActionGroup::make([
                 //     Tables\Actions\DeleteBulkAction::make(),
                 // ]),
-            ]);
+            ])
+            ->modifyQueryUsing(function ($query) {
+                return $query->latest();
+            });
     }
 
     public static function getRelations(): array

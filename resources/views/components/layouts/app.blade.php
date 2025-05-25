@@ -76,6 +76,41 @@
         }
     </style> --}}
 
+    <style>
+        .hero-header {
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .hero-header .carousel-item img {
+            height: 100vh;
+            object-fit: cover;
+            filter: brightness(60%);
+            /* darkens the image */
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(20, 20, 31, 0.7), rgba(20, 20, 31, 0.7));
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 2;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+        }
+    </style>
+
     @filamentStyles
     @vite('resources/css/app.css')
 </head>

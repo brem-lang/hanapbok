@@ -17,7 +17,7 @@
             <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a>
         </nav>
 
-        <div class="container-fluid bg-primary py-5 mb-5 hero-header">
+        {{-- <div class="container-fluid bg-primary py-5 mb-5 hero-header">
             <div class="container py-5">
                 <div class="row justify-content-center py-5">
                     <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
@@ -31,103 +31,191 @@
                     </div>
                 </div>
             </div>
+        </div> --}}
+        <div class="container-fluid hero-header p-0">
+            <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ asset('carousel/carousel1.jpg') }}" class="d-block w-100" alt="Slide 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('carousel/carousel2.jpg') }}" class="d-block w-100" alt="Slide 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('carousel/carousel3.jpg') }}" class="d-block w-100" alt="Slide 3">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('carousel/carousel4.jpg') }}" class="d-block w-100" alt="Slide 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('carousel/carousel5.jpg') }}" class="d-block w-100" alt="Slide 3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dark Overlay -->
+            <div class="hero-overlay"></div>
+
+            <!-- Hero Text Content -->
+            <div class="hero-content container">
+                <h1 class="display-3 text-white animated slideInDown">Lost Items</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{{ route('index') }}">Home</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Lost Items</li>
+                    </ol>
+                </nav>
+            </div>
         </div>
     </div>
     <!-- Navbar & Hero End -->
 
-    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="booking p-5">
-                <div class="row g-5 align-items-center">
-                    <div class="col-md-6 text-white">
-                        <h1 class="text-white mb-4">Report Lost Items </h1>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mt-4">
-                            <div>
-                                <div class="form-floating">
-                                    <select class="form-select" wire:model="selectResort" required>
-                                        <option value="">Select Resort</option>
-                                        @foreach ($resorts as $resort)
-                                            <option value="{{ $resort->id }}">{{ $resort->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label>Resort</label>
-                                </div>
-                                @error('resort')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+    @if ($this->activePage == 'create')
+        <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="container">
+                <div class="booking p-5">
+                    <div class="row g-5 align-items-center">
+                        <div class="col-md-6 text-white">
+                            <h1 class="text-white mb-4">Report Lost Items </h1>
                         </div>
-                        <div class="mt-4">
-                            <div>
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" wire:model="description" required>
-                                    <label>Description</label>
+                        <div class="col-md-6">
+                            <div class="mt-4">
+                                <div>
+                                    <div class="form-floating">
+                                        <select class="form-select" wire:model="selectResort" required>
+                                            <option value="">Select Resort</option>
+                                            @foreach ($resorts as $resort)
+                                                <option value="{{ $resort->id }}">{{ $resort->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label>Resort</label>
+                                    </div>
+                                    @error('resort')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                @error('description')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
                             </div>
-                        </div>
-                        <div class="mt-4">
-                            <div>
-                                <div class="form-floating">
-                                    <input type="date" class="form-control" wire:model="date" required>
-                                    <label>Date</label>
+                            <div class="mt-4">
+                                <div>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" wire:model="description" required>
+                                        <label>Description</label>
+                                    </div>
+                                    @error('description')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                @error('date')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
                             </div>
-                        </div>
-                        <div class="mt-4">
-                            <div>
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" wire:model="location" required>
-                                    <label>Location</label>
+                            <div class="mt-4">
+                                <div>
+                                    <div class="form-floating">
+                                        <input type="date" class="form-control" wire:model="date" required>
+                                        <label>Date</label>
+                                    </div>
+                                    @error('date')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                @error('location')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
                             </div>
-                        </div>
-                        <div class="mt-4">
-                            <div>
+                            <div class="mt-4">
+                                <div>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" wire:model="location" required>
+                                        <label>Location</label>
+                                    </div>
+                                    @error('location')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div>
 
-                                <label for="formFile" class="form-label">Upload Image (Optional)</label>
-                                <input class="form-control @error('uploadPhoto') is-invalid @enderror" type="file"
-                                    id="formFile" accept="image/*" wire:model="uploadPhoto">
+                                    <label for="formFile" class="form-label">Upload Image</label>
+                                    <input class="form-control @error('uploadPhoto') is-invalid @enderror"
+                                        type="file" id="formFile" accept="image/*" wire:model="uploadPhoto">
 
-                                @error('uploadPhoto')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <div id="uploading-indicator" class="mt-2 text-info" style="display: none;">
-                                    <span class="spinner-border spinner-border-sm me-2" role="status"
-                                        aria-hidden="true"></span>
-                                    Uploading image...
-                                </div>
-                                <div id="upload-error" class="mt-2 text-danger" style="display: none;"></div>
-                                <div id="upload-success" class="mt-2 text-success" style="display: none;"></div>
-                                <div id="image-preview" class="mt-3">
-                                    @if ($uploadPhoto)
-                                        <img src="{{ $uploadPhoto->temporaryUrl() }}" alt="Payment Preview"
-                                            style="max-width: 100%; height: auto;">
-                                    @endif
+                                    @error('uploadPhoto')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div id="uploading-indicator" class="mt-2 text-info" style="display: none;">
+                                        <span class="spinner-border spinner-border-sm me-2" role="status"
+                                            aria-hidden="true"></span>
+                                        Uploading image...
+                                    </div>
+                                    <div id="upload-error" class="mt-2 text-danger" style="display: none;"></div>
+                                    <div id="upload-success" class="mt-2 text-success" style="display: none;"></div>
+                                    <div id="image-preview" class="mt-3">
+                                        @if ($uploadPhoto)
+                                            <img src="{{ $uploadPhoto->temporaryUrl() }}" alt="Payment Preview"
+                                                style="max-width: 100%; height: auto;">
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12 mt-4">
-                            <button class="btn btn-outline-light w-100 py-3" wire:click.prevent='report'>Report</button>
+                            <div class="col-12 mt-4">
+                                <button class="btn btn-outline-light w-100 py-3"
+                                    wire:click.prevent='report'>Report</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
+
+    @if ($this->activePage == 'list')
+        <div class="container-xxl py-5">
+            <div class="text-end">
+                <a class="btn btn-sm btn-primary me-2" wire:click="createReport">Create Report</a>
+            </div>
+            <div class="container">
+                <table id="dataTable" class="table nowrap">
+                    <thead>
+                        <tr>
+                            <th>Resort</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($record as $item)
+                            <tr>
+                                <td>{{ $item->resort->name }}</td>
+                                <td>{{ $item->location }}</td>
+                                <td>{{ $item->status == 'not_found' ? 'Not Found' : 'Found' }}</td>
+                            </tr>
+                        @endforeach
+                </table>
+            </div>
+        </div>
+    @endif
     <!-- Package Start -->
 
     <!-- Package End -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-white mb-3">Contact</h4>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Anilao Port Anilao Proper , Mabini ,
+                        Davao De Oro , Philippines</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>0969 643 3420</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>icmomabini@gmail.com</p>
+                    <p class="mb-2"><i class="fab fa-facebook me-3"></i>Mabini ICM Tourism Office</p>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="#">HANAPBOK</a>, All Right Reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
@@ -143,4 +231,12 @@
             });
         </script>
     @endscript
+
+    <script>
+        $('#dataTable').DataTable({
+            layout: {
+                topStart: {}
+            }
+        });
+    </script>
 </div>
