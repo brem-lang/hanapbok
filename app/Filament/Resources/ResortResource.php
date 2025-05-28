@@ -31,7 +31,7 @@ class ResortResource extends Resource
 
     public static function canAccess(): bool
     {
-        return false;
+        return auth()->user()->isAdmin();
     }
 
     public static function form(Form $form): Form
