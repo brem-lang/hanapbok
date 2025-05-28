@@ -76,7 +76,7 @@ class ResortsAdmin extends Page implements HasTable
                             Select::make('user_id')
                                 ->label('Admin')
                                 ->required()
-                                ->options(User::where('role', 'resorts_admin')->pluck('name', 'id')->toArray())
+                                ->options(User::where('role', 'resorts_admin')->whereDoesntHave('AdminResort')->pluck('name', 'id')->toArray())
                                 ->formatStateUsing(fn ($record) => $record?->user_id ?? null),
                         ])
                         ->action(function ($record, $data) {

@@ -103,7 +103,7 @@
                                             <option value="lost_item">Lost Item</option>
                                             <option value="found_item">Found Item</option>
                                         </select>
-                                        <label>Resort</label>
+                                        <label>Type</label>
                                     </div>
                                     @error('type')
                                         <span class="text-danger">{{ $message }}</span>
