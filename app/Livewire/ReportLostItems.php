@@ -26,6 +26,8 @@ class ReportLostItems extends Component
 
     public $uploadPhoto;
 
+    public $type;
+
     public $activePage = 'list';
 
     public function mount()
@@ -48,6 +50,7 @@ class ReportLostItems extends Component
             'date' => 'required|date',
             'selectResort' => 'required|exists:resorts,id',
             'uploadPhoto' => 'image|max:2048',
+            'type' => 'required|string|max:255',
         ]);
 
         $path = $this->uploadPhoto->store('', 'public_uploads_lost_item');
@@ -60,6 +63,7 @@ class ReportLostItems extends Component
             'resort_id' => $this->selectResort,
             'photo' => $path,
             'status' => 'not_found',
+            'type' => $this->type,
         ]);
 
         $this->dispatch('swal:modal');

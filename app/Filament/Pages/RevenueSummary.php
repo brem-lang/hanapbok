@@ -11,4 +11,9 @@ class RevenueSummary extends Page
     protected static string $view = 'filament.pages.revenue-summary';
 
     protected static ?string $navigationGroup = 'Reports';
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->isResortsAdmin();
+    }
 }

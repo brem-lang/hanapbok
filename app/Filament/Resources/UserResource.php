@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
@@ -118,6 +119,12 @@ class UserResource extends Resource
                     ->searchable(),
             ])
             ->filters([
+                SelectFilter::make('role')
+                    ->label('Role')
+                    ->options([
+                        'guest' => 'Guest',
+                        'resorts_admin' => 'Resorts Admin',
+                    ]),
                 TrashedFilter::make(),
             ])
             ->actions([

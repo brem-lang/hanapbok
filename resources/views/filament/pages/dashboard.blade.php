@@ -187,4 +187,28 @@
     </div> --}}
     {{-- @else
     @endif --}}
+    <div>
+        <div class="text-2xl">
+            Welcome <span class="font-semibold">{{ auth()->user()->name }}</span>!
+        </div>
+        <div class="text">
+            <p id="time"></p>
+        </div>
+    </div>
+    @if (auth()->user()->isAdmin())
+        @livewire(\App\Livewire\StatsOverview::class)
+    @endif
+
+    @if (auth()->user()->isResortsAdmin())
+        @livewire(\App\Livewire\StatsOverviewResortAdmin::class)
+    @endif
+
 </x-filament-panels::page>
+<script>
+    function startTime() {
+        const today = new Date();
+        document.getElementById('time').innerHTML = 'Today is ' + today;
+        setTimeout(startTime, 1000);
+    }
+    startTime()
+</script>

@@ -60,4 +60,14 @@ class User extends Authenticatable
     {
         return $this->role === 'guest';
     }
+
+    public function isResortsAdmin(): bool
+    {
+        return $this->role === 'resorts_admin';
+    }
+
+    public function AdminResort()
+    {
+        return $this->hasOne(Resort::class, 'user_id', 'id');
+    }
 }

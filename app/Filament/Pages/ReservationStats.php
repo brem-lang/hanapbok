@@ -11,4 +11,9 @@ class ReservationStats extends Page
     protected static string $view = 'filament.pages.reservation-stats';
 
     protected static ?string $navigationGroup = 'Reports';
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->isResortsAdmin();
+    }
 }

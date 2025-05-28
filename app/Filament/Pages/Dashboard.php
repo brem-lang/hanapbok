@@ -32,7 +32,6 @@ class Dashboard extends Page implements HasForms
 
     public function mount()
     {
-
         if (auth()->user()->isGuest()) {
             abort(404);
         }

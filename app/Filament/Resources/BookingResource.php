@@ -23,7 +23,7 @@ class BookingResource extends Resource
 
     public static function canAccess(): bool
     {
-        return auth()->user()->isAdmin();
+        return auth()->user()->isAdmin() || auth()->user()->isResortsAdmin();
     }
 
     public static function form(Form $form): Form
@@ -42,6 +42,7 @@ class BookingResource extends Resource
                 TextColumn::make('resort.name')
                     ->label('Resort')
                     ->searchable()
+                    ->visible(auth()->user()->isAdmin())
                     ->sortable(),
                 TextColumn::make('user.name')
                     ->label('User')
@@ -100,8 +101,17 @@ class BookingResource extends Resource
                 // ]),
             ])
             ->modifyQueryUsing(function ($query) {
+                $auth = auth()->user();
 
-                return $query->latest();
+                if ($auth->isResortsAdmin()) {
+                    return $query->whereHas('resort', function ($query) use ($auth) {
+                        $query->where('user_id', $auth->id);
+                    })->latest();
+                }
+
+                if ($auth->isAdmin()) {
+                    return $query->latest();
+                }
             });
     }
 

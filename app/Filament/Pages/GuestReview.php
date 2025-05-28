@@ -11,4 +11,9 @@ class GuestReview extends Page
     protected static string $view = 'filament.pages.guest-review';
 
     protected static ?string $navigationGroup = 'Reports';
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->isResortsAdmin();
+    }
 }

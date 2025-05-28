@@ -76,7 +76,7 @@
                 <div class="booking p-5">
                     <div class="row g-5 align-items-center">
                         <div class="col-md-6 text-white">
-                            <h1 class="text-white mb-4">Report Lost Items </h1>
+                            <h1 class="text-white mb-4">Report Items </h1>
                         </div>
                         <div class="col-md-6">
                             <div class="mt-4">
@@ -91,6 +91,21 @@
                                         <label>Resort</label>
                                     </div>
                                     @error('resort')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div>
+                                    <div class="form-floating">
+                                        <select class="form-select" wire:model="type" required>
+                                            <option value="">Select Type</option>
+                                            <option value="lost_item">Lost Item</option>
+                                            <option value="found_item">Found Item</option>
+                                        </select>
+                                        <label>Resort</label>
+                                    </div>
+                                    @error('type')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -155,7 +170,7 @@
                             </div>
                             <div class="col-12 mt-4">
                                 <button class="btn btn-outline-light w-100 py-3"
-                                    wire:click.prevent='report'>Report</button>
+                                    wire:click.prevent='report'>Submit</button>
                             </div>
                         </div>
                     </div>
@@ -167,7 +182,7 @@
     @if ($this->activePage == 'list')
         <div class="container-xxl py-5">
             <div class="text-end">
-                <a class="btn btn-sm btn-primary me-2" wire:click="createReport">Create Report</a>
+                <a class="btn btn-sm btn-primary me-2" wire:click="createReport">Report</a>
             </div>
             <div class="container">
                 <table id="dataTable" class="table nowrap">
