@@ -10,8 +10,8 @@ class StatsLostItemsOverview extends BaseWidget
 {
     protected function getStats(): array
     {
-        $lost = LostItem::query()->where('resort_id', auth()->user()->AdminResort->id)->where('type', 'lost_item')->latest()->count();
-        $found = LostItem::query()->where('resort_id', auth()->user()->AdminResort->id)->where('type', 'found_item')->latest()->count();
+        $lost = LostItem::query()->where('resort_id', auth()->user()?->AdminResort?->id)->where('type', 'lost_item')->latest()->count();
+        $found = LostItem::query()->where('resort_id', auth()->user()?->AdminResort?->id)->where('type', 'found_item')->latest()->count();
 
         return [
             Stat::make('Lost Items', $lost),

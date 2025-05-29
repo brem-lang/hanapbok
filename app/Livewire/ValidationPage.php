@@ -10,6 +10,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -19,8 +20,12 @@ class ValidationPage extends Component implements HasForms
 
     public ?array $userValidateIDData = [];
 
-    public function mount()
+    public $resort_id;
+
+    public function mount(Request $request)
     {
+        $this->resort_id = session('resort_id');
+
         if (auth()->user()->is_validated) {
             abort(403);
         }
@@ -62,6 +67,7 @@ class ValidationPage extends Component implements HasForms
             'back_id' => $data['back_id'],
             'notes' => null,
             'status' => 'pending',
+            'resort_id' => $this->resort_id,
         ]);
 
         Notification::make()

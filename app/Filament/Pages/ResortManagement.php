@@ -39,8 +39,8 @@ class ResortManagement extends Page implements HasForms
         if (auth()->user()->isGuest()) {
             abort(404);
         }
-
         $resort = Resort::where('user_id', auth()->user()->id)->first();
+
         $this->record = $resort;
         $this->form->fill([
             'name' => $resort?->name,

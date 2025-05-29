@@ -108,7 +108,10 @@ class ViewResort extends Component implements HasForms
         $user = auth()->user();
 
         if (! $user->is_validated) {
-            return redirect('/validate');
+            // return redirect('/validate');
+            return redirect()->to('/validate')->with([
+                'resort_id' => $this->record->id,
+            ]);
         }
 
         $this->activePage = 'booking';

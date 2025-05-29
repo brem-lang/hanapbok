@@ -27,7 +27,7 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $modelLabel = 'User Management';
+    protected static ?string $modelLabel = 'Resorts Admin';
 
     protected static ?string $navigationGroup = 'User Management';
 
@@ -71,7 +71,7 @@ class UserResource extends Resource
                             ->columnSpanFull()
                             ->hint('Please avoid to upload blurry images.')
                             ->openable()
-                            ->label('Front ID')
+                            ->label('Valid ID')
                             ->required()
                             ->maxSize(1024)
                             ->disk('public_uploads_id')
@@ -81,14 +81,12 @@ class UserResource extends Resource
                         FileUpload::make('back_id')
                             ->columnSpanFull()
                             ->hint('Please avoid to upload blurry images.')
-                            ->label('Back ID')
+                            ->label('Attachments')
                             ->openable()
                             ->maxSize(1024)
                             ->required()
                             ->disk('public_uploads_id')
-                            ->directory('/')
-                            ->image()
-                            ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
+                            ->directory('/'),
                     ])
                     ->columns(2),
             ]);
@@ -139,7 +137,7 @@ class UserResource extends Resource
                 // ]),
             ])
             ->modifyQueryUsing(function ($query) {
-                return $query->latest();
+                return $query->where('role', 'resorts_admin')->latest();
             });
     }
 

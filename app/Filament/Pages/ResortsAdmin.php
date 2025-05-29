@@ -25,6 +25,8 @@ class ResortsAdmin extends Page implements HasTable
 
     protected static ?string $navigationGroup = 'User Management';
 
+    protected static ?string $title = 'Assign Resorts Admin';
+
     public static function canAccess(): bool
     {
         return auth()->user()->isAdmin();

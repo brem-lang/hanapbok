@@ -11,9 +11,9 @@ class StatsOverviewResortAdmin extends BaseWidget
 {
     protected function getStats(): array
     {
-        $booking = Booking::query()->where('status', 'confirmed')->where('resort_id', auth()->user()->AdminResort->id)->count();
-        $lostItem = LostItem::query()->where('status', 'not_found')->where('resort_id', auth()->user()->AdminResort->id)->count();
-        $pendingBooking = Booking::query()->where('status', 'pending')->where('resort_id', auth()->user()->AdminResort->id)->count();
+        $booking = Booking::query()->where('status', 'confirmed')->where('resort_id', auth()->user()?->AdminResort?->id)->count();
+        $lostItem = LostItem::query()->where('status', 'not_found')->where('resort_id', auth()->user()?->AdminResort?->id)->count();
+        $pendingBooking = Booking::query()->where('status', 'pending')->where('resort_id', auth()->user()?->AdminResort?->id)->count();
 
         return [
             Stat::make('Number of Tourist', $booking),

@@ -40,7 +40,7 @@ class LostItems extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(LostItem::query()->where('resort_id', auth()->user()->AdminResort->id)->latest())
+            ->query(LostItem::query()->where('resort_id', auth()->user()?->AdminResort?->id)->latest())
             ->paginated([10, 25, 50])
             ->columns([
                 ImageColumn::make('photo')

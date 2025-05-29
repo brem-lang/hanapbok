@@ -203,6 +203,8 @@
         @livewire(\App\Livewire\StatsOverviewResortAdmin::class)
     @endif
 
+    @livewire(\App\Livewire\DashboardChart::class)
+
 </x-filament-panels::page>
 <script>
     function startTime() {
