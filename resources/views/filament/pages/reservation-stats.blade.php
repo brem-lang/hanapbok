@@ -7,13 +7,7 @@
             <p id="time"></p>
         </div>
     </div>
-    @if (auth()->user()->isAdmin())
-        @livewire(\App\Livewire\StatsOverview::class)
-    @endif
-
-    @if (auth()->user()->isResortsAdmin())
-        @livewire(\App\Livewire\StatsOverviewResortAdmin::class)
-    @endif
+    @livewire(\App\Livewire\ReservationStatOverview::class)
 
     @livewire(\App\Livewire\DashboardChart::class)
 
