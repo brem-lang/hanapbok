@@ -1,5 +1,5 @@
 <div
-    style="width: 100vw; height: 100vh; margin: 0; font-family: 'Figtree', sans-serif; background-image: url('{{ asset('img/bg-hero.jpg') }}'); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center;">
+    style="width: 100vw; height: 100vh; margin: 0; font-family: 'Figtree', sans-serif; background-image: url('{{ asset('carousel/carousel5.jpg') }}'); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center;">
     <link rel="stylesheet" href="{{ asset('css/filament/filament/app.css?v=3.2.124.0') }}">
     <div style="width: 80%; background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 8px;">
         <div class="text-center">
