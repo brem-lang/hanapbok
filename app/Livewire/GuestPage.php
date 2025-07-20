@@ -12,6 +12,11 @@ class GuestPage extends Component
         return view('livewire.guest-page');
     }
 
+    public function login()
+    {
+        return redirect()->to('/app/login');
+    }
+
     public function logout()
     {
         Auth::logout();

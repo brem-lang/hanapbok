@@ -18,7 +18,7 @@
     .fi-simple-layout {
         width: 100%;
         height: 100%;
-        background: url('{{ asset('carousel/carousel5.jpg') }}') center no-repeat;
+        background: url('{{ asset('img/homepaeabouthanapbok.jpg') }}') center no-repeat;
         background-size: cover;
         background-attachment: fixed;
         top: 0;

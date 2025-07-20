@@ -132,7 +132,7 @@
                             <div class="mt-4">
                                 <div>
                                     <div class="form-floating">
-                                        <input type="date" class="form-control" wire:model="date" required>
+                                        <input type="datetime-local" class="form-control" wire:model="date" required>
                                         <label>Date</label>
                                     </div>
                                     @error('date')
@@ -177,8 +177,37 @@
                                 </div>
                             </div>
                             <div class="col-12 mt-4">
-                                <button class="btn btn-outline-light w-100 py-3"
-                                    wire:click.prevent='report'>Submit</button>
+                                {{-- <button class="btn btn-outline-light w-100 py-3"
+                                    wire:click.prevent='report'>Submit</button> --}}
+
+                                <button type="button" class="btn btn-outline-light w-100 py-3"
+                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    Submit
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you would like to do this?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="button" wire:click.prevent='report'
+                                                    class="btn btn-primary">Confirm</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -196,6 +225,7 @@
                 <table id="dataTable" class="table nowrap">
                     <thead>
                         <tr>
+                            <th>Type</th>
                             <th>Resort</th>
                             <th>Location</th>
                             <th>Status</th>
@@ -204,9 +234,31 @@
                     <tbody>
                         @foreach ($record as $item)
                             <tr>
+                                <td>{{ $item->type == 'lost_item' ? 'Lost Item' : 'Found Item' }}</td>
                                 <td>{{ $item->resort->name }}</td>
                                 <td>{{ $item->location }}</td>
-                                <td>{{ $item->status == 'not_found' ? 'Not Found' : 'Found' }}</td>
+                                <td>
+                                    @switch($item->status)
+                                        @case('found')
+                                            Found
+                                        @break
+
+                                        @case('not_found')
+                                            Not Found
+                                        @break
+
+                                        @case('claimed')
+                                            Claimed
+                                        @break
+
+                                        @case('not_claimed')
+                                            Not Claimed
+                                        @break
+
+                                        @default
+                                            Unknown
+                                    @endswitch
+                                </td>
                             </tr>
                         @endforeach
                 </table>
@@ -260,6 +312,14 @@
             layout: {
                 topStart: {}
             }
+        });
+    </script>
+
+    <script>
+        window.addEventListener('close-modal', () => {
+            const modalEl = document.getElementById('staticBackdrop');
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.hide();
         });
     </script>
 </div>

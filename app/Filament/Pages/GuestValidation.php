@@ -57,6 +57,7 @@ class GuestValidation extends Page implements HasTable
                 EditAction::make()
                     ->label('Validate')
                     ->modalHeading('Validate')
+                    ->requiresConfirmation()
                     ->form([
                         FileUpload::make('front_id')
                             ->columnSpanFull()

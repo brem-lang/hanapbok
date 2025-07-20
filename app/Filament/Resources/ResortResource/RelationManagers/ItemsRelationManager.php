@@ -18,6 +18,8 @@ class ItemsRelationManager extends RelationManager
 
     protected static ?string $modelLabel = 'Rooms and Cottages';
 
+    protected static ?string $title = 'Accomodation';
+
     public function form(Form $form): Form
     {
         return $form

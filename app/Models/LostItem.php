@@ -12,4 +12,9 @@ class LostItem extends Model
     {
         return $this->belongsTo(Resort::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

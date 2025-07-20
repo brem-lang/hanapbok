@@ -44,6 +44,8 @@ class ReportLostItems extends Component
 
     public function report()
     {
+        $this->dispatch('close-modal');
+
         $this->validate([
             'description' => 'required|string|max:255',
             'location' => 'required|string|max:255',
@@ -62,7 +64,7 @@ class ReportLostItems extends Component
             'date' => $this->date,
             'resort_id' => $this->selectResort,
             'photo' => $path,
-            'status' => 'not_found',
+            'status' => $this->type == 'lost_item' ? 'not_found' : 'not_claimed',
             'type' => $this->type,
         ]);
 

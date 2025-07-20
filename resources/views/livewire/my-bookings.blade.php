@@ -110,8 +110,37 @@
                                     class="btn btn-sm btn-primary me-2">View</a>
 
                                 @if ($item->status === 'confirmed')
-                                    <a class="btn btn-sm btn-danger me-2"
-                                        wire:click.prevent="cancelBooking({{ $item->id }})">Cancel</a>
+                                    {{-- <a class="btn btn-sm btn-danger me-2"
+                                        wire:click.prevent="cancelBooking({{ $item->id }})">Cancel</a> --}}
+                                    <button type="button" class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop">
+                                        Cancel
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body text-left">
+                                                    Are you sure you would like to do this?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="button"
+                                                        wire:click.prevent="cancelBooking({{ $item->id }})"
+                                                        class="btn btn-primary">Confirm</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endif
                             </td>
                         </tr>

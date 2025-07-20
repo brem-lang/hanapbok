@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Mail\LostAndFoundMail;
 use App\Models\LostItem;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -14,6 +15,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Mail;
 
 class LostItems extends Page implements HasTable
 {
@@ -51,7 +53,7 @@ class LostItems extends Page implements HasTable
                 TextColumn::make('description')->searchable(),
                 TextColumn::make('location')->searchable(),
                 TextColumn::make('date')
-                    ->dateTime('F j, Y')
+                    ->dateTime('F j, Y h:i A')
                     ->searchable(),
                 TextColumn::make('type')
                     ->label('Type')
@@ -64,7 +66,19 @@ class LostItems extends Page implements HasTable
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->formatStateUsing(fn ($state) => $state == 'found' ? 'Found' : 'Not Found'),
+                    ->formatStateUsing(fn (?string $state) => [
+                        'found' => 'Found',
+                        'not_found' => 'Not Found',
+                        'claimed' => 'Claimed',
+                        'not_claimed' => 'Not Claimed',
+                    ][$state] ?? ucfirst(str_replace('_', ' ', (string) $state)))
+                    ->color(fn (?string $state) => match ($state) {
+                        'found' => 'success',   // green
+                        'not_found' => 'danger',    // red
+                        'claimed' => 'primary',   // blue
+                        'not_claimed' => 'secondary', // gray
+                        default => 'gray',
+                    }),
             ])
             ->filters([
                 SelectFilter::make('type')
@@ -75,6 +89,29 @@ class LostItems extends Page implements HasTable
                     ]),
             ])
             ->actions([
+                Action::make('email_front_desk')
+                    ->label('Mail')
+                    ->icon('heroicon-o-envelope')
+                    ->action(function ($data, $record) {
+                        $details = [
+                            'name' => $record->user->name,
+                            'message' => $data['message'],
+                        ];
+
+                        Mail::to($record->user->email)->send(new LostAndFoundMail($details));
+
+                        Notification::make()
+                            ->title('Email Sent')
+                            ->success()
+                            ->send();
+                    })
+                    ->form([
+                        Textarea::make('message')
+                            ->label('Message')
+                            ->required()
+                            ->maxLength(500)
+                            ->placeholder('Type your message here'),
+                    ]),
                 Action::make('status')
                     ->label('Update Status')
                     ->icon('heroicon-o-document-text')
@@ -85,14 +122,29 @@ class LostItems extends Page implements HasTable
                             ->formatStateUsing(fn ($record) => $record->remarks),
                         Select::make('status')
                             ->label('Status')
-                            ->options([
-                                'not_found' => 'Not Found',
-                                'found' => 'Found',
-                            ])
+                            ->options(
+                                function ($record) {
+                                    if ($record->type == 'lost_item') {
+                                        return [
+                                            'found' => 'Found',
+                                            'not_found' => 'Not Found',
+                                        ];
+                                    }
+
+                                    if ($record->type == 'found_item') {
+                                        return [
+                                            'claimed' => 'Claimed',
+                                            'not_claimed' => 'Not Claimed',
+                                        ];
+                                    }
+                                }
+                            )
                             ->formatStateUsing(fn ($record) => $record->status)
                             ->required(),
                     ])
                     ->action(function ($record, $data) {
+
+                        // dd($data['status']);
                         $record->status = $data['status'];
                         $record->remarks = $data['remarks'];
                         $record->save();

@@ -312,9 +312,38 @@
                                     </div>
 
                                     <div class="col-12 mt-4">
-                                        <button class="btn btn-outline-light w-100 py-3"
+                                        {{-- <button class="btn btn-outline-light w-100 py-3"
                                             wire:click.prevent='submit'>Book
-                                            Now</button>
+                                            Now</button> --}}
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-outline-light w-100 py-3"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                            Book Now
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                            data-bs-keyboard="false" tabindex="-1"
+                                            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+                                                        <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure you would like to do this?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" wire:click.prevent='submit'
+                                                            class="btn btn-primary">Confirm</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -376,3 +405,10 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
+<script>
+    window.addEventListener('close-modal', () => {
+        const modalEl = document.getElementById('staticBackdrop');
+        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modal.hide();
+    });
+</script>

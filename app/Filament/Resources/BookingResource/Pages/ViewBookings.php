@@ -7,6 +7,7 @@ use App\Models\Booking;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\TextEntry;
@@ -38,6 +39,7 @@ class ViewBookings extends Page
             Action::make('edit-status')
                 ->icon('heroicon-o-pencil')
                 ->label('Edit Booking')
+                ->requiresConfirmation()
                 ->action(function ($data) {
 
                     $this->record->status = $data['status'];
@@ -75,6 +77,11 @@ class ViewBookings extends Page
     {
         return $form
             ->schema([
+                TextInput::make('amount_paid')
+                    ->numeric()
+                    ->required(),
+                Toggle::make('is_partial')
+                    ->label('Partial Payment'),
                 FileUpload::make('proof_of_payment')
                     ->dehydrated(false)
                     ->openable()
@@ -84,9 +91,6 @@ class ViewBookings extends Page
                     ->disk('public_uploads_payments')
                     ->directory('/')
                     ->hint('Please upload the proof of payment for gcash.'),
-
-                Toggle::make('is_partial')
-                    ->label('Partial Payment'),
             ])
             ->columns(2)
             ->statePath('formData');
@@ -112,7 +116,9 @@ class ViewBookings extends Page
                     ->formatStateUsing(fn (string $state): string => __(ucfirst($state))),
                 TextEntry::make('date')->dateTime('F j, Y')->label('Date From'),
                 TextEntry::make('date_to')->dateTime('F j, Y')->label('Date To'),
-                TextEntry::make('amount_to_pay')->label('Payment')->prefix('₱ '),
+                TextEntry::make('amount_to_pay')->label('Amount')->prefix('₱ '),
+                TextEntry::make('amount_paid')->label('Amount Paid')->prefix('₱ '),
+                TextEntry::make('balance')->label('Balance')->prefix('₱ '),
                 TextEntry::make('resort.name')->label('Resort'),
                 TextEntry::make('payment_type')->label('Payment Type')
                     ->formatStateUsing(fn (string $state): string => ucfirst($state)),
@@ -122,9 +128,12 @@ class ViewBookings extends Page
 
     public function confirm()
     {
-        $this->record->status = 'confirmed';
+        $data = $this->form->getState();
 
-        $this->record->is_partial = $this->formData['is_partial'];
+        $this->record->status = 'confirmed';
+        $this->record->is_partial = $data['is_partial'];
+        $this->record->amount_paid = $data['amount_paid'];
+        $this->record->balance = $this->record->amount_to_pay - $data['amount_paid'];
 
         $this->record->save();
 

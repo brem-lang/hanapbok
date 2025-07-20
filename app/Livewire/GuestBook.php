@@ -38,7 +38,19 @@ class GuestBook extends Component implements HasForms
 
     public function bookResort($id)
     {
-        return redirect()->route('view-resort', $id);
+
+        if (Auth::check()) {
+            return redirect()->route('view-resort', $id);
+        } else {
+            return redirect('/app/register');
+        }
+
+        // return redirect()->route('view-resort', $id);
+    }
+
+    public function login()
+    {
+        return redirect()->to('/app/login');
     }
 
     public function logout()

@@ -132,6 +132,8 @@ class ViewResort extends Component implements HasForms
 
     public function submit()
     {
+        $this->dispatch('close-modal');
+
         $entranceFeesData = $this->items ?? [];
         $accomodationData = $this->cottageRooms ?? [];
         $date = $this->date;

@@ -136,7 +136,27 @@
                         <div class="col-sm-6">
                             <p class="mb-0" style="font-size: 13px;"><i
                                     class="fa fa-arrow-right text-primary me-2"></i>
-                                ₱ {{ $record->amount_to_pay }}
+                                ₱ {{ $record->amount_to_pay ?? '0' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <h6 class=" bg-white text-start text-primary pe-3">Amount Paid</h6>
+                    <div class="row gy-2 gx-4 mb-2">
+                        <div class="col-sm-6">
+                            <p class="mb-0" style="font-size: 13px;"><i
+                                    class="fa fa-arrow-right text-primary me-2"></i>
+                                ₱ {{ $record->amount_paid ?? '0' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <h6 class=" bg-white text-start text-primary pe-3">Balance</h6>
+                    <div class="row gy-2 gx-4 mb-2">
+                        <div class="col-sm-6">
+                            <p class="mb-0" style="font-size: 13px;"><i
+                                    class="fa fa-arrow-right text-primary me-2"></i>
+                                ₱ {{ $record->balance ?? '0' }}
                             </p>
                         </div>
                     </div>
@@ -206,9 +226,39 @@
                         <a href="#" class="btn btn-warning py-1 px-3 mt-2 disabled">Waiting for
                             Confirmation</a>
                     @else
-                        <a href="#"
+                        {{-- <a href="#"
                             class="btn btn-primary py-1 px-3 mt-2 @if (!$payment_image) disabled @endif"
-                            wire:click.prevent="confirm">Confirm Payment</a>
+                            wire:click.prevent="confirm">Confirm Payment</a> --}}
+
+                        <button type="button"
+                            class="btn btn-primary py-1 px-3 mt-2 @if (!$payment_image) disabled @endif"
+                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            Confirm Payment
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you would like to do this?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" wire:click.prevent="confirm"
+                                            class="btn btn-primary">Confirm</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endif
 
                     <div class="row gy-2 gx-4 mb-2" style="margin-top: 10px;">

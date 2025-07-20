@@ -11,7 +11,29 @@
             <div class="navbar-nav ms-auto py-0">
                 <a href="{{ route('index') }}" class="nav-item nav-link">Home</a>
                 <a class="nav-item nav-link active">Book Now</a>
-                <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
+
+                @auth
+                    <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
+                    <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost Items</a>
+
+                    <a class="nav-item nav-link position-relative">
+                        <i class="fa fa-bell fs-5"></i>
+                        <span class="position-absolute translate-middle badge rounded-pill bg-danger">
+                            3
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </a>
+                @endauth
+            </div>
+
+            @auth
+                <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a>
+            @endauth
+
+            @guest
+                <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="login">Login</a>
+            @endguest
+            {{-- <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
                 <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost Items</a>
 
                 <a class="nav-item nav-link position-relative">
@@ -22,7 +44,7 @@
                     </span>
                 </a>
             </div>
-            <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a>
+            <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a> --}}
         </nav>
 
         {{-- <div class="container-fluid bg-primary py-5 mb-5 hero-header">
@@ -123,10 +145,10 @@
                                         <small class="fa fa-star text-primary"></small>
                                     </div>
                                     <div class="d-flex justify-content-center mb-2">
-                                        <a href="#" class="btn btn-sm btn-primary px-3 border-end"
-                                            style="border-radius: 30px 0 0 30px;">GPS</a>
+                                        {{-- <a href="#" class="btn btn-sm btn-primary px-3 border-end"
+                                            style="border-radius: 30px 0 0 30px;">GPS</a> --}}
                                         <a href="#" class="btn btn-sm btn-primary px-3"
-                                            style="border-radius: 0 30px 30px 0;"
+                                            style="border-radius: 30px 30px 30px 30px;"
                                             wire:click.prevent="bookResort({{ $resort->id }})">Visit Resort</a>
                                         {{-- <a href="#" class="btn btn-sm btn-primary px-3"
                                             style="border-radius: 30px 30px 30px 30px;"

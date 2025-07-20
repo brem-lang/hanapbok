@@ -68,7 +68,9 @@ class AppPanelProvider extends PanelProvider
                         ->activeIcon('heroicon-s-document-text'),
                 ]
             )
+            ->darkMode(false)
             ->spa()
+            ->brandName('Booking Platform')
             ->registration(Register::class)
             ->maxContentWidth(MaxWidth::Full)
             ->databaseNotifications()
