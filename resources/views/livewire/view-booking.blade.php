@@ -12,7 +12,7 @@
                 <a href="{{ route('index') }}" class="nav-item nav-link">Home</a>
                 <a href="{{ route('guest-booking') }}" class="nav-item nav-link">Book Now</a>
                 <a href="{{ route('my-bookings') }}" class="nav-item nav-link active">My Bookings</a>
-                <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost Items</a>
+                <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost and Found Items</a>
 
                 <a class="nav-item nav-link position-relative">
                     <i class="fa fa-bell fs-5"></i>
@@ -221,7 +221,7 @@
                     </div>
 
                     @if ($record->status == 'confirmed')
-                        <a href="#" class="btn btn-success py-1 px-3 mt-2 disabled">Confrimed</a>
+                        <a href="#" class="btn btn-success py-1 px-3 mt-2 disabled">Confrim</a>
                     @elseif ($record->proof_of_payment)
                         <a href="#" class="btn btn-warning py-1 px-3 mt-2 disabled">Waiting for
                             Confirmation</a>

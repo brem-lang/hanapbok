@@ -12,6 +12,6 @@
     </svg>
 
     <span class="fi-btn-label">
-        Sign in with Google
+        Log in with Google
     </span>
 </a>

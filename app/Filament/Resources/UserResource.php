@@ -82,11 +82,25 @@ class UserResource extends Resource
                             ->columnSpanFull()
                             ->hint('Please avoid to upload blurry images.')
                             ->label('Attachments')
+                            ->multiple()
                             ->openable()
-                            ->maxSize(1024)
+                            ->maxSize(10000)
                             ->required()
                             ->disk('public_uploads_id')
-                            ->directory('/'),
+                            ->directory('/')
+                            ->acceptedFileTypes([
+                                // Images
+                                'image/jpeg',
+                                'image/png',
+                                'image/gif',
+                                'image/webp',
+                                // Documents
+                                'application/pdf',
+                                'application/msword', // for .doc files
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // for .docx files
+                                'application/vnd.ms-excel', // for .xls files
+                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // for .xlsx files
+                            ]),
                     ])
                     ->columns(2),
             ]);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PrintController;
 use App\Http\Controllers\SocialiteController;
 use App\Livewire\Booking;
 use App\Livewire\GuestBook;
@@ -55,4 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('view-booking/{id}', ViewBooking::class)->name('view-booking');
 
     Route::get('lost-items', ReportLostItems::class)->name('lost-items');
+
+    Route::get('/revenue-summary/print', [PrintController::class, 'printRevenueReport'])
+        ->name('revenue.print');
 });

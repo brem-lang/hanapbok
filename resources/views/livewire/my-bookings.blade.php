@@ -12,7 +12,7 @@
                 <a href="{{ route('index') }}" class="nav-item nav-link">Home</a>
                 <a href="{{ route('guest-booking') }}" class="nav-item nav-link">Book Now</a>
                 <a href="{{ route('my-bookings') }}" class="nav-item nav-link active">My Bookings</a>
-                <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost Items</a>
+                <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost and Found Items</a>
 
                 <a class="nav-item nav-link position-relative">
                     <i class="fa fa-bell fs-5"></i>
@@ -103,7 +103,29 @@
                             <td>{{ $item->is_partial ? 'Partial Payment' : 'Full Payment' }} -
                                 {{ $item->payment_type == 'gcash' ? 'GCash' : 'Walk In' }}
                             </td>
-                            <td>{{ ucfirst($item->status) }}</td>
+                            <td>
+                                @switch($item->status)
+                                    {{-- <-- Change 'status' to your field name --}}
+                                    @case('pending')
+                                        <span>Pending</span>
+                                    @break
+
+                                    @case('confirmed')
+                                        <span>Confirm</span>
+                                    @break
+
+                                    @case('cancelled')
+                                        <span>Cancel</span>
+                                    @break
+
+                                    @case('moved')
+                                        <span>Move</span>
+                                    @break
+
+                                    @default
+                                        <span>Unknown</span>
+                                @endswitch
+                            </td>
                             <td>{{ $item->amount_to_pay }}</td>
                             <td class="text-end">
                                 <a href="{{ route('view-booking', $item->id) }}"

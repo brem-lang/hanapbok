@@ -33,45 +33,45 @@ class ViewBookings extends Page
         ]);
     }
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Action::make('edit-status')
-                ->icon('heroicon-o-pencil')
-                ->label('Edit Booking')
-                ->requiresConfirmation()
-                ->action(function ($data) {
+    // protected function getHeaderActions(): array
+    // {
+    //     return [
+    //         Action::make('edit-status')
+    //             ->icon('heroicon-o-pencil')
+    //             ->label('Edit Booking')
+    //             ->requiresConfirmation()
+    //             ->action(function ($data) {
 
-                    $this->record->status = $data['status'];
+    //                 $this->record->status = $data['status'];
 
-                    $this->record->is_partial = $data['is_partial'];
+    //                 $this->record->is_partial = $data['is_partial'];
 
-                    $this->record->save();
+    //                 $this->record->save();
 
-                    Notification::make()
-                        ->success()
-                        ->title('Booking Updated')
-                        ->icon('heroicon-o-check-circle')
-                        ->send();
+    //                 Notification::make()
+    //                     ->success()
+    //                     ->title('Booking Updated')
+    //                     ->icon('heroicon-o-check-circle')
+    //                     ->send();
 
-                    redirect(BookingResource::getUrl('view', ['record' => $this->record->id]));
-                })
-                ->form([
-                    Select::make('status')
-                        ->label('Status')
-                        ->options([
-                            'pending' => 'Pending',
-                            'confirmed' => 'Confirmed',
-                            'cancelled' => 'Cancelled',
-                            'moved' => 'Moved',
-                        ])
-                        ->default('pending')
-                        ->required(),
-                    Toggle::make('is_partial')
-                        ->label('Partial Payment'),
-                ]),
-        ];
-    }
+    //                 redirect(BookingResource::getUrl('view', ['record' => $this->record->id]));
+    //             })
+    //             ->form([
+    //                 Select::make('status')
+    //                     ->label('Status')
+    //                     ->options([
+    //                         'pending' => 'Pending',
+    //                         'confirmed' => 'Confirmed',
+    //                         'cancelled' => 'Cancelled',
+    //                         'moved' => 'Moved',
+    //                     ])
+    //                     ->default('pending')
+    //                     ->required(),
+    //                 Toggle::make('is_partial')
+    //                     ->label('Partial Payment'),
+    //             ]),
+    //     ];
+    // }
 
     public function form(Form $form): Form
     {
@@ -79,9 +79,11 @@ class ViewBookings extends Page
             ->schema([
                 TextInput::make('amount_paid')
                     ->numeric()
-                    ->required(),
+                    ->required()
+                    ->hidden($this->record->status == 'confirmed'),
                 Toggle::make('is_partial')
-                    ->label('Partial Payment'),
+                    ->label('Partial Payment')
+                    ->hidden($this->record->status == 'confirmed'),
                 FileUpload::make('proof_of_payment')
                     ->dehydrated(false)
                     ->openable()
@@ -113,7 +115,15 @@ class ViewBookings extends Page
                         'cancelled' => 'danger',
                         'moved' => 'warning',
                     })
-                    ->formatStateUsing(fn (string $state): string => __(ucfirst($state))),
+                    ->formatStateUsing(function (string $state): string {
+                        return match ($state) {
+                            'pending' => 'Pending',
+                            'confirmed' => 'Confirm',
+                            'cancelled' => 'Cancel',
+                            'moved' => 'Move',
+                            default => 'Unknown',
+                        };
+                    }),
                 TextEntry::make('date')->dateTime('F j, Y')->label('Date From'),
                 TextEntry::make('date_to')->dateTime('F j, Y')->label('Date To'),
                 TextEntry::make('amount_to_pay')->label('Amount')->prefix('₱ '),

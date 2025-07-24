@@ -14,7 +14,7 @@
 
                 @auth
                     <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
-                    <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost Items</a>
+                    <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost and Found Items</a>
 
                     <a class="nav-item nav-link position-relative">
                         <i class="fa fa-bell fs-5"></i>
@@ -34,7 +34,7 @@
                 <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="login">Login</a>
             @endguest
             {{-- <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
-                <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost Items</a>
+                <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost and Found Items</a>
 
                 <a class="nav-item nav-link position-relative">
                     <i class="fa fa-bell fs-5"></i>

@@ -61,7 +61,7 @@ class ItemsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Rooms and Cottages')
+            ->heading('Accomodation')
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
@@ -83,7 +83,7 @@ class ItemsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label('New Accomodation'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

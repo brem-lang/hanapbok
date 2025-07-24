@@ -61,7 +61,15 @@ class BookingResource extends Resource
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->formatStateUsing(fn ($state) => ucfirst($state))
+                    ->formatStateUsing(function (string $state): string {
+                        return match ($state) {
+                            'pending' => 'Pending',
+                            'confirmed' => 'Confirm',
+                            'cancelled' => 'Cancel',
+                            'moved' => 'Move',
+                            default => 'Unknown',
+                        };
+                    })
                     ->color(
                         fn ($state) => match ($state) {
                             'pending' => 'warning',

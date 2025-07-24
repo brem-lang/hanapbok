@@ -12,7 +12,7 @@
                 <a href="{{ route('index') }}" class="nav-item nav-link">Home</a>
                 <a href="{{ route('guest-booking') }}" class="nav-item nav-link">Book Now</a>
                 <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
-                <a href="{{ route('lost-items') }}" class="nav-item nav-link active">Lost Items</a>
+                <a href="{{ route('lost-items') }}" class="nav-item nav-link active">Lost and Found Items</a>
 
                 <a class="nav-item nav-link position-relative">
                     <i class="fa fa-bell fs-5"></i>
@@ -180,8 +180,8 @@
                                 {{-- <button class="btn btn-outline-light w-100 py-3"
                                     wire:click.prevent='report'>Submit</button> --}}
 
-                                <button type="button" class="btn btn-outline-light w-100 py-3"
-                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                <button type="button" class="btn btn-dark w-100 py-3" data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdrop">
                                     Submit
                                 </button>
 

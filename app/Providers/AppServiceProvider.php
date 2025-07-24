@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Filament\Facades\Filament;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse as ContractsLoginResponse;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
@@ -36,6 +37,26 @@ class AppServiceProvider extends ServiceProvider
             PanelsRenderHook::USER_MENU_BEFORE,
             fn (): string => ucfirst(auth()->user()->role),
         );
+
+        Filament::serving(function () {
+            Filament::registerRenderHook(
+                'panels::auth.login.form.after',
+                fn (): string => <<<'HTML'
+                    <script>
+                        // Find the button with type="submit" and change its text content
+                        const button = document.querySelector('button[type="submit"]');
+                        if (button) {
+                            button.textContent = 'Login';
+                        }
+
+                         const heading = document.querySelector('h1.fi-simple-header-heading')
+                        if (heading) {
+                            heading.textContent = 'Login';
+                        }
+                    </script>
+                HTML,
+            );
+        });
 
         Livewire::component('validate-page', \App\Livewire\ValidationPage::class);
         Livewire::component('book-resort', \App\Livewire\BookResort::class);

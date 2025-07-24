@@ -47,6 +47,7 @@ class EntranceFees extends Component implements HasForms, HasTable
             ->filters([
                 //
             ])
+            ->heading('Entrance')
             ->headerActions([
                 Action::make('create')
                     ->label('New Entrance')

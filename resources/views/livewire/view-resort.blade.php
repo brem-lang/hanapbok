@@ -12,7 +12,7 @@
                 <a href="{{ route('index') }}" class="nav-item nav-link">Home</a>
                 <a class="nav-item nav-link active">Book Now</a>
                 <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
-                <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost Items</a>
+                <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost and Found Items</a>
 
                 <a class="nav-item nav-link position-relative">
                     <i class="fa fa-bell fs-5"></i>
@@ -267,7 +267,7 @@
 
                             <div class="mt-4">
                                 <div>
-                                    <div class="row g-3 mb-3" wire:key="item-{{ $index }}">
+                                    {{-- <div class="row g-3 mb-3" wire:key="item-{{ $index }}">
                                         <div class='col-md-6'>
                                             <div class="form-floating">
                                                 <input type="date" class="form-control" wire:model="date" required
@@ -286,6 +286,33 @@
                                             </div>
                                             @error('date_to')
                                                 <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div> --}}
+                                    <div class="row g-3 mb-3">
+                                        <div class='col-md-6'>
+                                            <div class="form-floating">
+                                                {{-- Use wire:model.live to update the component immediately when a date is selected --}}
+                                                <input type="date" class="form-control" wire:model.live="date"
+                                                    required min="{{ now()->toDateString() }}">
+                                                <label>Date From</label>
+                                            </div>
+                                            @error('date')
+                                                <span class="text-danger small">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class='col-md-6'>
+                                            <div class="form-floating">
+                                                {{-- This input is now dynamic --}}
+                                                <input type="date" class="form-control" wire:model.live="date_to"
+                                                    required {{-- Disable this input if 'date_from' has not been selected yet --}}
+                                                    @if (!$date) disabled @endif
+                                                    {{-- The minimum selectable date is now dynamically set to the day AFTER 'date_from' --}}
+                                                    min="{{ $date ? \Carbon\Carbon::parse($date)->addDay()->toDateString() : now()->toDateString() }}">
+                                                <label>Date To</label>
+                                            </div>
+                                            @error('date_to')
+                                                <span class="text-danger small">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>

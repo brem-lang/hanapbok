@@ -9,7 +9,7 @@
     </div>
     @livewire(\App\Livewire\LoasAndFoundOverview::class)
 
-    @livewire(\App\Livewire\DashboardChart::class)
+    @livewire(\App\Livewire\LostandFoundChart::class)
 
 </x-filament-panels::page>
 <script>

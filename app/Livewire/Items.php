@@ -53,9 +53,10 @@ class Items extends Component implements HasForms, HasTable
             ->filters([
                 //
             ])
+            ->heading('Accomodations')
             ->headerActions([
                 Action::make('create')
-                    ->label('New Rooms and Cottages')
+                    ->label('New Accomodation')
                     ->form([
                         TextInput::make('name')
                             ->required()
