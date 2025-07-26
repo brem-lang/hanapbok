@@ -23,7 +23,7 @@
                 <x-slot name="trigger">
                     <x-filament::button icon="heroicon-m-chevron-down" icon-position="after">
                         {{-- Dynamically show the current filter --}}
-                        {{ ucfirst($this->filter) }}
+                        {{ ($this->filter == 'yearly' ? 'Annually' : $this->filter == 'monthly') ? 'Monthly' : 'Daily' }}
                     </x-filament::button>
                 </x-slot>
 
