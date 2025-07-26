@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\Booking;
 use Carbon\Carbon;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 
@@ -35,51 +36,77 @@ class RevenueSummary extends Page
     #[Computed()]
     public function chartData(): array
     {
-        $query = Booking::query()
-            ->select(
-                DB::raw('SUM(amount_paid) as revenue')
-            )
-            ->where('status', 'confirmed')
-            ->where('resort_id', auth()->user()->resort_id);
+        $datasets = [];
+        $labels = [];
+        $user = Auth::user();
+
+        $query = Booking::query()->where('status', 'confirmed')->where('resort_id', $user->AdminResort?->id);
 
         switch ($this->filter) {
             case 'daily':
-                $data = $query
-                    ->addSelect(DB::raw('DATE(created_at) as period'))
-                    ->where('created_at', '>=', now()->subDays(30))
-                    ->groupBy('period')
-                    ->orderBy('period', 'asc')
-                    ->get();
+                $startDate = now()->subDays(30)->startOfDay();
+                $endDate = now()->endOfDay();
 
-                $labels = $data->pluck('period')->map(fn ($date) => Carbon::parse($date)->format('M d'));
+                $dailyData = (clone $query)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as total_bookings'))
+                    ->groupBy(DB::raw('DATE(created_at)'))
+                    ->orderBy('date', 'asc')
+                    ->pluck('total_bookings', 'date');
+
+                $bookingsByDay = [];
+                for ($i = 0; $i < 30; $i++) {
+                    $date = now()->subDays(4 - $i)->format('Y-m-d');
+                    $labels[] = Carbon::parse($date)->format('M d');
+                    $bookingsByDay[] = $dailyData->get($date, 0);
+                }
+
+                $datasets = [['label' => 'Daily Bookings', 'data' => $bookingsByDay]];
                 break;
 
             case 'yearly':
-                $data = $query
-                    ->addSelect(DB::raw('YEAR(created_at) as period'))
-                    ->groupBy('period')
-                    ->orderBy('period', 'asc')
-                    ->get();
+                $startYear = 2021;
+                $endYear = now()->year;
+                $labels = range($startYear, $endYear);
 
-                $labels = $data->pluck('period');
+                $yearlyData = (clone $query)
+                    ->whereBetween(DB::raw('YEAR(created_at)'), [$startYear, $endYear])
+                    ->select(DB::raw('YEAR(created_at) as year'), DB::raw('COUNT(*) as total_bookings'))
+                    ->groupBy(DB::raw('YEAR(created_at)'))
+                    ->orderBy('year', 'asc')
+                    ->pluck('total_bookings', 'year');
+
+                $bookingsByYear = [];
+                foreach ($labels as $year) {
+                    $bookingsByYear[] = $yearlyData->get($year, 0);
+                }
+
+                $datasets = [['label' => 'Yearly Bookings', 'data' => $bookingsByYear]];
                 break;
 
             case 'monthly':
             default:
-                $data = $query
-                    ->addSelect(DB::raw('YEAR(created_at) as year'), DB::raw('MONTHNAME(created_at) as month_name'), DB::raw('MONTH(created_at) as month_num'))
-                    ->whereYear('created_at', now()->year)
-                    ->groupBy('year', 'month_name', 'month_num')
-                    ->orderBy('month_num', 'asc')
-                    ->get();
+                $labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-                $labels = $data->pluck('month_name');
+                $monthlyData = (clone $query)
+                    ->whereYear('created_at', now()->year)
+                    ->select(DB::raw('MONTH(created_at) as month'), DB::raw('COUNT(*) as total_bookings'))
+                    ->groupBy(DB::raw('MONTH(created_at)'))
+                    ->orderBy('month', 'asc')
+                    ->pluck('total_bookings', 'month');
+
+                $bookingsByMonth = array_fill(1, 12, 0);
+                foreach ($monthlyData as $month => $bookings) {
+                    $bookingsByMonth[$month] = $bookings;
+                }
+
+                $datasets = [['label' => 'Monthly Bookings', 'data' => array_values($bookingsByMonth)]];
                 break;
         }
 
         return [
+            'datasets' => $datasets,
             'labels' => $labels,
-            'revenue' => $data->pluck('revenue')->map(fn ($val) => (float) $val),
         ];
     }
 

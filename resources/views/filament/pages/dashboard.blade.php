@@ -19,17 +19,30 @@
     {{-- Filters and Print Button --}}
     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div class="flex items-center gap-x-2">
-            <x-filament::button wire:click="setFilter('daily')" :color="$this->filter === 'daily' ? 'primary' : 'gray'">
-                Daily
-            </x-filament::button>
+            <x-filament::dropdown>
+                <x-slot name="trigger">
+                    <x-filament::button icon="heroicon-m-chevron-down" icon-position="after">
+                        {{-- Dynamically show the current filter --}}
+                        {{ ucfirst($this->filter) }}
+                    </x-filament::button>
+                </x-slot>
 
-            <x-filament::button wire:click="setFilter('monthly')" :color="$this->filter === 'monthly' ? 'primary' : 'gray'">
-                Monthly
-            </x-filament::button>
+                <x-filament::dropdown.list>
+                    <x-filament::dropdown.list.item wire:click="setFilter('daily')" :icon="$this->filter === 'daily' ? 'heroicon-m-check' : null" :color="$this->filter === 'daily' ? 'primary' : 'gray'">
+                        Daily
+                    </x-filament::dropdown.list.item>
 
-            <x-filament::button wire:click="setFilter('yearly')" :color="$this->filter === 'yearly' ? 'primary' : 'gray'">
-                Yearly
-            </x-filament::button>
+                    <x-filament::dropdown.list.item wire:click="setFilter('monthly')" :icon="$this->filter === 'monthly' ? 'heroicon-m-check' : null"
+                        :color="$this->filter === 'monthly' ? 'primary' : 'gray'">
+                        Monthly
+                    </x-filament::dropdown.list.item>
+
+                    <x-filament::dropdown.list.item wire:click="setFilter('yearly')" :icon="$this->filter === 'yearly' ? 'heroicon-m-check' : null"
+                        :color="$this->filter === 'yearly' ? 'primary' : 'gray'">
+                        Yearly
+                    </x-filament::dropdown.list.item>
+                </x-filament::dropdown.list>
+            </x-filament::dropdown>
         </div>
         {{-- <div>
             <a href="{{ route('bookings.print', ['filter' => $this->filter]) }}" target="_blank"

@@ -11,17 +11,30 @@
     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
         {{-- This container now uses Filament's Button components --}}
         <div class="flex items-center gap-x-2">
-            <x-filament::button wire:click="setFilter('daily')" :color="$this->filter === 'daily' ? 'primary' : 'gray'">
-                Daily
-            </x-filament::button>
+            <x-filament::dropdown>
+                <x-slot name="trigger">
+                    <x-filament::button icon="heroicon-m-chevron-down" icon-position="after">
+                        {{-- Dynamically show the current filter --}}
+                        {{ ucfirst($this->filter) }}
+                    </x-filament::button>
+                </x-slot>
 
-            <x-filament::button wire:click="setFilter('monthly')" :color="$this->filter === 'monthly' ? 'primary' : 'gray'">
-                Monthly
-            </x-filament::button>
+                <x-filament::dropdown.list>
+                    <x-filament::dropdown.list.item wire:click="setFilter('daily')" :icon="$this->filter === 'daily' ? 'heroicon-m-check' : null" :color="$this->filter === 'daily' ? 'primary' : 'gray'">
+                        Daily
+                    </x-filament::dropdown.list.item>
 
-            <x-filament::button wire:click="setFilter('yearly')" :color="$this->filter === 'yearly' ? 'primary' : 'gray'">
-                Yearly
-            </x-filament::button>
+                    <x-filament::dropdown.list.item wire:click="setFilter('monthly')" :icon="$this->filter === 'monthly' ? 'heroicon-m-check' : null"
+                        :color="$this->filter === 'monthly' ? 'primary' : 'gray'">
+                        Monthly
+                    </x-filament::dropdown.list.item>
+
+                    <x-filament::dropdown.list.item wire:click="setFilter('yearly')" :icon="$this->filter === 'yearly' ? 'heroicon-m-check' : null"
+                        :color="$this->filter === 'yearly' ? 'primary' : 'gray'">
+                        Yearly
+                    </x-filament::dropdown.list.item>
+                </x-filament::dropdown.list>
+            </x-filament::dropdown>
         </div>
         <div>
             {{-- Note: You will need to create the 'revenue.print' route and a PrintController --}}
@@ -38,19 +51,17 @@
         x-data="{
             chart: null,
             labels: @js($chartData['labels']),
-            revenue: @js($chartData['revenue']),
+            revenue: @js($chartData['datasets'][0]['data']), // Correctly access the data array
             init() {
-                // Destroy previous chart instance if it exists
                 if (this.chart) {
                     this.chart.destroy();
                 }
-        
                 this.chart = new Chart(this.$refs.canvas, {
                     type: 'bar',
                     data: {
                         labels: this.labels,
                         datasets: [{
-                            label: 'Total Revenue',
+                            label: 'Total Bookings',
                             data: this.revenue,
                             backgroundColor: 'rgba(79, 70, 229, 0.8)',
                             borderColor: 'rgba(79, 70, 229, 1)',
@@ -62,7 +73,10 @@
                         maintainAspectRatio: false,
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1 // Ensure y-axis increments by whole numbers
+                                }
                             }
                         }
                     }

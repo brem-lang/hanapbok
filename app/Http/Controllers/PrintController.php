@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class PrintController extends Controller
 {
@@ -15,44 +14,47 @@ class PrintController extends Controller
         $filter = $request->input('filter', 'monthly');
 
         // Get the name of the logged-in user (assuming they are the manager)
-        $managerName = Auth::user()->name;
+        $user = Auth::user();
 
         // Start the query based on your 'bookings' table
         $query = Booking::query()
-            ->select(
-                DB::raw('SUM(amount_paid) as revenue')
-            )
+            ->where('resort_id', $user->AdminResort?->id)
             ->where('status', 'confirmed');
 
         // Apply the correct grouping and date range based on the filter
         switch ($filter) {
             case 'daily':
-                $title = 'Daily Revenue Report (Last 30 Days)';
+                $startDate = now()->subDays(30)->startOfDay();
+                $endDate = now()->endOfDay();
+                $title = 'Daily Revenue Report (Last 30 Days) '.$startDate->format('F j,').' to '.$endDate->format('F j, Y');
+
                 $data = $query
-                    ->addSelect(DB::raw('DATE(created_at) as period'))
-                    ->where('created_at', '>=', now()->subDays(30))
-                    ->groupBy('period')
-                    ->orderBy('period', 'asc')
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->orderBy('created_at', 'desc')
                     ->get();
                 break;
 
             case 'yearly':
-                $title = 'Yearly Revenue Report';
+                $startDate = now()->startOfYear();
+                $endDate = now()->endOfYear();
+                $title = 'Yearly Revenue Report for '.now()->year;
+
                 $data = $query
-                    ->addSelect(DB::raw('YEAR(created_at) as period'))
-                    ->groupBy('period')
-                    ->orderBy('period', 'asc')
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->orderBy('created_at', 'desc')
                     ->get();
+
                 break;
 
             case 'monthly':
             default:
-                $title = 'Monthly Revenue Report for '.now()->year;
+                $startDate = now()->subDays(30)->startOfDay();
+                $endDate = now()->endOfDay();
+                $title = 'Monthly Revenue Report for '.$startDate->format('F Y').' to '.$endDate->format('F Y');
+
                 $data = $query
-                    ->addSelect(DB::raw('MONTHNAME(created_at) as period'))
-                    ->whereYear('created_at', now()->year)
-                    ->groupBy('period', DB::raw('MONTH(created_at)'))
-                    ->orderBy(DB::raw('MONTH(created_at)'), 'asc')
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->orderBy('created_at', 'desc')
                     ->get();
                 break;
         }
@@ -61,7 +63,7 @@ class PrintController extends Controller
         return view('print.revenue-report', [
             'data' => $data,
             'title' => $title,
-            'managerName' => $managerName,
+            'managerName' => $user->name,
         ]);
     }
 }

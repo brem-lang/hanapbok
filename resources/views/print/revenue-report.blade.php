@@ -29,8 +29,7 @@
 
         <div class="mb-6 flex justify-between text-sm text-gray-500">
             <div>
-                <strong>Date Generated:</strong> {{ now()->format('F j, Y') }}
-                <strong>Time Generated:</strong> {{ now()->format('F j, Y') }}
+                <strong>Date Generated:</strong> {{ now()->format('F j, Y H:i') }}
             </div>
             <div>
                 <strong>Resort Manager:</strong> {{ $managerName }}
@@ -56,11 +55,11 @@
                         <tr>
                             <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                                 <p class="text-gray-900 whitespace-no-wrap">
-                                    {{ Carbon\Carbon::parse($row->period)->format('F j, Y') }}</p>
+                                    {{ Carbon\Carbon::parse($row->created_at)->format('F j, Y') }}</p>
                             </td>
                             <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm text-right">
                                 <p class="text-gray-900 whitespace-no-wrap font-semibold">₱
-                                    {{ number_format($row->revenue, 2) }}</p>
+                                    {{ number_format($row->amount_paid, 2) }}</p>
                             </td>
                         </tr>
                     @empty
@@ -72,7 +71,8 @@
                     @endforelse
                     <tr class="bg-gray-50 font-bold">
                         <td class="px-5 py-3 text-right text-gray-700">Total:</td>
-                        <td class="px-5 py-3 text-right text-gray-800">₱ {{ number_format($data->sum('revenue'), 2) }}
+                        <td class="px-5 py-3 text-right text-gray-800">₱
+                            {{ number_format($data->sum('amount_paid'), 2) }}
                         </td>
                     </tr>
                 </tbody>
