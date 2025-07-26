@@ -31,7 +31,7 @@
 
                     <x-filament::dropdown.list.item wire:click="setFilter('yearly')" :icon="$this->filter === 'yearly' ? 'heroicon-m-check' : null"
                         :color="$this->filter === 'yearly' ? 'primary' : 'gray'">
-                        Yearly
+                        Annually
                     </x-filament::dropdown.list.item>
                 </x-filament::dropdown.list>
             </x-filament::dropdown>
