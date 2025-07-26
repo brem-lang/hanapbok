@@ -37,7 +37,7 @@ class PrintController extends Controller
             case 'yearly':
                 $startDate = now()->startOfYear();
                 $endDate = now()->endOfYear();
-                $title = 'Yearly Revenue Report for '.now()->year;
+                $title = 'Anually Revenue Report for '.now()->year;
 
                 $data = $query
                     ->whereBetween('created_at', [$startDate, $endDate])
