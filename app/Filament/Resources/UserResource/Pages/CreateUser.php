@@ -18,6 +18,7 @@ class CreateUser extends CreateRecord
     protected function handleRecordCreation(array $data): Model
     {
         $data['role'] = 'resorts_admin';
+        $data['password'] = bcrypt('password');
 
         $created = $this->getModel()::create($data);
 

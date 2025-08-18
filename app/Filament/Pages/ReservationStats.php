@@ -12,6 +12,8 @@ class ReservationStats extends Page
 
     protected static ?string $navigationGroup = 'Reports';
 
+    protected static ?int $navigationSort = 8;
+
     protected static ?string $title = 'Reservation Status';
 
     public static function canAccess(): bool

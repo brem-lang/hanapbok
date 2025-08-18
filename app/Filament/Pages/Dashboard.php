@@ -19,6 +19,8 @@ class Dashboard extends Page implements HasForms
 
     public $record;
 
+    protected static ?int $navigationSort = 1;
+
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.dashboard';

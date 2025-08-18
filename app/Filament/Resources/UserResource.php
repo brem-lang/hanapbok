@@ -58,7 +58,7 @@ class UserResource extends Resource
                             ->minLength(8)
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                             ->dehydrated(fn ($state) => filled($state))
-                            ->required(fn (string $context): bool => $context === 'create'),
+                            ->hidden(fn (string $context): bool => $context === 'create'),
                         // Select::make('role')
                         //     ->label('Role')
                         //     ->options([

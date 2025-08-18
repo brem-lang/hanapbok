@@ -20,7 +20,7 @@
     </style>
 </head>
 
-<body class="bg-white" onload="window.print()">
+<body class="bg-white">
     <div class="container mx-auto p-8">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Revenue Report</h1>
@@ -55,11 +55,11 @@
                         <tr>
                             <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                                 <p class="text-gray-900 whitespace-no-wrap">
-                                    {{ Carbon\Carbon::parse($row->created_at)->format('F j, Y') }}</p>
+                                    {{ $row->period }}</p>
                             </td>
                             <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm text-right">
                                 <p class="text-gray-900 whitespace-no-wrap font-semibold">₱
-                                    {{ number_format($row->amount_paid, 2) }}</p>
+                                    {{ number_format($row->total, 2) }}</p>
                             </td>
                         </tr>
                     @empty
@@ -72,7 +72,7 @@
                     <tr class="bg-gray-50 font-bold">
                         <td class="px-5 py-3 text-right text-gray-700">Total:</td>
                         <td class="px-5 py-3 text-right text-gray-800">₱
-                            {{ number_format($data->sum('amount_paid'), 2) }}
+                            {{ number_format($overallTotal, 2) }}
                         </td>
                     </tr>
                 </tbody>

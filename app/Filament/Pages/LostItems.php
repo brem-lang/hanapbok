@@ -27,6 +27,8 @@ class LostItems extends Page implements HasTable
 
     protected static ?string $navigationGroup = 'Lost Items';
 
+    protected static ?int $navigationSort = 5;
+
     public static function canAccess(): bool
     {
         return auth()->user()->isResortsAdmin();

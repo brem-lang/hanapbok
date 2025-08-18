@@ -18,16 +18,18 @@ class Profile extends Page implements HasForms
 
     protected static string $view = 'filament.pages.profile';
 
+    protected static ?string $navigationGroup = 'Settings';
+
     protected static ?int $navigationSort = 10;
 
     public ?array $data = [];
 
     public $user;
 
-    public static function canAccess(): bool
-    {
-        return auth()->user()->isGuest() && auth()->user()->is_validated;
-    }
+    // public static function canAccess(): bool
+    // {
+    //     return auth()->user()->isGuest() && auth()->user()->is_validated;
+    // }
 
     public function mount()
     {
@@ -53,46 +55,46 @@ class Profile extends Page implements HasForms
                     ->schema([
                         TextInput::make('name')
                             ->label('Name')
-                            ->required()
+                            ->readOnly()
+                            ->dehydrated(false)
                             ->maxLength(255),
                         TextInput::make('email')
                             ->label('Email')
-                            ->required()
-                            ->unique(ignoreRecord: true)
+                            ->readOnly()
+                            ->dehydrated(false)
                             ->maxLength(255),
                         TextInput::make('password')
                             ->password()
                             ->minLength(8)
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                            ->dehydrated(fn ($state) => filled($state))
-                            ->required(fn (string $context): bool => $context === 'create'),
-                        Select::make('role')
-                            ->label('Role')
-                            ->options([
-                                'admin' => 'Admin',
-                                'guest' => 'Guest',
-                            ])
-                            ->required(),
-                        FileUpload::make('front_id')
-                            ->dehydrated(false)
-                            ->hint('Please avoid to upload blurry images.')
-                            ->openable()
-                            ->label('Front ID')
-                            ->maxSize(1024)
-                            ->disk('public_uploads_id')
-                            ->directory('/')
-                            ->image()
-                            ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
-                        FileUpload::make('back_id')
-                            ->dehydrated(false)
-                            ->hint('Please avoid to upload blurry images.')
-                            ->label('Back ID')
-                            ->openable()
-                            ->maxSize(1024)
-                            ->disk('public_uploads_id')
-                            ->directory('/')
-                            ->image()
-                            ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
+                            ->dehydrated(fn ($state) => filled($state)),
+                        // Select::make('role')
+                        //     ->label('Role')
+                        //     ->options([
+                        //         'admin' => 'Admin',
+                        //         'guest' => 'Guest',
+                        //     ])
+                        //     ->required(),
+                        // FileUpload::make('front_id')
+                        //     ->dehydrated(false)
+                        //     ->hint('Please avoid to upload blurry images.')
+                        //     ->openable()
+                        //     ->label('Front ID')
+                        //     ->maxSize(1024)
+                        //     ->disk('public_uploads_id')
+                        //     ->directory('/')
+                        //     ->image()
+                        //     ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
+                        // FileUpload::make('back_id')
+                        //     ->dehydrated(false)
+                        //     ->hint('Please avoid to upload blurry images.')
+                        //     ->label('Back ID')
+                        //     ->openable()
+                        //     ->maxSize(1024)
+                        //     ->disk('public_uploads_id')
+                        //     ->directory('/')
+                        //     ->image()
+                        //     ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
                     ])
                     ->columns(2),
             ])

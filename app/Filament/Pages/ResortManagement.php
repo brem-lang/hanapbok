@@ -25,6 +25,8 @@ class ResortManagement extends Page implements HasForms
 
     protected static ?string $navigationGroup = 'Resorts Management';
 
+    protected static ?int $navigationSort = 2;
+
     public ?array $data = [];
 
     public $record;

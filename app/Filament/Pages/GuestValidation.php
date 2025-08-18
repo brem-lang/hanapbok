@@ -16,6 +16,8 @@ class GuestValidation extends Page implements HasTable
 {
     use InteractsWithTable;
 
+    protected static ?int $navigationSort = 4;
+
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.guest-validation';
