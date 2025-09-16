@@ -10,6 +10,10 @@ use Livewire\Component;
 
 class GuestBook extends Component implements HasForms
 {
+    public $notifications;
+
+    public $unreadNotificationsCount;
+
     use InteractsWithForms;
 
     public $search = '';
@@ -19,6 +23,34 @@ class GuestBook extends Component implements HasForms
     public function mount()
     {
         $this->resorts = Resort::where('is_active', true)->get();
+
+        if (Auth::check()) {
+            $this->loadNotifications();
+        }
+    }
+
+    public function markAllAsRead()
+    {
+        auth()->user()->unreadNotifications->markAsRead();
+
+        return redirect()->route('index');
+    }
+
+    public function clearAll()
+    {
+        auth()->user()->notifications()->delete();
+
+        return redirect()->route('index');
+    }
+
+    public function loadNotifications()
+    {
+        $this->notifications = auth()->user()
+            ->notifications()
+            ->take(50)
+            ->get();
+
+        $this->unreadNotificationsCount = auth()->user()->unreadNotifications->count();
     }
 
     public function render()

@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ open: false }">
     <!-- Navbar & Hero Start -->
     <div class="container-fluid position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
@@ -14,12 +14,14 @@
                 <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
                 <a href="{{ route('lost-items') }}" class="nav-item nav-link active">Lost and Found Items</a>
 
-                <a class="nav-item nav-link position-relative">
+                <a @click="open = true" class="nav-item nav-link position-relative">
                     <i class="fa fa-bell fs-5"></i>
-                    <span class="position-absolute translate-middle badge rounded-pill bg-danger">
-                        3
-                        <span class="visually-hidden">unread messages</span>
-                    </span>
+                    @if ($unreadNotificationsCount)
+                        <span class="position-absolute translate-middle badge rounded-pill bg-danger">
+                            {{ $unreadNotificationsCount }}
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                    @endif
                 </a>
             </div>
             <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a>
@@ -74,6 +76,77 @@
                     </ol>
                 </nav>
             </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay -->
+    <div x-show="open" x-transition.opacity @click="open = false"
+        class="position-fixed top-0 start-0 w-100 h-200 bg-opacity-50" x-cloak>
+    </div>
+
+    <!-- Drawer -->
+    <div x-show="open" x-transition:enter="transition transform duration-300"
+        x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition transform duration-300" x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="-translate-x-full"
+        class="position-fixed top-0 start-0 bg-white h-100 shadow-lg border-end rounded-end"
+        style="width: 340px; z-index: 1050" x-cloak>
+        <!-- Header -->
+        <div class="px-4 py-3 border-bottom bg-light">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Notifications</h5>
+                <button class="btn btn-sm btn-light" @click="open = false" aria-label="Close">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2 mt-3">
+                <button wire:click="markAllAsRead" class="btn btn-sm btn-outline-success" title="Mark all as read">
+                    <i class="fa fa-check me-1"></i> Read All
+                </button>
+
+                <button wire:click="clearAll" class="btn btn-sm btn-outline-danger" wire:click="clearAll"
+                    title="Clear all notifications">
+                    <i class="fa fa-trash me-1"></i> Clear All
+                </button>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="p-4 overflow-auto" style="max-height: calc(100vh - 65px);">
+            @forelse($notifications as $notification)
+                @php
+                    $url = $notification->data['actions'][0]['url'] ?? '';
+
+                    $parentUrl = dirname($url);
+                    $bookingId = basename($parentUrl);
+                @endphp
+
+                <a href="{{ route('view-booking', $bookingId) }}" class="text-decoration-none text-dark d-block">
+                    <div class="d-flex align-items-start mb-3 p-3 bg-light rounded shadow-sm notification-item"
+                        style="transition: background-color 0.2s;">
+                        <div class="me-3">
+                            <i class="fa fa-bell text-primary fs-4"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold text-dark">
+                                {{ $notification->data['title'] ?? 'Notification' }}
+                            </div>
+                            <div class="small text-muted">
+                                {{ $notification->created_at->diffForHumans() }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            @empty
+                <div class="text-center text-muted mt-4">
+                    <i class="fa fa-check-circle fa-2x mb-2"></i>
+                    <p>No new notifications.</p>
+                </div>
+            @endforelse
         </div>
     </div>
     <!-- Navbar & Hero End -->

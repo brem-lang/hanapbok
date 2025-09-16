@@ -10,9 +10,41 @@ class MyBookings extends Component
 {
     public $record;
 
+    public $notifications;
+
+    public $unreadNotificationsCount;
+
     public function mount()
     {
         $this->record = Booking::with('resort')->where('user_id', auth()->user()->id)->latest()->get();
+
+        if (Auth::check()) {
+            $this->loadNotifications();
+        }
+    }
+
+    public function markAllAsRead()
+    {
+        auth()->user()->unreadNotifications->markAsRead();
+
+        return redirect()->route('index');
+    }
+
+    public function clearAll()
+    {
+        auth()->user()->notifications()->delete();
+
+        return redirect()->route('index');
+    }
+
+    public function loadNotifications()
+    {
+        $this->notifications = auth()->user()
+            ->notifications()
+            ->take(50)
+            ->get();
+
+        $this->unreadNotificationsCount = auth()->user()->unreadNotifications->count();
     }
 
     public function render()
