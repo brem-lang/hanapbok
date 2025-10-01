@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\LostItem;
 use App\Models\Resort;
+use App\Models\User;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -101,6 +103,21 @@ class ReportLostItems extends Component
         ]);
 
         $this->dispatch('swal:modal');
+
+        $selectedResor = Resort::find($this->selectResort);
+
+        Notification::make()
+            ->success()
+            ->title('Report Submitted')
+            ->icon('heroicon-o-check-circle')
+            ->body(auth()->user()->name.' has submitted a report.')
+            // ->actions([
+            //     Action::make('view')
+            //         ->label('View')
+            //         ->url(fn () => BookingResource::getUrl('view', ['record' => $this->booking->id]))
+            //         ->markAsRead(),
+            // ])
+            ->sendToDatabase(User::where('id', $selectedResor->userAdmin->id)->get());
 
         return redirect('/lost-items');
     }

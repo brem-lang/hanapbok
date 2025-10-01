@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Mail\LostAndFoundMail;
 use App\Models\LostItem;
+use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
@@ -157,6 +158,12 @@ class LostItems extends Page implements HasTable
                             ->body('Status updated successfully.')
                             ->success()
                             ->send();
+
+                        Notification::make()
+                            ->success()
+                            ->title('Item Status Updated')
+                            ->icon('heroicon-o-check-circle')
+                            ->sendToDatabase(User::where('id', $record->user_id)->get());
                     }),
             ])
             ->bulkActions([

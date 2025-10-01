@@ -116,7 +116,7 @@
         </div>
 
         <!-- Body -->
-        <div class="p-4 overflow-auto" style="max-height: calc(100vh - 65px);">
+        {{-- <div class="p-4 overflow-auto" style="max-height: calc(100vh - 65px);">
             @forelse($notifications as $notification)
                 @php
                     $url = $notification->data['actions'][0]['url'] ?? '';
@@ -126,6 +126,38 @@
                 @endphp
 
                 <a href="{{ route('view-booking', $bookingId) }}" class="text-decoration-none text-dark d-block">
+                    <div class="d-flex align-items-start mb-3 p-3 bg-light rounded shadow-sm notification-item"
+                        style="transition: background-color 0.2s;">
+                        <div class="me-3">
+                            <i class="fa fa-bell text-primary fs-4"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold text-dark">
+                                {{ $notification->data['title'] ?? 'Notification' }}
+                            </div>
+                            <div class="small text-muted">
+                                {{ $notification->created_at->diffForHumans() }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            @empty
+                <div class="text-center text-muted mt-4">
+                    <i class="fa fa-check-circle fa-2x mb-2"></i>
+                    <p>No new notifications.</p>
+                </div>
+            @endforelse
+        </div> --}}
+        <div class="p-4 overflow-auto" style="max-height: calc(100vh - 65px);">
+            @forelse($notifications as $notification)
+                @php
+                    // $url = $notification->data['actions'][0]['url'] ?? '';
+
+                    // $parentUrl = dirname($url);
+                    // $bookingId = basename($parentUrl);
+                @endphp
+
+                <a class="text-decoration-none text-dark d-block">
                     <div class="d-flex align-items-start mb-3 p-3 bg-light rounded shadow-sm notification-item"
                         style="transition: background-color 0.2s;">
                         <div class="me-3">

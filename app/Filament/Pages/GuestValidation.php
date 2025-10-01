@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\User;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -59,6 +60,13 @@ class GuestValidation extends Page implements HasTable
                 EditAction::make()
                     ->label('Validate')
                     ->modalHeading('Validate')
+                    ->after(function ($record) {
+                        Notification::make()
+                            ->success()
+                            ->title('Validated Successfully')
+                            ->icon('heroicon-o-check-circle')
+                            ->sendToDatabase(User::where('id', $record->id)->get());
+                    })
                     ->requiresConfirmation()
                     ->form([
                         FileUpload::make('front_id')

@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Booking;
+use App\Models\User;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -21,7 +23,7 @@ class ViewBooking extends Component
 
     public function mount($id)
     {
-        $booking = Booking::with(['resort', 'bookingItems', 'bookingItems.item', 'bookingItems.entranceFee'])->find($id);
+        $booking = Booking::with(['resort.userAdmin', 'bookingItems', 'bookingItems.item', 'bookingItems.entranceFee'])->find($id);
 
         if (! $booking) {
             abort(404);
@@ -50,6 +52,19 @@ class ViewBooking extends Component
         ]);
 
         session()->flash('message', 'Payment confirmed. Your proof has been uploaded.');
+
+        Notification::make()
+            ->success()
+            ->title('Payment Sent')
+            ->icon('heroicon-o-check-circle')
+            ->body(auth()->user()->name.' has sent a payment.')
+            // ->actions([
+            //     Action::make('view')
+            //         ->label('View')
+            //         ->url(fn () => BookingResource::getUrl('view', ['record' => $this->booking->id]))
+            //         ->markAsRead(),
+            // ])
+            ->sendToDatabase(User::where('id', $this->record->resort->userAdmin->id)->get());
 
         // Optionally reset the property
         return redirect('view-booking/'.$this->record->id);

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\BookingResource\Pages;
 
 use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
+use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -152,6 +153,12 @@ class ViewBookings extends Page
             ->title('Booking Confirmed')
             ->icon('heroicon-o-check-circle')
             ->send();
+
+        Notification::make()
+            ->success()
+            ->title('Booking Confirmed')
+            ->icon('heroicon-o-check-circle')
+            ->sendToDatabase(User::where('id', $this->record->user_id)->get());
 
         redirect(BookingResource::getUrl('view', ['record' => $this->record->id]));
     }

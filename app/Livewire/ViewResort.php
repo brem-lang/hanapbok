@@ -7,11 +7,13 @@ use App\Models\BookingItem;
 use App\Models\EntranceFee;
 use App\Models\Item;
 use App\Models\Resort;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -45,7 +47,7 @@ class ViewResort extends Component implements HasForms
 
     public function mount($id)
     {
-        $this->record = Resort::with('items', 'entranceFees')->find($id);
+        $this->record = Resort::with('items', 'entranceFees', 'userAdmin')->find($id);
 
         $this->entranceFees = EntranceFee::where('resort_id', $this->record->id)->get();
 
@@ -242,6 +244,19 @@ class ViewResort extends Component implements HasForms
                 ]);
             }
         }
+
+        Notification::make()
+            ->success()
+            ->title('Booking Created')
+            ->icon('heroicon-o-check-circle')
+            ->body(auth()->user()->name.' has created a new booking.')
+            // ->actions([
+            //     Action::make('view')
+            //         ->label('View')
+            //         ->url(fn () => BookingResource::getUrl('view', ['record' => $this->booking->id]))
+            //         ->markAsRead(),
+            // ])
+            ->sendToDatabase(User::where('id', $this->record->userAdmin->id)->get());
 
         return redirect('/view-booking/'.$book->id);
     }
