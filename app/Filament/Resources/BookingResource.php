@@ -76,6 +76,7 @@ class BookingResource extends Resource
                             'confirmed' => 'success',
                             'cancelled' => 'danger',
                             'moved' => 'warning',
+                            'completed' => 'success',
                         }
                     )
                     ->searchable()
@@ -113,7 +114,7 @@ class BookingResource extends Resource
 
                 if ($auth->isResortsAdmin()) {
                     return $query->whereHas('resort', function ($query) use ($auth) {
-                        $query->where('user_id', $auth->id);
+                        $query->where('user_id', $auth->id)->where('status', '!=', 'completed');
                     })->latest();
                 }
 

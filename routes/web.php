@@ -7,6 +7,7 @@ use App\Livewire\GuestBook;
 use App\Livewire\GuestPage;
 use App\Livewire\MyBookings;
 use App\Livewire\ReportLostItems;
+use App\Livewire\Review;
 use App\Livewire\ValidationPage;
 use App\Livewire\ViewBooking;
 use App\Livewire\ViewResort;
@@ -48,6 +49,8 @@ Route::middleware('auth')->group(function () {
     // Route::get('/guest-booking', GuestBook::class)->name('guest-booking');
 
     Route::get('view-resort/{id}', ViewResort::class)->name('view-resort');
+
+    Route::get('review/{id}', Review::class)->name('review');
 
     Route::get('validate', ValidationPage::class)->name('validate');
 

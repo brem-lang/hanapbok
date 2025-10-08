@@ -44,6 +44,11 @@ class ReportLostItems extends Component
 
         if (Auth::check()) {
             $this->loadNotifications();
+
+            $review = auth()->user()->bookings()->where('is_review', true)->first();
+            if ($review) {
+                return redirect()->route('review', $review->resort_id);
+            }
         }
     }
 

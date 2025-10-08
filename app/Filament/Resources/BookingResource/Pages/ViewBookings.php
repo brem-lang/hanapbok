@@ -133,6 +133,7 @@ class ViewBookings extends Page
                 TextEntry::make('resort.name')->label('Resort'),
                 TextEntry::make('payment_type')->label('Payment Type')
                     ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                // TextEntry::make('bookingItems'),
             ])
             ->columns(3);
     }

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Booking;
 use App\Models\BookingItem;
 use App\Models\EntranceFee;
+use App\Models\GuestReview;
 use App\Models\Item;
 use App\Models\Resort;
 use App\Models\User;
@@ -45,13 +46,21 @@ class ViewResort extends Component implements HasForms
 
     public $activePage = 'view';
 
+    public $reviews;
+
     public function mount($id)
     {
         $this->record = Resort::with('items', 'entranceFees', 'userAdmin')->find($id);
 
         $this->entranceFees = EntranceFee::where('resort_id', $this->record->id)->get();
 
-        $this->resort = Item::where('resort_id', $this->record->id)->get();
+        $this->resort = Item::where('resort_id', $this->record->id)->where('is_occupied', 0)->get();
+
+        $this->reviews = GuestReview::where('resort_id', $this->record->id)
+            ->with('user')
+            ->latest()
+            ->take(10)
+            ->get();
     }
 
     public function addItem()
