@@ -27,4 +27,9 @@ class Resort extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

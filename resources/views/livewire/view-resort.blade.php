@@ -365,8 +365,11 @@
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-danger"
                                                             data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" wire:click.prevent='submit'
-                                                            class="btn btn-primary">Confirm</button>
+                                                        <button type="button" wire:click.prevent="submit"
+                                                            wire:loading.attr="disabled" class="btn btn-primary">
+                                                            <span wire:loading.remove>Confirm</span>
+                                                            <span wire:loading>Processing...</span>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

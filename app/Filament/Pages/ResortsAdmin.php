@@ -29,7 +29,7 @@ class ResortsAdmin extends Page implements HasTable
 
     public static function canAccess(): bool
     {
-        return auth()->user()->isAdmin();
+        return false;
     }
 
     public function mount()

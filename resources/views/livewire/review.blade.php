@@ -138,9 +138,10 @@
                                             wire:click.prevent='submit'>Book
                                             Now</button> --}}
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-outline-light w-100 py-3"
-                                    wire:click.prevent='submit'>
-                                    Submit
+                                <button type="button" wire:click.prevent="submit" wire:loading.attr="disabled"
+                                    class="btn btn-outline-light w-100 py-3">
+                                    <span wire:loading.remove>Submit</span>
+                                    <span wire:loading>Processing...</span>
                                 </button>
 
                                 <!-- Modal -->

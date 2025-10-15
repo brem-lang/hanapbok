@@ -68,12 +68,14 @@ class GuestValidation extends Page implements HasTable
                             ->sendToDatabase(User::where('id', $record->id)->get());
                     })
                     ->requiresConfirmation()
+                    ->modalWidth('2xl')
                     ->form([
                         FileUpload::make('front_id')
                             ->columnSpanFull()
+                            ->disabled()
                             ->hint('Please avoid to upload blurry images.')
                             ->openable()
-                            ->label('Valid ID')
+                            ->label('Front')
                             ->required()
                             ->maxSize(1024)
                             ->disk('public_uploads_id')
@@ -82,8 +84,9 @@ class GuestValidation extends Page implements HasTable
                             ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
                         FileUpload::make('back_id')
                             ->columnSpanFull()
+                            ->disabled()
                             ->hint('Please avoid to upload blurry images.')
-                            ->label('Attachments')
+                            ->label('Back')
                             ->multiple()
                             ->openable()
                             ->maxSize(10000)

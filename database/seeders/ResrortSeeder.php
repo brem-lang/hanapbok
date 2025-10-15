@@ -70,34 +70,34 @@ class ResrortSeeder extends Seeder
 
         ];
 
-        foreach ($resorts1 as $resort) {
-            Resort::create([
-                'name' => $resort,
-                'barangay' => 'Barangay Tagnanan',
-                'description' => $resort,
-            ]);
-        }
+        // foreach ($resorts1 as $resort) {
+        //     Resort::create([
+        //         'name' => $resort,
+        //         'barangay' => 'Barangay Tagnanan',
+        //         'description' => $resort,
+        //     ]);
+        // }
 
-        foreach ($resorts2 as $resort) {
-            Resort::create([
-                'name' => $resort,
-                'barangay' => 'Barangay Pindasan',
-                'description' => $resort,
-            ]);
-        }
+        // foreach ($resorts2 as $resort) {
+        //     Resort::create([
+        //         'name' => $resort,
+        //         'barangay' => 'Barangay Pindasan',
+        //         'description' => $resort,
+        //     ]);
+        // }
 
-        foreach ($resorts3 as $resort) {
-            Resort::create([
-                'name' => $resort,
-                'barangay' => 'Barangay Del Pilar',
-                'description' => $resort,
-            ]);
-        }
+        // foreach ($resorts3 as $resort) {
+        //     Resort::create([
+        //         'name' => $resort,
+        //         'barangay' => 'Barangay Del Pilar',
+        //         'description' => $resort,
+        //     ]);
+        // }
 
-        Resort::create([
-            'name' => 'Gacasan Beach Resort',
-            'barangay' => 'Barangay San Antonio',
-            'description' => ' Gacasan Beach Resort',
-        ]);
+        // Resort::create([
+        //     'name' => 'Gacasan Beach Resort',
+        //     'barangay' => 'Barangay San Antonio',
+        //     'description' => ' Gacasan Beach Resort',
+        // ]);
     }
 }

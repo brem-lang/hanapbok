@@ -23,7 +23,7 @@ class BookingResource extends Resource
 
     public static function canAccess(): bool
     {
-        return auth()->user()->isAdmin() || auth()->user()->isResortsAdmin();
+        return auth()->user()->isResortsAdmin();
     }
 
     public static function form(Form $form): Form

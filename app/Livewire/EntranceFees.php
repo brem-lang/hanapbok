@@ -84,7 +84,24 @@ class EntranceFees extends Component implements HasForms, HasTable
                     }),
             ])
             ->actions([
-                EditAction::make(),
+                EditAction::make()
+                    ->form([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        Select::make('type')
+                            ->required()
+                            ->options([
+                                'free' => 'Free',
+                                'day_tour' => 'Day Tour',
+                                'night_tour' => 'Night Tour',
+                            ]),
+                        TextInput::make('price')
+                            ->prefix('₱')
+                            ->required()
+                            ->numeric()
+                            ->maxLength(255),
+                    ]),
                 DeleteAction::make(),
             ])
             ->bulkActions([

@@ -7,6 +7,7 @@ use App\Filament\Resources\ResortResource\RelationManagers\EntranceFeesRelationM
 use App\Filament\Resources\ResortResource\RelationManagers\ItemsRelationManager;
 use App\Models\Resort;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -38,36 +39,76 @@ class ResortResource extends Resource
     {
         return $form
             ->schema([
-                Section::make()
+                Group::make()
                     ->schema([
-                        TextInput::make('name')
-                            ->label('Name')
-                            ->required()
-                            ->maxLength(255),
-                        Textarea::make('description')
-                            ->label('Description')
-                            ->required(),
-                        FileUpload::make('image')
-                            ->openable()
-                            ->label('Image')
-                            // ->required()
-                            ->maxSize(1024)
-                            ->disk('public_uploads_resorts')
-                            ->directory('/')
-                            ->image()
-                            ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
-                        Toggle::make('is_active')
-                            ->default(true)
-                            ->inline(false),
-                        Repeater::make('others')
-                            ->label('Other Details')
+                        Section::make()
                             ->schema([
-                                Textarea::make('name')->required(),
+                                TextInput::make('name')
+                                    ->label('Name')
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('description')
+                                    ->label('Description')
+                                    ->required(),
+                                FileUpload::make('image')
+                                    ->openable()
+                                    ->label('Image')
+                                    // ->required()
+                                    ->maxSize(1024)
+                                    ->disk('public_uploads_resorts')
+                                    ->directory('/')
+                                    ->image()
+                                    ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
+                                Toggle::make('is_active')
+                                    ->default(true)
+                                    ->inline(false),
+                                TextInput::make('barangay')
+                                    ->label('Barangay')
+                                    ->required()
+                                    ->maxLength(255),
+                                Repeater::make('others')
+                                    ->columnSpanFull()
+                                    ->label('Other Details')
+                                    ->schema([
+                                        Textarea::make('name')->required(),
+                                    ])
+                                    ->columns(1),
+                            ])
+                            ->columns(2),
+                    ])
+                    ->columnSpan(2),
+                Group::make()
+                    ->schema([
+                        Section::make('Resort Admin')
+                            ->schema([
+                                TextInput::make('resort_admin')
+                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->name ?? null)
+                                    // ->readOnly()
+                                    ->required()
+                                    ->label('Name')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('resort_admin_email')
+                                    ->label('Email')
+                                    ->required()
+                                    // ->readOnly()
+                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->email ?? null)
+                                    ->maxLength(255),
+                                TextInput::make('contact_number')
+                                    ->label('Contact Number')
+                                    ->required()
+                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->contact_number ?? null)
+                                    ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
+                                    ->maxLength(255),
+                                Toggle::make('is_validated')
+                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->is_validated ?? false)
+                                    ->label('Validated')
+                                    ->disabled(),
                             ])
                             ->columns(1),
-                    ])
-                    ->columns(2),
-            ]);
+                    ]),
+            ])
+            ->columns(3);
     }
 
     public static function table(Table $table): Table

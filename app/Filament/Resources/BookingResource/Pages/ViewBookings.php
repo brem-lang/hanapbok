@@ -86,6 +86,7 @@ class ViewBookings extends Page
                     ->label('Partial Payment')
                     ->hidden($this->record->status == 'confirmed'),
                 FileUpload::make('proof_of_payment')
+                    ->disabled()
                     ->dehydrated(false)
                     ->openable()
                     ->columnSpanFull()
@@ -93,7 +94,7 @@ class ViewBookings extends Page
                     ->required()
                     ->disk('public_uploads_payments')
                     ->directory('/')
-                    ->hint('Please upload the proof of payment for gcash.'),
+                    ->hint('Kindly upload your GCash payment proof.'),
             ])
             ->columns(2)
             ->statePath('formData');
@@ -114,6 +115,7 @@ class ViewBookings extends Page
                         'pending' => 'gray',
                         'confirmed' => 'success',
                         'cancelled' => 'danger',
+                        'completed' => 'primary',
                         'moved' => 'warning',
                     })
                     ->formatStateUsing(function (string $state): string {
@@ -122,6 +124,7 @@ class ViewBookings extends Page
                             'confirmed' => 'Confirm',
                             'cancelled' => 'Cancel',
                             'moved' => 'Move',
+                            'completed' => 'Completed',
                             default => 'Unknown',
                         };
                     }),

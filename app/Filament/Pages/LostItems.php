@@ -26,7 +26,9 @@ class LostItems extends Page implements HasTable
 
     protected static string $view = 'filament.pages.lost-items';
 
-    protected static ?string $navigationGroup = 'Lost Items';
+    protected static ?string $navigationGroup = 'Lost and Found Items';
+
+    protected static ?string $title = 'Lost and Found Items';
 
     protected static ?int $navigationSort = 5;
 

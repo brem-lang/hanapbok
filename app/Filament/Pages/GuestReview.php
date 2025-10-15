@@ -2,10 +2,21 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\GuestReview as ModelsGuestReview;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
 
-class GuestReview extends Page
+class GuestReview extends Page implements HasForms, HasTable
 {
+    use InteractsWithForms;
+    use InteractsWithTable;
+
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.guest-review';
@@ -17,5 +28,42 @@ class GuestReview extends Page
     public static function canAccess(): bool
     {
         return auth()->user()->isResortsAdmin();
+    }
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->headerActions([
+                Action::make('print')
+                    ->label('Print')
+                    ->icon('heroicon-o-printer')
+                    ->url(fn () => route('reports.print', ['resort_id' => auth()->user()?->AdminResort?->id]))
+                    ->openUrlInNewTab(),
+            ])
+            ->query(ModelsGuestReview::query()->with('user')->where('resort_id', auth()->user()?->AdminResort?->id)->latest())
+            ->columns([
+                TextColumn::make('user.name')
+                    ->label('Guest Name')
+                    ->sortable()
+                    ->toggleable()
+                    ->searchable(),
+                TextColumn::make('review')
+                    ->label('Review')
+                    ->sortable()
+                    ->limit(50)
+                    ->toggleable(),
+                TextColumn::make('created_at')
+                    ->label('Date')
+                    ->date('F d, Y h:i A')
+                    ->searchable()
+                    ->toggleable()
+                    ->sortable(),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                //
+            ]);
     }
 }

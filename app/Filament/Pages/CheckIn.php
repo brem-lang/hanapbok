@@ -40,7 +40,7 @@ class CheckIn extends Page implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Booking::query()->with('bookingItems.item')->where('status', 'confirmed')->latest())
+            ->query(Booking::query()->with('bookingItems.item')->where('resort_id', auth()->user()?->AdminResort?->id)->where('status', 'confirmed')->latest())
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Guest Name')
@@ -143,7 +143,7 @@ class CheckIn extends Page implements HasForms, HasTable
                                 ->label('Status')
                                 ->options([
                                     'paid' => 'Paid',
-                                    'pending' => 'Pending',
+                                    'pending' => 'Not Paid',
                                 ]),
                         ];
                     })

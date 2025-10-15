@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Accommodation;
 use App\Models\Item;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -41,9 +42,9 @@ class Items extends Component implements HasForms, HasTable
                     ->label('Tour Type')
                     ->formatStateUsing(fn ($state) => $state === 'night_tour' ? 'Night Tour' : 'Day Tour')
                     ->searchable(),
-                TextColumn::make('room_cottage_type')
+                TextColumn::make('accommodations.name')
                     ->label('Accommodation Type')
-                    ->formatStateUsing(fn ($state) => $state === 'cottage' ? 'Cottage' : 'Room')
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
                     ->searchable(),
                 TextColumn::make('price')
                     ->money('PHP', true)
@@ -53,10 +54,10 @@ class Items extends Component implements HasForms, HasTable
             ->filters([
                 //
             ])
-            ->heading('Accomodations')
+            ->heading('Accommodations')
             ->headerActions([
                 Action::make('create')
-                    ->label('New Accomodation')
+                    ->label('New Accommodation ')
                     ->form([
                         TextInput::make('name')
                             ->required()
@@ -69,12 +70,23 @@ class Items extends Component implements HasForms, HasTable
                                 'night_tour' => 'Night Tour',
                             ]),
                         Select::make('room_cottage_type')
-                            ->required()
                             ->label('Accommodation Type')
-                            ->options([
-                                'room' => 'Room',
-                                'cottage' => 'Cottage',
-                            ]),
+                            ->options(fn () => Accommodation::pluck('name', 'id')) // closure for lazy load
+                            ->searchable()
+                            ->required()
+                            ->createOptionForm([
+                                TextInput::make('name')
+                                    ->label('New Accommodation Type')
+                                    ->required(),
+                            ])
+                            ->createOptionUsing(function (array $data): int {
+                                // Save the new accommodation and return its ID
+                                $accommodation = Accommodation::create([
+                                    'name' => $data['name'],
+                                ]);
+
+                                return $accommodation->id;
+                            }),
                         TextInput::make('price')
                             ->prefix('₱')
                             ->required()
@@ -107,7 +119,38 @@ class Items extends Component implements HasForms, HasTable
                     }),
             ])
             ->actions([
-                EditAction::make(),
+                EditAction::make()
+                    ->form([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        Select::make('type')
+                            ->hint('leave blank if not applicable')
+                            ->label('Tour Type')
+                            ->options([
+                                'day_tour' => 'Day Tour',
+                                'night_tour' => 'Night Tour',
+                            ]),
+                        Select::make('room_cottage_type')
+                            ->label('Accommodation Type')
+                            ->options(fn () => Accommodation::pluck('name', 'id')) // closure for lazy load
+                            ->searchable()
+                            ->required(),
+                        TextInput::make('price')
+                            ->prefix('₱')
+                            ->required()
+                            ->numeric()
+                            ->maxLength(255),
+                        Textarea::make('description')
+                            ->columnSpanFull()
+                            ->maxLength(255),
+                        Repeater::make('otherInfo')
+                            ->reorderable(false)
+                            ->columnSpanFull()
+                            ->schema([
+                                TextInput::make('info'),
+                            ]),
+                    ]),
                 DeleteAction::make(),
             ])
             ->bulkActions([

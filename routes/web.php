@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\GuestReviewController;
+use App\Http\Controllers\LostFoundController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\SocialiteController;
 use App\Livewire\Booking;
@@ -62,4 +64,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/revenue-summary/print', [PrintController::class, 'printRevenueReport'])
         ->name('revenue.print');
+
+    Route::get('/reports/print/{resort_id}', [GuestReviewController::class, 'export'])
+        ->name('reports.print');
+
+    Route::get('/lost-found/print/{resort_id}', [LostFoundController::class, 'export'])
+        ->name('lostFound.print');
 });

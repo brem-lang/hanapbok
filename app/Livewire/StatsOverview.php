@@ -13,12 +13,12 @@ class StatsOverview extends BaseWidget
     {
         $numberTourist = Booking::query()->where('status', 'confirmed')->count();
         $pendingBooking = Booking::query()->where('status', 'pending')->count();
-        $lostItem = LostItem::query()->where('status', 'not_found')->count();
+        // $lostItem = LostItem::query()->where('status', 'not_found')->count();
 
         return [
             Stat::make('Number of Tourist', $numberTourist),
             Stat::make('Number of Bookings', $pendingBooking),
-            Stat::make('Number of Lost Items', $lostItem),
+            // Stat::make('Number of Lost Items', $lostItem),
         ];
     }
 }

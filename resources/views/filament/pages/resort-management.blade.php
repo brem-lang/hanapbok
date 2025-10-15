@@ -84,7 +84,7 @@
                     class="fi-tabs-item group inline-flex items-center justify-center gap-x-2 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium outline-none transition duration-75"
                     role="tab">
                     <span class="fi-tabs-item-label transition duration-75">
-                        Accomodation 
+                        Accommodation
                     </span>
                 </button>
             </nav>

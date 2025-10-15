@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Actions\Action;
 use Filament\Pages\Page;
 
 class LostandFoundStats extends Page
@@ -19,5 +20,16 @@ class LostandFoundStats extends Page
     public static function canAccess(): bool
     {
         return auth()->user()->isResortsAdmin();
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('print')
+                ->label('Print')
+                ->icon('heroicon-o-printer')
+                ->url(fn () => route('lostFound.print', ['resort_id' => auth()->user()?->AdminResort?->id]))
+                ->openUrlInNewTab(),
+        ];
     }
 }
