@@ -25,6 +25,10 @@
                             </span>
                         @endif
                     </a>
+
+                    <a href="{{ route('profile') }}" class="nav-item nav-link position-relative">
+                        <i class="fa fa-user fs-5"></i>
+                    </a>
                 @endauth
             </div>
 

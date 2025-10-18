@@ -23,10 +23,6 @@
                         </span>
                     @endif
                 </a>
-
-                <a href="{{ route('profile') }}" class="nav-item nav-link position-relative">
-                    <i class="fa fa-user fs-5"></i>
-                </a>
             </div>
             <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a>
         </nav>
@@ -72,13 +68,8 @@
 
             <!-- Hero Text Content -->
             <div class="hero-content container">
-                <h1 class="display-3 text-white animated slideInDown">Lost Items</h1>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center">
-                        <li class="breadcrumb-item"><a href="{{ route('index') }}">Home</a></li>
-                        <li class="breadcrumb-item text-white active" aria-current="page">Lost Items</li>
-                    </ol>
-                </nav>
+                <h1 class="display-3 text-white animated slideInDown">Profile</h1>
+
             </div>
         </div>
     </div>
@@ -187,197 +178,68 @@
     </div>
     <!-- Navbar & Hero End -->
 
-    @if ($this->activePage == 'create')
-        <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="container">
-                <div class="booking p-5">
-                    <div class="row g-5 align-items-center">
-                        <div class="col-md-6 text-white">
-                            <h1 class="text-white mb-4">Report Items </h1>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mt-4">
-                                <div>
-                                    <div class="form-floating">
-                                        <select class="form-select" wire:model="selectResort" required>
-                                            <option value="">Select Resort</option>
-                                            @foreach ($resorts as $resort)
-                                                <option value="{{ $resort->id }}">{{ $resort->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label>Resort</label>
-                                    </div>
-                                    @error('resort')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <div>
-                                    <div class="form-floating">
-                                        <select class="form-select" wire:model="type" required>
-                                            <option value="">Select Type</option>
-                                            <option value="lost_item">Lost Item</option>
-                                            <option value="found_item">Found Item</option>
-                                        </select>
-                                        <label>Type</label>
-                                    </div>
-                                    @error('type')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <div>
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" wire:model="description" required>
-                                        <label>Description</label>
-                                    </div>
-                                    @error('description')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <div>
-                                    <div class="form-floating">
-                                        <input type="datetime-local" class="form-control" wire:model="date" required>
-                                        <label>Date</label>
-                                    </div>
-                                    @error('date')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <div>
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" wire:model="location" required>
-                                        <label>Location</label>
-                                    </div>
-                                    @error('location')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <div>
 
-                                    <label for="formFile" class="form-label">Upload Image</label>
-                                    <input class="form-control @error('uploadPhoto') is-invalid @enderror"
-                                        type="file" id="formFile" accept="image/*" wire:model="uploadPhoto">
 
-                                    @error('uploadPhoto')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <div id="uploading-indicator" class="mt-2 text-info" style="display: none;">
-                                        <span class="spinner-border spinner-border-sm me-2" role="status"
-                                            aria-hidden="true"></span>
-                                        Uploading image...
-                                    </div>
-                                    <div id="upload-error" class="mt-2 text-danger" style="display: none;"></div>
-                                    <div id="upload-success" class="mt-2 text-success" style="display: none;"></div>
-                                    <div id="image-preview" class="mt-3">
-                                        @if ($uploadPhoto)
-                                            <img src="{{ $uploadPhoto->temporaryUrl() }}" alt="Payment Preview"
-                                                style="max-width: 100%; height: auto;">
-                                        @endif
-                                    </div>
+    <div class="container-xxl py-5">
+        <div class="container py-4">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">My Profile</h5>
+                </div>
+
+                <div class="card-body">
+                    @if (session()->has('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
+
+                    <form wire:submit.prevent="updateProfile">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Full Name</label>
+                                <input type="text" wire:model="name" class="form-control" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Email Address</label>
+                                <input type="email" wire:model="email" class="form-control" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Contact Number</label>
+                                <input type="text" wire:model="phone" class="form-control"
+                                    placeholder="Enter contact number">
+                                @error('phone')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Front ID</label>
+                                <div class="border rounded p-2 text-center bg-light">
+                                    <img src="{{ Storage::disk('public_uploads_id')->url($frontIdPreview) }}"
+                                        class="img-fluid rounded" style="max-height:180px;">
                                 </div>
                             </div>
-                            <div class="col-12 mt-4">
-                                {{-- <button class="btn btn-outline-light w-100 py-3"
-                                    wire:click.prevent='report'>Submit</button> --}}
 
-                                <button type="button" class="btn btn-dark w-100 py-3" data-bs-toggle="modal"
-                                    data-bs-target="#staticBackdrop">
-                                    Submit
-                                </button>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
-                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Are you sure you would like to do this?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-danger"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="button" wire:click.prevent="report"
-                                                    wire:loading.attr="disabled"
-                                                    class="btn btn-outline-light w-100 py-3">
-                                                    <span wire:loading.remove>Confirm</span>
-                                                    <span wire:loading>Processing...</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Back ID</label>
+                                <div class="border rounded p-2 text-center bg-light">
+                                    <img src="{{ Storage::disk('public_uploads_id')->url($backIdPreview) }}"
+                                        class="img-fluid rounded" style="max-height:180px;">
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4 py-2">Update</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    @endif
 
-    @if ($this->activePage == 'list')
-        <div class="container-xxl py-5">
-            <div class="text-end">
-                <a class="btn btn-sm btn-primary me-2" wire:click="createReport">Report</a>
-            </div>
-            <div class="container">
-                <table id="dataTable" class="table nowrap">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Resort</th>
-                            <th>Location</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($record as $item)
-                            <tr>
-                                <td>{{ $item->type == 'lost_item' ? 'Lost Item' : 'Found Item' }}</td>
-                                <td>{{ $item->resort->name }}</td>
-                                <td>{{ $item->location }}</td>
-                                <td>
-                                    @switch($item->status)
-                                        @case('found')
-                                            Found
-                                        @break
+    </div>
 
-                                        @case('not_found')
-                                            Not Found
-                                        @break
-
-                                        @case('claimed')
-                                            Claimed
-                                        @break
-
-                                        @case('not_claimed')
-                                            Not Claimed
-                                        @break
-
-                                        @default
-                                            Unknown
-                                    @endswitch
-                                </td>
-                            </tr>
-                        @endforeach
-                </table>
-            </div>
-        </div>
-    @endif
     <!-- Package Start -->
 
     <!-- Package End -->

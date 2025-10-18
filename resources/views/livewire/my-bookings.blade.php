@@ -23,6 +23,10 @@
                         </span>
                     @endif
                 </a>
+
+                <a href="{{ route('profile') }}" class="nav-item nav-link position-relative">
+                    <i class="fa fa-user fs-5"></i>
+                </a>
             </div>
             <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a>
         </nav>

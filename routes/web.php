@@ -62,6 +62,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('lost-items', ReportLostItems::class)->name('lost-items');
 
+    Route::get('/profile', \App\Livewire\ProFile::class)->name('profile');
+
     Route::get('/revenue-summary/print', [PrintController::class, 'printRevenueReport'])
         ->name('revenue.print');
 

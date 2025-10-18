@@ -28,9 +28,9 @@ class User extends Authenticatable
 
     protected $guarded = [];
 
-    protected $casts = [
-        'back_id' => 'array',
-    ];
+    // protected $casts = [
+    //     'back_id' => 'array',
+    // ];
 
     /**
      * The attributes that should be hidden for serialization.
