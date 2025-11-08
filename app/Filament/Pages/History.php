@@ -23,12 +23,17 @@ class History extends Page implements HasTable
 
     protected static ?int $navigationSort = 40;
 
-    public function mount()
+    public static function canAccess(): bool
     {
-        if (auth()->user()->isGuest()) {
-            abort(404);
-        }
+        return false;
     }
+
+    // public function mount()
+    // {
+    //     if (auth()->user()->isGuest()) {
+    //         abort(404);
+    //     }
+    // }
 
     public function table(Table $table): Table
     {

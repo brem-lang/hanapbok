@@ -4,13 +4,16 @@ namespace App\Filament\Resources\BookingResource\Pages;
 
 use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
+use App\Models\Charge;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
@@ -32,6 +35,52 @@ class ViewBookings extends Page
             'proof_of_payment' => $record->proof_of_payment,
             'is_partial' => $record->is_partial,
         ]);
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('additional_charges')
+                ->label('Charges')
+                ->icon('heroicon-o-plus-circle')
+                ->form([
+                    Repeater::make('charges')
+                        ->formatStateUsing(fn () => $this->record->additional_charges)
+                        ->label('Additional Charges')
+                        ->reorderable(false)
+                        ->schema([
+                            Select::make('name')
+                                ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                ->required()
+                                ->label('Charge Name')
+                                ->options(Charge::pluck('name', 'id'))
+                                ->live()
+                                ->afterStateUpdated(function (Set $set, ?string $state) {
+                                    $charge = Charge::find($state);
+                                    $set('amount', $charge?->amount);
+                                })
+                                ->searchable(),
+
+                            TextInput::make('amount')
+                                ->label('Amount')
+                                ->prefix('PHP')
+                                ->numeric()
+                                ->readOnly(),
+                        ])
+                        ->columns(2),
+                ])->action(function ($data) {
+
+                    $this->record->additional_charges = $data['charges'];
+                    $this->record->save();
+
+                    Notification::make()
+                        ->success()
+                        ->title('Charges Updated')
+                        ->icon('heroicon-o-check-circle')
+                        ->send();
+                })
+                ->visible(fn () => $this->record->is_checkin === 1),
+        ];
     }
 
     // protected function getHeaderActions(): array

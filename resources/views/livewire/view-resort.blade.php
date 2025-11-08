@@ -326,7 +326,7 @@
                                                     <select class="form-select" wire:model="payment_type">
                                                         <option value="">Select Payment Type</option>
                                                         <option value="gcash">GCash</option>
-                                                        <option value="walk_in">Walk In</option>
+                                                        {{-- <option value="walk_in">Walk In</option> --}}
                                                     </select>
                                                     <label>Payment Type</label>
                                                 </div>

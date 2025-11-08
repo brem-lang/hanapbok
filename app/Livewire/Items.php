@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Accommodation;
 use App\Models\Item;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -101,6 +102,15 @@ class Items extends Component implements HasForms, HasTable
                             ->schema([
                                 TextInput::make('info'),
                             ]),
+                        FileUpload::make('image')
+                            ->openable()
+                            ->label('Image')
+                            ->required()
+                            ->maxSize(1024)
+                            ->disk('public_uploads_accommodations')
+                            ->directory('/')
+                            ->image()
+                            ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
                     ])
                     ->action(function ($data) {
                         Item::create([
@@ -109,6 +119,7 @@ class Items extends Component implements HasForms, HasTable
                             'room_cottage_type' => $data['room_cottage_type'],
                             'price' => $data['price'],
                             'resort_id' => auth()->user()->AdminResort->id,
+                            'image' => $data['image'],
                         ]);
 
                         Notification::make()
@@ -150,6 +161,15 @@ class Items extends Component implements HasForms, HasTable
                             ->schema([
                                 TextInput::make('info'),
                             ]),
+                        FileUpload::make('image')
+                            ->openable()
+                            ->label('Image')
+                            ->required()
+                            ->maxSize(1024)
+                            ->disk('public_uploads_accommodations')
+                            ->directory('/')
+                            ->image()
+                            ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
                     ]),
                 DeleteAction::make(),
             ])

@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\ResortResource\Pages;
 
 use App\Filament\Resources\ResortResource;
+use App\Models\User;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class EditResort extends EditRecord
 {
@@ -15,5 +17,27 @@ class EditResort extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        $user = User::create([
+            'name' => $data['resort_admin'],
+            'email' => $data['resort_admin_email'],
+            'role' => 'resorts_admin',
+            'password' => bcrypt('password'),
+            'contact_number' => $data['contact_number'],
+        ]);
+
+        unset($data['resort_admin']);
+        unset($data['resort_admin_email']);
+        unset($data['is_validated']);
+        unset($data['contact_number']);
+
+        $data['user_id'] = $user->id;
+
+        $record->update($data);
+
+        return $record;
     }
 }

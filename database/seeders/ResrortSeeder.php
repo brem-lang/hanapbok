@@ -94,10 +94,10 @@ class ResrortSeeder extends Seeder
         //     ]);
         // }
 
-        // Resort::create([
-        //     'name' => 'Gacasan Beach Resort',
-        //     'barangay' => 'Barangay San Antonio',
-        //     'description' => ' Gacasan Beach Resort',
-        // ]);
+        Resort::create([
+            'name' => 'Gacasan Beach Resort',
+            'barangay' => 'Barangay San Antonio',
+            'description' => ' Gacasan Beach Resort',
+        ]);
     }
 }

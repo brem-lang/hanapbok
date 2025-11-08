@@ -92,6 +92,14 @@ return [
             'throw' => false,
         ],
 
+        'public_uploads_accommodations' => [
+            'driver' => 'local',
+            'root' => public_path('accommodations-photo'),
+            'url' => env('APP_URL').'/accommodations-photo',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
     ],
 
     /*

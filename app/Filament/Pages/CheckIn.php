@@ -4,6 +4,8 @@ namespace App\Filament\Pages;
 
 use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
+use App\Models\Charge;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -113,7 +115,8 @@ class CheckIn extends Page implements HasForms, HasTable
                     ->icon('heroicon-o-check-circle')
                     ->label('Check Out')
                     ->color('warning')
-                    ->requiresConfirmation()
+                    ->modalWidth('3xl')
+                    // ->requiresConfirmation()
                     ->visible(fn ($record) => $record->is_checkin == 1)
                     ->form(function ($record) {
                         return [
@@ -136,8 +139,28 @@ class CheckIn extends Page implements HasForms, HasTable
                                 ->prefix('₱ ')
                                 ->disabled()
                                 ->formatStateUsing(function ($record) {
-                                    return $record->balance;
+                                    $chargesAmount = 0;
+                                    foreach ($record['additional_charges'] ?? [] as $charge) {
+                                        $chargesAmount += $charge['amount'];
+                                    }
+
+                                    return $record->balance + $chargesAmount;
                                 }),
+
+                            Repeater::make('charges')
+                                ->formatStateUsing(fn ($record) => $record->additional_charges)
+                                ->label('Additional Charges')
+                                ->reorderable(false)
+                                ->schema([
+                                    Select::make('name')
+                                        ->disabled()
+                                        ->options(Charge::pluck('name', 'id')),
+                                    TextInput::make('amount')->numeric()->required(),
+                                ])
+                                ->addable(false)
+                                ->deletable(false)
+                                ->reorderable(false)
+                                ->columns(2),
 
                             Select::make('status')
                                 ->label('Status')
