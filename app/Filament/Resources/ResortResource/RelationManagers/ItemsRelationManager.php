@@ -18,7 +18,7 @@ class ItemsRelationManager extends RelationManager
 
     protected static ?string $modelLabel = 'Rooms and Cottages';
 
-    protected static ?string $title = 'Accomodation';
+    protected static ?string $title = 'Accommodation';
 
     public function form(Form $form): Form
     {
@@ -61,7 +61,7 @@ class ItemsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Accomodation')
+            ->heading('Accommodation')
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
