@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('charges', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('resort_id')->constrained('resorts')->cascadeOnDelete();
             $table->string('name');
             $table->string('description')->nullable();
             $table->decimal('amount');

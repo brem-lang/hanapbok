@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\Resort;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -50,6 +51,7 @@ class ResortManagement extends Page implements HasForms
             'image' => $resort?->image,
             'is_active' => $resort?->is_active,
             'others' => $resort?->others,
+            'qr' => $resort?->qr,
         ]);
     }
 
@@ -57,36 +59,56 @@ class ResortManagement extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make()
+                Group::make()
                     ->schema([
-                        TextInput::make('name')
-                            ->label('Name')
-                            ->required()
-                            ->maxLength(255),
-                        Textarea::make('description')
-                            ->label('Description')
-                            ->required(),
-                        FileUpload::make('image')
-                            ->openable()
-                            ->label('Image')
-                            // ->required()
-                            ->maxSize(1024)
-                            ->disk('public_uploads_resorts')
-                            ->directory('/')
-                            ->image()
-                            ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
-                        Toggle::make('is_active')
-                            ->default(true)
-                            ->inline(false),
-                        Repeater::make('others')
-                            ->label('Other Details')
+                        Section::make()
                             ->schema([
-                                Textarea::make('name')->required(),
+                                TextInput::make('name')
+                                    ->label('Name')
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('description')
+                                    ->label('Description')
+                                    ->required(),
+                                FileUpload::make('image')
+                                    ->openable()
+                                    ->label('Image')
+                                    // ->required()
+                                    ->maxSize(1024)
+                                    ->disk('public_uploads_resorts')
+                                    ->directory('/')
+                                    ->image()
+                                    ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
+                                Toggle::make('is_active')
+                                    ->default(true)
+                                    ->inline(false),
+                                Repeater::make('others')
+                                    ->label('Other Details')
+                                    ->schema([
+                                        Textarea::make('name')->required(),
+                                    ])
+                                    ->columns(1),
+                            ])
+                            ->columns(2),
+                    ])
+                    ->columnSpan(2),
+                Group::make()
+                    ->schema([
+                        Section::make('QR Code')
+                            ->schema([
+                                FileUpload::make('qr')
+                                    ->label('')
+                                    ->openable()
+                                    ->maxSize(1024)
+                                    ->disk('public_uploads_qr')
+                                    ->directory('/')
+                                    ->required()
+                                    ->image(),
                             ])
                             ->columns(1),
-                    ])
-                    ->columns(2),
+                    ]),
             ])
+            ->columns(3)
             ->statePath('data');
     }
 

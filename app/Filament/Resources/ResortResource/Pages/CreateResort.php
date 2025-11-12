@@ -18,13 +18,15 @@ class CreateResort extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $user = User::create([
-            'name' => $data['resort_admin'],
-            'email' => $data['resort_admin_email'],
-            'role' => 'resorts_admin',
-            'password' => bcrypt('password'),
-            'contact_number' => $data['contact_number'],
-        ]);
+        $user = User::updateOrCreate(
+            ['email' => $data['resort_admin_email']],
+            [
+                'name' => $data['resort_admin'],
+                'role' => 'resorts_admin',
+                'password' => bcrypt('password'),
+                'contact_number' => $data['contact_number'],
+            ]
+        );
 
         unset($data['resort_admin']);
         unset($data['resort_admin_email']);

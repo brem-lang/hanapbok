@@ -189,12 +189,12 @@ class CheckIn extends Page implements HasForms, HasTable
                                 ->success()
                                 ->title('Check Out')
                                 ->send();
+                        } else {
+                            Notification::make()
+                                ->success()
+                                ->title('Settle the balance first.')
+                                ->send();
                         }
-
-                        Notification::make()
-                            ->success()
-                            ->title('Settle the balance first.')
-                            ->send();
                     }),
             ])
             ->bulkActions([

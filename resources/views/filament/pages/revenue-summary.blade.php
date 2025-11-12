@@ -8,6 +8,7 @@
         </div>
     </div>
 
+    {{-- <div class="flex flex-wrap items-center justify-between gap-4 mb-6"> --}}
     <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
         {{-- This container now uses Filament's Button components --}}
         <div class="flex items-center gap-x-2">
@@ -47,8 +48,9 @@
         </div>
     </div>
 
+    {{ $this->table }}
     {{-- Bar Graph --}}
-    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6" wire:key="chart-{{ $this->filter }}"
+    {{-- <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6" wire:key="chart-{{ $this->filter }}"
         x-data="{
             chart: null,
             labels: @js($chartData['labels']),
@@ -91,7 +93,7 @@
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    @endpush
+    @endpush --}}
 </x-filament-panels::page>
 <script>
     function startTime() {

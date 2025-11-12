@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ChargeResource extends Resource
 {
@@ -27,6 +28,14 @@ class ChargeResource extends Resource
     public static function canAccess(): bool
     {
         return auth()->user()->isResortsAdmin();
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+
+        $data = parent::getEloquentQuery()->where('resort_id', auth()->user()->AdminResort->id);
+
+        return $data;
     }
 
     public static function form(Form $form): Form

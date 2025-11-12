@@ -86,13 +86,13 @@ class ResrortSeeder extends Seeder
         //     ]);
         // }
 
-        foreach ($resorts3 as $resort) {
-            Resort::create([
-                'name' => $resort,
-                'barangay' => 'Barangay Del Pilar',
-                'description' => $resort,
-            ]);
-        }
+        // foreach ($resorts3 as $resort) {
+        //     Resort::create([
+        //         'name' => $resort,
+        //         'barangay' => 'Barangay Del Pilar',
+        //         'description' => $resort,
+        //     ]);
+        // }
 
         // Resort::create([
         //     'name' => 'Gacasan Beach Resort',

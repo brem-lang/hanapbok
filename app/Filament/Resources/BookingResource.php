@@ -89,6 +89,7 @@ class BookingResource extends Resource
                         fn ($state) => match ($state) {
                             'gcash' => 'success',
                             'walk_in' => 'warning',
+                            'cash' => 'danger',
                         }
                     ),
             ])

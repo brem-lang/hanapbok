@@ -100,6 +100,13 @@ return [
             'throw' => false,
         ],
 
+        'public_uploads_qr' => [
+            'driver' => 'local',
+            'root' => public_path('qr-photo'),
+            'url' => env('APP_URL').'/qr-photo',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
     ],
 
     /*

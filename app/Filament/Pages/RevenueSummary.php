@@ -5,12 +5,18 @@ namespace App\Filament\Pages;
 use App\Models\Booking;
 use Carbon\Carbon;
 use Filament\Pages\Page;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 
-class RevenueSummary extends Page
+class RevenueSummary extends Page implements HasTable
 {
+    use InteractsWithTable;
+
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.revenue-summary';
@@ -42,7 +48,7 @@ class RevenueSummary extends Page
         $labels = [];
         $user = Auth::user();
 
-        $query = Booking::query()->where('status', 'confirmed')->where('resort_id', $user->AdminResort?->id);
+        $query = Booking::query()->whereIn('status', ['confirmed', 'completed'])->where('resort_id', $user->AdminResort?->id);
 
         switch ($this->filter) {
             case 'daily':
@@ -122,5 +128,47 @@ class RevenueSummary extends Page
         return [
             'chartData' => $this->chartData(),
         ];
+    }
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->query(Booking::query()->whereIn('status', ['confirmed', 'completed'])->where('resort_id', auth()->user()?->AdminResort?->id)->latest())
+            ->paginated([10, 25, 50])
+            ->columns([
+                TextColumn::make('resort.name')
+                    ->label('Resort')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('date')
+                    ->label('Date From')
+                    ->dateTime('F j, Y')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('date_to')
+                    ->label('Date To')
+                    ->dateTime('F j, Y')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('payment_type')
+                    ->label('Payment Type')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color(
+                        fn ($state) => match ($state) {
+                            'gcash' => 'success',
+                            'walk_in' => 'warning',
+                            'cash' => 'danger',
+                        }
+                    ),
+            ])
+            ->filters([
+                //
+            ])
+            ->bulkActions([
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
+            ]);
     }
 }

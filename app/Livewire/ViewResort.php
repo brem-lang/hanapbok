@@ -212,6 +212,7 @@ class ViewResort extends Component implements HasForms
                 $accomodationAmount += $availableAccommodations[$accomodationId]->price * $quantity;
             }
         }
+
         $total_amount = $entranceFeeAmount + $accomodationAmount;
 
         $book = Booking::create([

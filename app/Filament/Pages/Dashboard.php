@@ -42,7 +42,7 @@ class Dashboard extends Page implements HasForms
         $labels = [];
         $user = Auth::user();
 
-        $query = Booking::query()->where('status', 'confirmed');
+        $query = Booking::query()->whereIn('status', ['confirmed', 'completed']);
 
         // ** FIX: Use the correct relationship to get the resort ID **
         if ($user->isResortsAdmin()) {

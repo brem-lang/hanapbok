@@ -5,14 +5,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @media print {
-            body {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+        body {
+            font-family: "DejaVu Sans", Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
 
+        h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-top: 0;
+            color: #555;
+        }
+
+        .header,
+        .meta {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .meta {
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        table td {
+            font-size: 12px;
+        }
+
+        table td.text-right {
+            text-align: right;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+
+        @media print {
             .no-print {
                 display: none;
             }
@@ -20,65 +78,43 @@
     </style>
 </head>
 
-<body class="bg-white">
-    <div class="container mx-auto p-8">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Revenue Report</h1>
-            <p class="text-lg text-gray-600">{{ $title }}</p>
-        </div>
-
-        <div class="mb-6 flex justify-between text-sm text-gray-500">
-            <div>
-                <strong>Date Generated:</strong> {{ now()->format('F j, Y H:i') }}
-            </div>
-            <div>
-                <strong>Resort Manager:</strong> {{ $managerName }}
-            </div>
-        </div>
-
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <table class="min-w-full leading-normal">
-                <thead>
-                    <tr>
-                        <th
-                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Period
-                        </th>
-                        <th
-                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Total Revenue
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($data as $row)
-                        <tr>
-                            <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 whitespace-no-wrap">
-                                    {{ $row->period }}</p>
-                            </td>
-                            <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm text-right">
-                                <p class="text-gray-900 whitespace-no-wrap font-semibold">₱
-                                    {{ number_format($row->total, 2) }}</p>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="2" class="text-center py-10 text-gray-500">
-                                No revenue data found for this period.
-                            </td>
-                        </tr>
-                    @endforelse
-                    <tr class="bg-gray-50 font-bold">
-                        <td class="px-5 py-3 text-right text-gray-700">Total:</td>
-                        <td class="px-5 py-3 text-right text-gray-800">₱
-                            {{ number_format($overallTotal, 2) }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<body>
+    <div class="header">
+        <h1>Revenue Report</h1>
+        <h2>{{ $title }}</h2>
     </div>
+
+    <div class="meta">
+        <div><strong>Date Generated:</strong> {{ now()->format('F j, Y H:i') }}</div>
+        <div><strong>Resort Manager:</strong> {{ $managerName }}</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th class="text-right">Total Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($data as $row)
+                <tr>
+                    <td>{{ $row->period }}</td>
+                    <td class="text-right">₱ {{ number_format($row->total, 2) }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="2" style="text-align:center; color:#888; padding: 20px;">
+                        No revenue data found for this period.
+                    </td>
+                </tr>
+            @endforelse
+            <tr class="total-row">
+                <td style="text-align: right;">Total:</td>
+                <td class="text-right">₱ {{ number_format($overallTotal, 2) }}</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 
 </html>

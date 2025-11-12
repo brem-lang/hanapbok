@@ -277,8 +277,9 @@
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
                     <div class="position-relative h-100">
                         <h6 class=" bg-white text-start text-primary pe-3">Scan QR Code</h6>
-                        <img class="img-fluid position-absolute w-100 h-100" src="{{ asset('img/qrcode.svg') }}"
-                            alt="" style="object-fit: cover;">
+                        <img class="img-fluid position-absolute w-100 h-100"
+                            src="{{ asset('qr-photo/' . $record->resort->qr) }}" alt=""
+                            style="object-fit: cover;">
                     </div>
                 </div>
             </div>

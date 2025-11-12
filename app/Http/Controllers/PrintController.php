@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +22,7 @@ class PrintController extends Controller
         // Start the query based on your 'bookings' table
         $query = Booking::query()
             ->where('resort_id', $user->AdminResort?->id)
-            ->where('status', 'confirmed');
+            ->whereIn('status', ['confirmed', 'completed']);
 
         // Apply the correct grouping and date range based on the filter
         switch ($filter) {
@@ -128,7 +130,16 @@ class PrintController extends Controller
         $overallTotal = collect($data)->sum('total');
 
         // Return the printable view with all the necessary data
-        return view('print.revenue-report', [
+        // return view('print.revenue-report', [
+        //     'data' => $data,
+        //     'title' => $title,
+        //     'managerName' => $user->name,
+        //     'startDate' => $startDate,
+        //     'endDate' => $endDate,
+        //     'overallTotal' => $overallTotal,
+        // ]);
+
+        $pdf = Pdf::loadView('print.revenue-report', [
             'data' => $data,
             'title' => $title,
             'managerName' => $user->name,
@@ -136,5 +147,7 @@ class PrintController extends Controller
             'endDate' => $endDate,
             'overallTotal' => $overallTotal,
         ]);
+
+        return $pdf->download($filter.'-revenue-report-'.Carbon::now()->format('Y-m-d-H-i-s').'.pdf');
     }
 }

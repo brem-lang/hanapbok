@@ -148,7 +148,7 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make(),
                 RestoreAction::make(),
                 DeleteAction::make(),
-                Impersonate::make(),
+                // Impersonate::make(),
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([

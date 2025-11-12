@@ -140,7 +140,13 @@ class ViewBookings extends Page
                     ->openable()
                     ->columnSpanFull()
                     ->label('Proof of Payment')
-                    ->required()
+                    ->required(function () {
+                        if ($this->record->user_id == auth()->user()->id) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    })
                     ->disk('public_uploads_payments')
                     ->directory('/')
                     ->hint('Kindly upload your GCash payment proof.'),
