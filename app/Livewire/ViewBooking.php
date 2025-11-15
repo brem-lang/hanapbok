@@ -8,6 +8,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Session;
 
 class ViewBooking extends Component
 {
@@ -23,6 +24,14 @@ class ViewBooking extends Component
 
     public function mount($id)
     {
+        if (! auth()->user()->isGuest()) {
+            abort(404);
+        }
+
+        if (! Session::has('user_2fa')) {
+            abort(404);
+        }
+
         $booking = Booking::with(['resort.userAdmin', 'bookingItems', 'bookingItems.item', 'bookingItems.entranceFee'])->find($id);
 
         if (! $booking) {

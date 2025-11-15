@@ -10,12 +10,14 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Actions\Action as ActionsAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 
@@ -80,6 +82,44 @@ class ViewBookings extends Page
                         ->send();
                 })
                 ->visible(fn () => $this->record->is_checkin === 1),
+            Action::make('cancel')
+                ->icon('heroicon-o-trash')
+                ->color('danger')
+                ->label('Cancel')
+                ->hidden($this->record->status == 'cancelled')
+                ->requiresConfirmation()
+                ->action(function ($data) {
+
+                    $this->record->status = 'cancelled';
+                    $this->record->cancel_reason = $data['reason'];
+
+                    $this->record->save();
+
+                    Notification::make()
+                        ->success()
+                        ->title('Booking Cancelled')
+                        ->icon('heroicon-o-check-circle')
+                        ->send();
+
+                    Notification::make()
+                        ->success()
+                        ->title('Booking Cancelled')
+                        ->icon('heroicon-o-check-circle')
+                        ->actions([
+                            ActionsAction::make('view')
+                                ->label('View')
+                                ->url(fn () => route('view-booking', ['id' => $this->record->id]))
+                                ->markAsRead(),
+                        ])
+                        ->sendToDatabase(User::where('id', $this->record->user_id)->get());
+
+                    redirect(BookingResource::getUrl('view', ['record' => $this->record->id]));
+                })
+                ->form([
+                    Textarea::make('reason')
+                        ->label('Reason')
+                        ->required(),
+                ]),
         ];
     }
 
@@ -217,6 +257,12 @@ class ViewBookings extends Page
             ->success()
             ->title('Booking Confirmed')
             ->icon('heroicon-o-check-circle')
+            ->actions([
+                ActionsAction::make('view')
+                    ->label('View')
+                    ->url(fn () => route('view-booking', ['id' => $this->record->id]))
+                    ->markAsRead(),
+            ])
             ->sendToDatabase(User::where('id', $this->record->user_id)->get());
 
         redirect(BookingResource::getUrl('view', ['record' => $this->record->id]));

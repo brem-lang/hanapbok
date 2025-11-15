@@ -45,14 +45,34 @@
             font-size: 12px;
             color: #777;
         }
+
+        .logo {
+            text-align: center;
+            margin-bottom: -80px;
+            margin-top: -80px;
+        }
+
+        .logo img {
+            max-height: 200px;
+        }
+
+        h3 {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
     </style>
 </head>
 
 <body>
-    <h3>{{ $resort->name }} — Guest Reviews Report</h3>
+    <div class="logo">
+        <img src="{{ public_path('img/logo1.png') }}" alt="Logo">
+    </div>
+
+    <h3>{{ $resort->name }} — Lost and Found Report</h3>
 
     <p><strong>Date Generated:</strong> {{ now()->format('F d, Y') }}</p>
-    <p><strong>Total Reviews:</strong> {{ $reviews->count() }}</p>
 
     <table>
         <thead style="font-size: 12px;">

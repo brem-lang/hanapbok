@@ -25,20 +25,20 @@ class History extends Page implements HasTable
 
     public static function canAccess(): bool
     {
-        return false;
+        return auth()->user()->isResortsAdmin();
     }
 
-    // public function mount()
-    // {
-    //     if (auth()->user()->isGuest()) {
-    //         abort(404);
-    //     }
-    // }
+    public function mount()
+    {
+        if (auth()->user()->isGuest()) {
+            abort(404);
+        }
+    }
 
     public function table(Table $table): Table
     {
         return $table
-            ->query(Booking::query()->with('bookingItems.item')->where('resort_id', auth()->user()?->AdminResort?->id)->where('status', 'completed')->latest())
+            ->query(Booking::query()->whereIn('status', ['confirmed', 'completed'])->where('resort_id', auth()->user()?->AdminResort?->id)->latest())
             ->paginated([10, 25, 50])
             ->columns([
                 TextColumn::make('user.name')

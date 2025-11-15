@@ -111,6 +111,8 @@
         }
     </style>
 
+    <link rel="stylesheet" href="{{ asset('css/filament/filament/app.css?v=3.2.124.0') }}">
+
     @filamentStyles
     @vite('resources/css/app.css')
 </head>

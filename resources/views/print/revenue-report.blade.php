@@ -75,10 +75,25 @@
                 display: none;
             }
         }
+
+        .logo {
+            text-align: center;
+            margin-bottom: -80px;
+            margin-top: -80px;
+        }
+
+        .logo img {
+            max-height: 200px;
+        }
     </style>
 </head>
 
 <body>
+
+    <div class="logo">
+        <img src="{{ public_path('img/logo1.png') }}" alt="Logo">
+    </div>
+
     <div class="header">
         <h1>Revenue Report</h1>
         <h2>{{ $title }}</h2>

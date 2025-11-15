@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\BookingItem;
 use App\Models\EntranceFee;
@@ -14,9 +15,11 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Session;
 
 class ViewResort extends Component implements HasForms
 {
@@ -50,6 +53,14 @@ class ViewResort extends Component implements HasForms
 
     public function mount($id)
     {
+        if (! auth()->user()->isGuest()) {
+            abort(404);
+        }
+
+        if (! Session::has('user_2fa')) {
+            abort(404);
+        }
+
         $this->record = Resort::with('items', 'entranceFees', 'userAdmin')->find($id);
 
         $this->entranceFees = EntranceFee::where('resort_id', $this->record->id)->get();
@@ -118,12 +129,11 @@ class ViewResort extends Component implements HasForms
     {
         $user = auth()->user();
 
-        if (! $user->is_validated) {
-            // return redirect('/validate');
-            return redirect()->to('/validate')->with([
-                'resort_id' => $this->record->id,
-            ]);
-        }
+        // if (! $user->is_validated) {
+        //     return redirect()->to('/validate')->with([
+        //         'resort_id' => $this->record->id,
+        //     ]);
+        // }
 
         $this->activePage = 'booking';
     }
@@ -260,12 +270,12 @@ class ViewResort extends Component implements HasForms
             ->title('Booking Created')
             ->icon('heroicon-o-check-circle')
             ->body(auth()->user()->name.' has created a new booking.')
-            // ->actions([
-            //     Action::make('view')
-            //         ->label('View')
-            //         ->url(fn () => BookingResource::getUrl('view', ['record' => $this->booking->id]))
-            //         ->markAsRead(),
-            // ])
+            ->actions([
+                Action::make('view')
+                    ->label('View')
+                    ->url(fn () => BookingResource::getUrl('view', ['record' => $book->id]))
+                    ->markAsRead(),
+            ])
             ->sendToDatabase(User::where('id', $this->record->userAdmin->id)->get());
 
         return redirect('/view-booking/'.$book->id);

@@ -107,6 +107,8 @@ class Register extends RegisterPage
 
         session()->regenerate();
 
+        auth()->user()->generateCode();
+
         return app(ResponsesRegistrationResponse::class);
     }
 }

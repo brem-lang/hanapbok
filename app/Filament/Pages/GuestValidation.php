@@ -27,7 +27,7 @@ class GuestValidation extends Page implements HasTable
 
     public static function canAccess(): bool
     {
-        return auth()->user()->isResortsAdmin();
+        return false;
     }
 
     public function table(Table $table): Table

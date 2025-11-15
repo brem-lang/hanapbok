@@ -293,22 +293,24 @@
                                         <div class='col-md-6'>
                                             <div class="form-floating">
                                                 {{-- Use wire:model.live to update the component immediately when a date is selected --}}
-                                                <input type="date" class="form-control" wire:model.live="date"
-                                                    required min="{{ now()->toDateString() }}">
+                                                <input type="datetime-local" class="form-control"
+                                                    wire:model.live="date" required
+                                                    min="{{ now()->format('Y-m-d\TH:i') }}">
                                                 <label>Date From</label>
                                             </div>
                                             @error('date')
-                                                <span class="text-danger small">{{ $message }}</span>
+                                                <span
+                                                    class="text-danger
+                                                    small">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class='col-md-6'>
                                             <div class="form-floating">
-                                                {{-- This input is now dynamic --}}
-                                                <input type="date" class="form-control" wire:model.live="date_to"
-                                                    required {{-- Disable this input if 'date_from' has not been selected yet --}}
+                                                <input type="datetime-local" class="form-control"
+                                                    wire:model.live="date_to" required
                                                     @if (!$date) disabled @endif
-                                                    {{-- The minimum selectable date is now dynamically set to the day AFTER 'date_from' --}}
-                                                    min="{{ $date ? \Carbon\Carbon::parse($date)->addDay()->toDateString() : now()->toDateString() }}">
+                                                    min="{{ $date ? \Carbon\Carbon::parse($date)->addMinute()->format('Y-m-d\TH:i') : now()->format('Y-m-d\TH:i') }}">
+
                                                 <label>Date To</label>
                                             </div>
                                             @error('date_to')
@@ -355,7 +357,8 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+                                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                                                        </h1>
                                                         <button type="button" class="btn-close"
                                                             data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>

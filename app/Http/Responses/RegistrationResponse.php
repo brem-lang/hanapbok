@@ -8,6 +8,7 @@ class RegistrationResponse implements RegistrationResponseContract
 {
     public function toResponse($request)
     {
-        return redirect()->route('index');
+        // return redirect()->route('index');
+        return redirect()->route('2fa.index');
     }
 }

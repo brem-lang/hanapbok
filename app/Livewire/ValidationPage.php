@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Filament\Resources\UserResource;
+use App\Filament\Resources\GuestValidationResource;
 use App\Models\Resort;
 use App\Models\User;
 use Filament\Forms\Components\FileUpload;
@@ -14,6 +14,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Session;
 
 class ValidationPage extends Component implements HasForms
 {
@@ -25,6 +26,14 @@ class ValidationPage extends Component implements HasForms
 
     public function mount(Request $request)
     {
+        if (! auth()->user()->isGuest()) {
+            abort(404);
+        }
+
+        if (! Session::has('user_2fa')) {
+            abort(404);
+        }
+
         $this->resort = Resort::where('id', session('resort_id'))->with('userAdmin')->first();
 
         if (auth()->user()->is_validated) {
@@ -82,11 +91,11 @@ class ValidationPage extends Component implements HasForms
             ->title('Upload ID')
             ->icon('heroicon-o-check-circle')
             ->body(auth()->user()->name.' has uploaded ID for verification.')
-            // ->actions([
-            //     Action::make('view')
-            //         ->label('View')
-            //         ->url(fn () => UserResource::getUrl('edit', ['record' => auth()->user()->id])),
-            // ])
+            ->actions([
+                Action::make('view')
+                    ->label('View')
+                    ->url(fn () => GuestValidationResource::getUrl('edit', ['record' => auth()->user()->id])),
+            ])
             ->sendToDatabase(User::where('id', $this->resort->userAdmin->id)->get());
 
         return redirect()->route('guest-booking');

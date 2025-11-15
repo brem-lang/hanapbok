@@ -3,6 +3,11 @@
 /public/build
 /public/hot
 /public/storage
+/public/accommodations-photo
+/public/id-photo
+/public/lost-item-photo
+/public/payments-photo
+/public/qr-photo
 /storage/*.key
 /storage/pail
 /vendor

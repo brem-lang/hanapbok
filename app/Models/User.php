@@ -3,10 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Mail\TwoFactorMail;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 
 class User extends Authenticatable
 {
@@ -52,6 +56,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'back_id' => 'array',
         ];
     }
 
@@ -78,5 +83,36 @@ class User extends Authenticatable
     public function bookings()
     {
         return $this->hasMany(Booking::class, 'user_id', 'id');
+    }
+
+    public function generateCode()
+    {
+
+        logger('generate');
+
+        $code = rand(100000, 999999);
+
+        UserCodes::updateOrCreate(
+            ['user_id' => auth()->user()->id],
+            ['code' => $code]
+        );
+
+        try {
+
+            $details = [
+                'title' => 'Email from HANAPBOK',
+                'code' => $code,
+                'name' => auth()->user()->name,
+            ];
+
+            Mail::to(auth()->user()->email)->send(new TwoFactorMail($details));
+        } catch (Exception $e) {
+            info('Error: '.$e->getMessage());
+        }
+    }
+
+    public function userCodes()
+    {
+        return $this->hasMany(UserCodes::class);
     }
 }

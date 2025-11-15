@@ -10,6 +10,7 @@ use App\Livewire\GuestPage;
 use App\Livewire\MyBookings;
 use App\Livewire\ReportLostItems;
 use App\Livewire\Review;
+use App\Livewire\TwoFactor;
 use App\Livewire\ValidationPage;
 use App\Livewire\ViewBooking;
 use App\Livewire\ViewResort;
@@ -42,6 +43,10 @@ Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback']
 Route::get('/index', GuestPage::class)->name('index');
 
 Route::get('/guest-booking', GuestBook::class)->name('guest-booking');
+
+Route::get('2fa', TwoFactor::class)->name('2fa.index')->middleware('redirect2FA');
+
+// ->middleware('redirect2FA')
 
 Route::middleware('auth')->group(function () {
     Route::get('/app/booking', Booking::class);

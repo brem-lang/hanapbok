@@ -7,6 +7,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Session;
 
 class GuestBook extends Component implements HasForms
 {
@@ -25,6 +26,14 @@ class GuestBook extends Component implements HasForms
         $this->resorts = Resort::where('is_active', true)->get();
 
         if (Auth::check()) {
+            if (! auth()->user()->isGuest()) {
+                abort(404);
+            }
+
+            if (! Session::has('user_2fa')) {
+                abort(404);
+            }
+
             $this->loadNotifications();
 
             $review = auth()->user()->bookings()->where('is_review', true)->first();

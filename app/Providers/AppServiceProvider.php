@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\Responses\LogoutResponse;
 use Filament\Facades\Filament;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse as ContractsLoginResponse;
+use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentView;
@@ -22,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
             ContractsLoginResponse::class,
             \App\Http\Responses\LoginResponse::class
         );
+
+        $this->app->bind(LogoutResponseContract::class, LogoutResponse::class);
 
         FilamentColor::register([
             'primary' => Color::Emerald,

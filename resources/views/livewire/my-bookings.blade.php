@@ -230,11 +230,15 @@
                                         <span>Move</span>
                                     @break
 
+                                    @case('completed')
+                                        <span>Completed</span>
+                                    @break
+
                                     @default
                                         <span>Unknown</span>
                                 @endswitch
                             </td>
-                            <td>{{ $item->amount_to_pay }}</td>
+                            <td>{{ number_format($item->amount_to_pay, 2) }}</td>
                             <td class="text-end">
                                 <a href="{{ route('view-booking', $item->id) }}"
                                     class="btn btn-sm btn-primary me-2">View</a>

@@ -241,7 +241,8 @@
                             <div class="mt-4">
                                 <div>
                                     <div class="form-floating">
-                                        <input type="datetime-local" class="form-control" wire:model="date" required>
+                                        <input type="datetime-local" class="form-control" wire:model="date" required
+                                            max="{{ now()->format('Y-m-d\TH:i') }}">
                                         <label>Date</label>
                                     </div>
                                     @error('date')
@@ -342,6 +343,7 @@
                             <th>Resort</th>
                             <th>Location</th>
                             <th>Status</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -372,6 +374,32 @@
                                             Unknown
                                     @endswitch
                                 </td>
+                                {{-- /************* ✨ Windsurf Command 🌟 *************/ --}}
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#remarksModal{{ $loop->index }}">
+                                        Remarks
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="remarksModal{{ $loop->index }}" tabindex="-1"
+                                        aria-labelledby="remarksModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="remarksModalLabel">Remarks</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ $item->remarks }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                {{-- <td>{{ $item->location }}</td> --}}
+                                {{-- /******* 491ce5fb-a7f5-4679-b6c9-a631ecdc99dc *******/ --}}
                             </tr>
                         @endforeach
                 </table>

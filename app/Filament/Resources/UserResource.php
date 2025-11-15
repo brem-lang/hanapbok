@@ -85,27 +85,29 @@ class UserResource extends Resource
                             ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
                         FileUpload::make('back_id')
                             ->columnSpanFull()
-                            ->hint('Please avoid to upload blurry images.')
+                            ->hint('ex. Business permits, ID, etc.')
                             ->label('Attachments')
                             ->multiple()
                             ->openable()
                             ->maxSize(10000)
+                            ->downloadable()
                             ->required()
                             ->disk('public_uploads_id')
                             ->directory('/')
-                            ->acceptedFileTypes([
-                                // Images
-                                'image/jpeg',
-                                'image/png',
-                                'image/gif',
-                                'image/webp',
-                                // Documents
-                                'application/pdf',
-                                'application/msword', // for .doc files
-                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // for .docx files
-                                'application/vnd.ms-excel', // for .xls files
-                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // for .xlsx files
-                            ]),
+                        // ->acceptedFileTypes([
+                        //     // Images
+                        //     'image/jpeg',
+                        //     'image/png',
+                        //     'image/gif',
+                        //     'image/webp',
+                        //     // Documents
+                        //     'application/pdf',
+                        //     'application/msword', // for .doc files
+                        //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // for .docx files
+                        //     'application/vnd.ms-excel', // for .xls files
+                        //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // for .xlsx files
+                        // ])
+                        ,
                     ])
                     ->columns(2),
             ]);

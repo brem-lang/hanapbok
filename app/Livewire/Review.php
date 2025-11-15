@@ -6,6 +6,7 @@ use App\Models\GuestReview;
 use App\Models\Resort;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Session;
 
 class Review extends Component
 {
@@ -17,6 +18,13 @@ class Review extends Component
 
     public function mount($id)
     {
+        if (! auth()->user()->isGuest()) {
+            abort(404);
+        }
+
+        if (! Session::has('user_2fa')) {
+            abort(404);
+        }
 
         $review = auth()->user()->bookings()->where('is_review', true)->first();
 

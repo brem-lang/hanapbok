@@ -30,9 +30,9 @@ class LoginResponse extends \Filament\Http\Responses\Auth\LoginResponse
                 return redirect('app');
             }
 
-            if (auth()->user()->isGuest()) {
-                return redirect()->route('index');
-            }
+            auth()->user()->generateCode();
+
+            return redirect()->route('2fa.index');
         }
 
         return parent::toResponse($request);

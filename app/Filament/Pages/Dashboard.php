@@ -25,6 +25,13 @@ class Dashboard extends Page implements HasForms
 
     protected static string $view = 'filament.pages.dashboard';
 
+    public function mount()
+    {
+        if (auth()->user()->isGuest()) {
+            abort(404);
+        }
+    }
+
     // The property to hold the current filter state.
     public string $filter = 'monthly';
 

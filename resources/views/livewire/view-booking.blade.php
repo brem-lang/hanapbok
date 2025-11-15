@@ -198,8 +198,9 @@
                         <div class="col-sm-6">
                             <p class="mb-0" style="font-size: 13px;"><i
                                     class="fa fa-arrow-right text-primary me-2"></i>
-                                {{ \Carbon\Carbon::parse($record->date)->format('F j, Y') }} ---
-                                {{ \Carbon\Carbon::parse($record->date_to)->format('F j, Y') }}
+                                {{ \Carbon\Carbon::parse($record->date)->format('F j, Y h:i A') }}
+                                ---
+                                {{ \Carbon\Carbon::parse($record->date_to)->format('F j, Y h:i A') }}
                             </p>
                         </div>
                     </div>
@@ -219,6 +220,19 @@
                             </p>
                         </div>
                     </div>
+
+                    @if ($record->status == 'cancelled')
+                        <h6 class=" bg-white text-start text-primary pe-3">Cancel Reason</h6>
+                        <div class="row gy-2 gx-4 mb-2">
+                            <div class="col-sm-6">
+                                <p class="mb-0" style="font-size: 13px;"><i
+                                        class="fa fa-arrow-right text-primary me-2"></i>
+                                    {{ $record->cancel_reason }}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+
 
                     @if ($record->status == 'confirmed')
                         <a href="#" class="btn btn-success py-1 px-3 mt-2 disabled">Confrim</a>
@@ -277,6 +291,11 @@
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
                     <div class="position-relative h-100">
                         <h6 class=" bg-white text-start text-primary pe-3">Scan QR Code</h6>
+                        <h3>{{ $record->resort['userAdmin']['contact_number'] }} -
+                            {{ $record->resort['userAdmin']['name'] }}</h3>
+                        <h6>
+                            50% Deposit Required ₱ {{ number_format($record->amount_to_pay, 2) }}
+                        </h6>
                         <img class="img-fluid position-absolute w-100 h-100"
                             src="{{ asset('qr-photo/' . $record->resort->qr) }}" alt=""
                             style="object-fit: cover;">

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Session;
 
 class MyBookings extends Component
 {
@@ -19,6 +20,14 @@ class MyBookings extends Component
         $this->record = Booking::with('resort')->where('user_id', auth()->user()->id)->latest()->get();
 
         if (Auth::check()) {
+            if (! auth()->user()->isGuest()) {
+                abort(404);
+            }
+
+            if (! Session::has('user_2fa')) {
+                abort(404);
+            }
+
             $this->loadNotifications();
 
             $review = auth()->user()->bookings()->where('is_review', true)->first();

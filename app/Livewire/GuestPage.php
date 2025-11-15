@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Session;
 
 class GuestPage extends Component
 {
@@ -19,6 +20,15 @@ class GuestPage extends Component
     public function mount()
     {
         if (Auth::check()) {
+
+            if (! auth()->user()->isGuest() && ! Session::has('user_2fa')) {
+                abort(404);
+            }
+
+            // if (! Session::has('user_2fa')) {
+            //     abort(404);
+            // }
+
             $this->loadNotifications();
 
             $review = auth()->user()->bookings()->where('is_review', true)->first();
