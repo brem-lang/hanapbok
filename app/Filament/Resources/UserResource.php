@@ -67,11 +67,11 @@ class UserResource extends Resource
                         //     ])
                         //     ->required(),
                         Toggle::make('is_validated'),
-                        TextInput::make('contact_number')
-                            ->label('Contact Number')
-                            ->required()
-                            ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
-                            ->maxLength(255),
+                        // TextInput::make('contact_number')
+                        //     ->label('Contact Number')
+                        //     ->required()
+                        //     ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
+                        //     ->maxLength(255),
                         FileUpload::make('front_id')
                             ->columnSpanFull()
                             ->hint('Please avoid to upload blurry images.')

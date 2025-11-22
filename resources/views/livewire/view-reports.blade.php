@@ -11,8 +11,8 @@
             <div class="navbar-nav ms-auto py-0">
                 <a href="{{ route('index') }}" class="nav-item nav-link">Home</a>
                 <a href="{{ route('guest-booking') }}" class="nav-item nav-link">Book Now</a>
-                <a href="{{ route('my-bookings') }}" class="nav-item nav-link active">My Bookings</a>
-                <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost and Found Items</a>
+                <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
+                <a href="{{ route('lost-items') }}" class="nav-item nav-link active">Lost and Found Items</a>
 
                 {{-- <a class="nav-item nav-link position-relative">
                     <i class="fa fa-bell fs-5"></i>
@@ -70,36 +70,50 @@
 
             <!-- Hero Text Content -->
             <div class="hero-content container">
-                <h1 class="display-3 text-white animated slideInDown">Booking Details</h1>
+                <h1 class="display-3 text-white animated slideInDown">Report Details</h1>
                 </h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb justify-content-center">
                         <li class="breadcrumb-item"><a href="{{ route('index') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('my-bookings') }}">My Bookings</a>
+                        <li class="breadcrumb-item"><a href="{{ route('lost-items') }}">Lost and Found Items</a>
                         </li>
                         <li class="breadcrumb-item text-white active" aria-current="page">
-                            Booking Details</li>
+                            Report Details</li>
                     </ol>
                 </nav>
             </div>
         </div>
     </div>
     <!-- Navbar & Hero End -->
-
     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-5">
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
                     <div class="position-relative h-100">
                         <img class="img-fluid position-absolute w-100 h-100"
-                            src="{{ $record->resort->image ? asset('resorts-photo/' . $record->resort->image) : asset('img/about.jpg') }}"
-                            alt="" style="object-fit: cover;">
+                            src="{{ asset('lost-item-photo/' . $record->photo) }}" alt=""
+                            style="object-fit: cover;">
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-                    {{-- <h6 class="section-title bg-white text-start text-primary pe-3">INFORMATION</h6>
-                            <p class="mb-2" style="font-size: 16px;">{{ $record->description }}</p> --}}
-                    <h6 class="section-title bg-white text-start text-primary pe-3">List of Person</h6>
+                    <ul class="list-unstyled">
+
+                        <li>
+                            <strong>Description:</strong>
+                            <p>{{ $record?->description }}</p>
+                        </li>
+
+                        {{-- Simple List Items --}}
+                        <li><strong>Date:</strong> {{ Carbon\Carbon::parse($record?->date)->format('F j, Y h:i A') }}
+                        </li>
+                        <li><strong>Location:</strong> {{ $record?->location }}</li>
+                        <li><strong>Status:</strong> <span
+                                class="badge {{ $record?->status == 'Approved' ? 'bg-success' : ($record?->status == 'Pending' ? 'bg-warning' : 'bg-danger') }}">{{ $record?->status }}</span>
+                        </li>
+                        <li><strong>Type:</strong> {{ $record?->type }}</li>
+                        <li><strong>Remarks:</strong> {{ $record?->remarks }}</li>
+                    </ul>
+                    {{-- <h6 class="section-title bg-white text-start text-primary pe-3">List of Person</h6>
                     <div class="row gy-2 gx-4 mb-2">
                         @foreach ($record?->bookingItems ?? [] as $bookingItem)
                             <div class="col-sm-6">
@@ -240,17 +254,12 @@
                         <a href="#" class="btn btn-warning py-1 px-3 mt-2 disabled">Waiting for
                             Confirmation</a>
                     @else
-                        {{-- <a href="#"
-                            class="btn btn-primary py-1 px-3 mt-2 @if (!$payment_image) disabled @endif"
-                            wire:click.prevent="confirm">Confirm Payment</a> --}}
-
                         <button type="button"
                             class="btn btn-primary py-1 px-3 mt-2 @if (!$payment_image) disabled @endif"
                             data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                             Confirm Payment
                         </button>
 
-                        <!-- Modal -->
                         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
                             data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
                             aria-hidden="true">
@@ -279,31 +288,12 @@
                         @if ($record->is_partial)
                             You paid partial amount pls pay full amount on upcoming check in
                         @endif
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
-                    <div class="position-relative h-100">
-                        <h6 class=" bg-white text-start text-primary pe-3">Scan QR Code</h6>
-                        <h3>{{ $record->resort['userAdmin']['contact_number'] }} -
-                            {{ $record->resort['userAdmin']['name'] }}</h3>
-                        <h6>
-                            50% Deposit Required ₱ {{ number_format($record->amount_to_pay / 2, 2) }}
-                        </h6>
-                        <img class="img-fluid position-absolute w-100 h-100"
-                            src="{{ asset('qr-photo/' . $record->resort->qr) }}" alt=""
-                            style="object-fit: cover;">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     {{-- <div class="container-xxl py-5">
         <div class="container">

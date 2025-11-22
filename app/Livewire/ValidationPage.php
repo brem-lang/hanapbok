@@ -30,9 +30,9 @@ class ValidationPage extends Component implements HasForms
             abort(404);
         }
 
-        if (! Session::has('user_2fa')) {
-            abort(404);
-        }
+        // if (! Session::has('user_2fa')) {
+        //     abort(404);
+        // }
 
         $this->resort = Resort::where('id', session('resort_id'))->with('userAdmin')->first();
 

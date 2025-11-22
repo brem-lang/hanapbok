@@ -22,9 +22,9 @@ class Review extends Component
             abort(404);
         }
 
-        if (! Session::has('user_2fa')) {
-            abort(404);
-        }
+        // if (! Session::has('user_2fa')) {
+        //     abort(404);
+        // }
 
         $review = auth()->user()->bookings()->where('is_review', true)->first();
 

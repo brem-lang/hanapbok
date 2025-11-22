@@ -104,6 +104,12 @@ class ResortManagement extends Page implements HasForms
                                     ->directory('/')
                                     ->required()
                                     ->image(),
+                                TextInput::make('contact_number')
+                                    ->label('Contact Number')
+                                    ->required()
+                                    ->formatStateUsing(fn ($record) => auth()->user()?->contact_number)
+                                    ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
+                                    ->maxLength(255),
                             ])
                             ->columns(1),
                     ]),
@@ -116,6 +122,11 @@ class ResortManagement extends Page implements HasForms
     {
         $data = $this->form->getState();
 
+        auth()->user()->update([
+            'contact_number' => $data['contact_number'],
+        ]);
+
+        unset($data['contact_number']);
         $this->record->update($data);
 
         Notification::make()

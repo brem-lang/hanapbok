@@ -24,14 +24,14 @@ class CreateResort extends CreateRecord
                 'name' => $data['resort_admin'],
                 'role' => 'resorts_admin',
                 'password' => bcrypt('password'),
-                'contact_number' => $data['contact_number'],
+                // 'contact_number' => $data['contact_number'],
             ]
         );
 
         unset($data['resort_admin']);
         unset($data['resort_admin_email']);
         unset($data['is_validated']);
-        unset($data['contact_number']);
+        // unset($data['contact_number']);
 
         $data['user_id'] = $user->id;
 

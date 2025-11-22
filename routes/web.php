@@ -13,6 +13,7 @@ use App\Livewire\Review;
 use App\Livewire\TwoFactor;
 use App\Livewire\ValidationPage;
 use App\Livewire\ViewBooking;
+use App\Livewire\ViewReports;
 use App\Livewire\ViewResort;
 use Illuminate\Support\Facades\Route;
 
@@ -66,6 +67,8 @@ Route::middleware('auth')->group(function () {
     Route::get('view-booking/{id}', ViewBooking::class)->name('view-booking');
 
     Route::get('lost-items', ReportLostItems::class)->name('lost-items');
+
+    Route::get('view-reports/{id}', ViewReports::class)->name('view-reports');
 
     Route::get('/profile', \App\Livewire\ProFile::class)->name('profile');
 

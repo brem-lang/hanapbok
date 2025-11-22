@@ -213,7 +213,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <label class="form-label fw-semibold">Front ID</label>
                                 <div class="border rounded p-2 text-center bg-light">
                                     <img src="{{ Storage::disk('public_uploads_id')->url($frontIdPreview) }}"
@@ -227,7 +227,7 @@
                                     <img src="{{ Storage::disk('public_uploads_id')->url($backIdPreview) }}"
                                         class="img-fluid rounded" style="max-height:180px;">
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="text-end mt-4">

@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Filament\Resources\LostItemResource;
 use App\Models\LostItem;
 use App\Models\Resort;
 use App\Models\User;
+use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -48,9 +50,9 @@ class ReportLostItems extends Component
                 abort(404);
             }
 
-            if (! Session::has('user_2fa')) {
-                abort(404);
-            }
+            // if (! Session::has('user_2fa')) {
+            //     abort(404);
+            // }
 
             $this->loadNotifications();
 
@@ -125,12 +127,12 @@ class ReportLostItems extends Component
             ->title('Report Submitted')
             ->icon('heroicon-o-check-circle')
             ->body(auth()->user()->name.' has submitted a report.')
-            // ->actions([
-            //     Action::make('view')
-            //         ->label('View')
-            //         ->url(fn () => BookingResource::getUrl('view', ['record' => $this->booking->id]))
-            //         ->markAsRead(),
-            // ])
+            ->actions([
+                Action::make('view')
+                    ->label('View')
+                    ->url(fn () => LostItemResource::getUrl('edit', ['record' => $lostItem->id]))
+                    ->markAsRead(),
+            ])
             ->sendToDatabase(User::where('id', $selectedResor->userAdmin->id)->get());
 
         return redirect('/lost-items');

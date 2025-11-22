@@ -21,7 +21,7 @@ class GuestPage extends Component
     {
         if (Auth::check()) {
 
-            if (! auth()->user()->isGuest() && ! Session::has('user_2fa')) {
+            if (! auth()->user()->isGuest()) {
                 abort(404);
             }
 

@@ -1,30 +1,34 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Resources;
 
+use App\Filament\Resources\LostItemResource\Pages;
 use App\Mail\LostAndFoundMail;
 use App\Models\LostItem;
 use App\Models\User;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Section as ComponentsSection;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Notifications\Actions\Action as ActionsAction;
 use Filament\Notifications\Notification;
-use Filament\Pages\Page;
+use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Mail;
 
-class LostItems extends Page implements HasTable
+class LostItemResource extends Resource
 {
-    use InteractsWithTable;
+    protected static ?string $model = LostItem::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
-
-    protected static string $view = 'filament.pages.lost-items';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Lost and Found Items';
 
@@ -34,20 +38,38 @@ class LostItems extends Page implements HasTable
 
     public static function canAccess(): bool
     {
+        return auth()->user()->isResortsAdmin();
+    }
+
+    public static function canCreate(): bool
+    {
         return false;
     }
 
-    public function mount()
+    public static function form(Form $form): Form
     {
-        if (auth()->user()->isGuest()) {
-            abort(404);
-        }
+        return $form
+            ->schema([
+                ComponentsSection::make()
+                    ->schema([
+                        TextInput::make('description'),
+                        DatePicker::make('date'),
+                        TextInput::make('location'),
+                        Select::make('type')
+                            ->options([
+                                'lost_item' => 'Lost Item',
+                                'found_item' => 'Found Item',
+                            ]),
+                        FileUpload::make('photo')
+                            ->disk('public_uploads_lost_item'),
+                    ])
+                    ->columns(2),
+            ]);
     }
 
-    public function table(Table $table): Table
+    public static function table(Table $table): Table
     {
         return $table
-            ->query(LostItem::query()->where('resort_id', auth()->user()?->AdminResort?->id)->latest())
             ->paginated([10, 25, 50])
             ->columns([
                 ImageColumn::make('photo')
@@ -144,8 +166,7 @@ class LostItems extends Page implements HasTable
                                     }
                                 }
                             )
-                            ->formatStateUsing(fn ($record) => $record->status)
-                            ->required(),
+                            ->formatStateUsing(fn ($record) => $record->status)->required(),
                     ])
                     ->action(function ($record, $data) {
 
@@ -165,6 +186,12 @@ class LostItems extends Page implements HasTable
                             ->success()
                             ->title('Item Status Updated')
                             ->icon('heroicon-o-check-circle')
+                            ->actions([
+                                ActionsAction::make('view')
+                                    ->label('View')
+                                    ->url(fn () => route('view-reports', ['id' => $record->id]))
+                                    ->markAsRead(),
+                            ])
                             ->sendToDatabase(User::where('id', $record->user_id)->get());
                     }),
             ])
@@ -173,7 +200,21 @@ class LostItems extends Page implements HasTable
                 //     Tables\Actions\DeleteBulkAction::make(),
                 // ]),
             ]);
+    }
 
-        return $table;
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListLostItems::route('/'),
+            'create' => Pages\CreateLostItem::route('/create'),
+            'edit' => Pages\EditLostItem::route('/{record}/edit'),
+        ];
     }
 }

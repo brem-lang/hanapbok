@@ -20,7 +20,11 @@ class RedirectAuthenticateSession
     {
         $auth = auth()->user();
 
-        if ($auth->userCodes()) {
+        if (! $auth->isGuest()) {
+            return redirect('/app');
+        }
+
+        if ($auth->userCodes() && $auth->isGuest()) {
             $time = Carbon::parse($auth->userCodes()->first()->updated_at);
 
             $now = now();

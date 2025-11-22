@@ -36,9 +36,9 @@ class ProFile extends Component
                 abort(404);
             }
 
-            if (! Session::has('user_2fa')) {
-                abort(404);
-            }
+            // if (! Session::has('user_2fa')) {
+            //     abort(404);
+            // }
 
             $this->loadNotifications();
 

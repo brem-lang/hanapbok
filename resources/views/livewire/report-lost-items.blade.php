@@ -155,13 +155,14 @@
         <div class="p-4 overflow-auto" style="max-height: calc(100vh - 65px);">
             @forelse($notifications as $notification)
                 @php
-                    // $url = $notification->data['actions'][0]['url'] ?? '';
+                    $url = $notification->data['actions'][0]['url'] ?? '';
 
                     // $parentUrl = dirname($url);
                     // $bookingId = basename($parentUrl);
+
                 @endphp
 
-                <a class="text-decoration-none text-dark d-block">
+                <a class="text-decoration-none text-dark d-block" href="{{ $url }}">
                     <div class="d-flex align-items-start mb-3 p-3 bg-light rounded shadow-sm notification-item"
                         style="transition: background-color 0.2s;">
                         <div class="me-3">
@@ -286,10 +287,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 mt-4">
-                                {{-- <button class="btn btn-outline-light w-100 py-3"
-                                    wire:click.prevent='report'>Submit</button> --}}
-
+                            {{-- <div class="col-12 mt-4">
                                 <button type="button" class="btn btn-dark w-100 py-3" data-bs-toggle="modal"
                                     data-bs-target="#staticBackdrop">
                                     Submit
@@ -322,6 +320,39 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div> --}}
+                            <div class="col-12 mt-4">
+                                <button type="button" class="btn btn-outline-light w-100 py-3"
+                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    Submit
+                                </button>
+
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                                                </h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you would like to do this?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="button" wire:click.prevent="report"
+                                                    wire:loading.attr="disabled" class="btn btn-primary">
+                                                    <span wire:loading.remove>Confirm</span>
+                                                    <span wire:loading>Processing...</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -343,7 +374,7 @@
                             <th>Resort</th>
                             <th>Location</th>
                             <th>Status</th>
-                            <th>Remarks</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -376,13 +407,15 @@
                                 </td>
                                 {{-- /************* ✨ Windsurf Command 🌟 *************/ --}}
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                    <a href="{{ route('view-reports', $item->id) }}"
+                                        class="btn btn-sm btn-primary me-2">View</a>
+                                    {{-- <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#remarksModal{{ $loop->index }}">
                                         Remarks
-                                    </button>
+                                    </button> --}}
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="remarksModal{{ $loop->index }}" tabindex="-1"
+                                    {{-- <div class="modal fade" id="remarksModal{{ $loop->index }}" tabindex="-1"
                                         aria-labelledby="remarksModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -396,7 +429,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </td>
                                 {{-- <td>{{ $item->location }}</td> --}}
                                 {{-- /******* 491ce5fb-a7f5-4679-b6c9-a631ecdc99dc *******/ --}}

@@ -30,9 +30,9 @@ class GuestBook extends Component implements HasForms
                 abort(404);
             }
 
-            if (! Session::has('user_2fa')) {
-                abort(404);
-            }
+            // if (! Session::has('user_2fa')) {
+            //     abort(404);
+            // }
 
             $this->loadNotifications();
 

@@ -94,16 +94,16 @@ class ResortResource extends Resource
                                     // ->readOnly()
                                     ->formatStateUsing(fn ($record) => $record?->userAdmin->email ?? null)
                                     ->maxLength(255),
-                                TextInput::make('contact_number')
-                                    ->label('Contact Number')
-                                    ->required()
-                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->contact_number ?? null)
-                                    ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
-                                    ->maxLength(255),
-                                Toggle::make('is_validated')
-                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->is_validated ?? false)
-                                    ->label('Validated')
-                                    ->disabled(),
+                                // TextInput::make('contact_number')
+                                //     ->label('Contact Number')
+                                //     ->required()
+                                //     ->formatStateUsing(fn ($record) => $record?->userAdmin->contact_number ?? null)
+                                //     ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
+                                //     ->maxLength(255),
+                                // Toggle::make('is_validated')
+                                //     ->formatStateUsing(fn ($record) => $record?->userAdmin->is_validated ?? false)
+                                //     ->label('Validated')
+                                //     ->disabled(),
                             ])
                             ->columns(1),
                     ]),

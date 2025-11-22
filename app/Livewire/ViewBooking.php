@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\User;
+use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -28,9 +30,9 @@ class ViewBooking extends Component
             abort(404);
         }
 
-        if (! Session::has('user_2fa')) {
-            abort(404);
-        }
+        // if (! Session::has('user_2fa')) {
+        //     abort(404);
+        // }
 
         $booking = Booking::with(['resort.userAdmin', 'bookingItems', 'bookingItems.item', 'bookingItems.entranceFee'])->find($id);
 
@@ -64,15 +66,15 @@ class ViewBooking extends Component
 
         Notification::make()
             ->success()
-            ->title('Payment Sent')
+            ->title('New Booking and Payment Received')
             ->icon('heroicon-o-check-circle')
-            ->body(auth()->user()->name.' has sent a payment.')
-            // ->actions([
-            //     Action::make('view')
-            //         ->label('View')
-            //         ->url(fn () => BookingResource::getUrl('view', ['record' => $this->booking->id]))
-            //         ->markAsRead(),
-            // ])
+            ->body('A new booking has been created by '.auth()->user()->name)
+            ->actions([
+                Action::make('view')
+                    ->label('View')
+                    ->url(fn () => BookingResource::getUrl('view', ['record' => $this->record->id]))
+                    ->markAsRead(),
+            ])
             ->sendToDatabase(User::where('id', $this->record->resort->userAdmin->id)->get());
 
         // Optionally reset the property

@@ -87,9 +87,6 @@ class User extends Authenticatable
 
     public function generateCode()
     {
-
-        logger('generate');
-
         $code = rand(100000, 999999);
 
         UserCodes::updateOrCreate(

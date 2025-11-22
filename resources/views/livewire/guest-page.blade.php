@@ -4,27 +4,17 @@
         <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
             <a href="" class="navbar-brand p-0">
                 <h1 class="text-primary m-0"><i class="fa fa-map-marker-alt me-3"></i>HANAPBOK</h1>
-                <!-- <img src="img/logo.png" alt="Logo"> -->
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>
             </button>
-            {{-- <div class="collapse navbar-collapse" id="navbarCollapse"> --}}
+
             <div class="navbar-nav ms-auto py-0">
                 <a class="nav-item nav-link active">Home</a>
                 <a href="{{ route('guest-booking') }}" class="nav-item nav-link">Book Now</a>
                 @auth
-                    {{-- <a href="{{ route('guest-booking') }}" class="nav-item nav-link">Book Now</a> --}}
                     <a href="{{ route('my-bookings') }}" class="nav-item nav-link">My Bookings</a>
                     <a href="{{ route('lost-items') }}" class="nav-item nav-link">Lost and Found Items</a>
-
-                    {{-- <a class="nav-item nav-link position-relative">
-                        <i class="fa fa-bell fs-5"></i>
-                        <span class="position-absolute translate-middle badge rounded-pill bg-danger">
-                            {{ $unreadNotificationsCount }}
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
-                    </a> --}}
                     <a @click="open = true" class="nav-item nav-link position-relative">
                         <i class="fa fa-bell fs-5"></i>
                         @if ($unreadNotificationsCount)
@@ -42,29 +32,23 @@
             </div>
 
             @auth
-                <!-- Overlay -->
                 <div x-show="open" x-transition.opacity @click="open = false"
                     class="position-fixed top-0 start-0 w-100 h-200 bg-opacity-50" x-cloak>
                 </div>
 
-                <!-- Drawer -->
                 <div x-show="open" x-transition:enter="transition transform duration-300"
                     x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
                     x-transition:leave="transition transform duration-300" x-transition:leave-start="translate-x-0"
                     x-transition:leave-end="-translate-x-full"
                     class="position-fixed top-0 start-0 bg-white h-100 shadow-lg border-end rounded-end"
                     style="width: 340px; z-index: 1050" x-cloak>
-                    <!-- Header -->
                     <div class="px-4 py-3 border-bottom bg-light">
-                        <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Notifications</h5>
                             <button class="btn btn-sm btn-light" @click="open = false" aria-label="Close">
                                 <i class="fa fa-times"></i>
                             </button>
                         </div>
-
-                        <!-- Action Buttons -->
                         <div class="d-flex gap-2 mt-3">
                             <button wire:click="markAllAsRead" class="btn btn-sm btn-outline-success"
                                 title="Mark all as read">
@@ -78,17 +62,12 @@
                         </div>
                     </div>
 
-                    <!-- Body -->
                     <div class="p-4 overflow-auto" style="max-height: calc(100vh - 65px);">
                         @forelse($notifications as $notification)
                             @php
                                 $url = $notification->data['actions'][0]['url'] ?? '';
 
-                                // $parentUrl = dirname($url);
-                                // $bookingId = basename($parentUrl);
-
                             @endphp
-                            {{-- {{ $url }} --}}
 
                             <a class="text-decoration-none text-dark d-block" href="{{ $url }}">
                                 <div class="d-flex align-items-start mb-3 p-3 bg-light rounded shadow-sm notification-item"
@@ -123,9 +102,6 @@
             @guest
                 <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="login">Login</a>
             @endguest
-
-            {{-- <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a> --}}
-            {{-- </div> --}}
         </nav>
 
         <div class="container-fluid hero-header p-0">
@@ -149,10 +125,7 @@
                 </div>
             </div>
 
-            <!-- Dark Overlay -->
             <div class="hero-overlay"></div>
-
-            <!-- Hero Text Content -->
             <div class="hero-content container">
                 <h1 class="display-3 text-white mb-3 animated slideInDown">Enjoy Your Vacation With Us</h1>
                 <p class="fs-4 mb-4 text-white animated slideInDown">Escape the stress and routine of everyday life —

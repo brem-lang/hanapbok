@@ -158,13 +158,14 @@
         <div class="p-4 overflow-auto" style="max-height: calc(100vh - 65px);">
             @forelse($notifications as $notification)
                 @php
-                    // $url = $notification->data['actions'][0]['url'] ?? '';
+                    $url = $notification->data['actions'][0]['url'] ?? '';
 
                     // $parentUrl = dirname($url);
                     // $bookingId = basename($parentUrl);
+
                 @endphp
 
-                <a class="text-decoration-none text-dark d-block">
+                <a class="text-decoration-none text-dark d-block" href="{{ $url }}">
                     <div class="d-flex align-items-start mb-3 p-3 bg-light rounded shadow-sm notification-item"
                         style="transition: background-color 0.2s;">
                         <div class="me-3">

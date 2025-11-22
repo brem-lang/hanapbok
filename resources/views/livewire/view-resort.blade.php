@@ -341,16 +341,11 @@
                                     </div>
 
                                     <div class="col-12 mt-4">
-                                        {{-- <button class="btn btn-outline-light w-100 py-3"
-                                            wire:click.prevent='submit'>Book
-                                            Now</button> --}}
-                                        <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-outline-light w-100 py-3"
                                             data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                             Book Now
                                         </button>
 
-                                        <!-- Modal -->
                                         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
                                             data-bs-keyboard="false" tabindex="-1"
                                             aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -394,8 +389,9 @@
                 <h6 class="section-title bg-white text-center text-primary px-3">ACCOMODATIONS</h6>
                 <h1 class="mb-5">Rooms & Cottages</h1>
             </div>
-            <div class="row g-4 justify-content-center">
+            {{-- <div class="row g-4 justify-content-center">
                 @foreach ($record->items ?? [] as $item)
+                    {{ $item->image }}
                     <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                         <div class="package-item">
                             <div class="text-center p-4">
@@ -404,7 +400,54 @@
                                 <p style="font-size: 12px;">
                                     {{ isset($item['type']) ? ($item['type'] == 'day_tour' ? 'Day Tour' : 'Night Tour') : '---' }}
                                 </p>
-                                {{-- <p>{{ $item['is_occupied'] ? 'Occupied' : 'Free' }}</p> --}}
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div> --}}
+            <div class="row g-4 justify-content-center">
+                @foreach ($record->items ?? [] as $item)
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="package-item">
+                            <div class="text-center p-4">
+
+                                {{-- Package Details --}}
+                                <h3 class="mb-0">₱ {{ $item['price'] }}</h3>
+                                <p>{{ ucfirst($item['name']) }} - <span
+                                        class="{{ $item['is_occupied'] ? 'text-danger' : 'text-success' }} fw-bold">{{ $item['is_occupied'] ? 'Occupied' : 'Free' }}</span>
+                                </p>
+                                <p style="font-size: 12px;">
+                                    {{ isset($item['type']) ? ($item['type'] == 'day_tour' ? 'Day Tour' : 'Night Tour') : '---' }}
+                                </p>
+
+                                {{-- 2. The VIEW IMAGE Button/Link (Moved Here) --}}
+                                <button type="button" class="btn btn-sm btn-primary mt-2" data-bs-toggle="modal"
+                                    data-bs-target="#imageModal-{{ $loop->index }}">
+                                    View Image
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="imageModal-{{ $loop->index }}" tabindex="-1"
+                        aria-labelledby="imageModalLabel-{{ $loop->index }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imageModalLabel-{{ $loop->index }}">
+                                        {{ ucfirst($item['name']) }} Image</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img src="{{ asset('accommodations-photo/' . $item->image) }}" class="img-fluid"
+                                        alt="{{ ucfirst($item['name']) }}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                </div>
                             </div>
                         </div>
                     </div>

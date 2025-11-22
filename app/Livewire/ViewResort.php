@@ -57,9 +57,9 @@ class ViewResort extends Component implements HasForms
             abort(404);
         }
 
-        if (! Session::has('user_2fa')) {
-            abort(404);
-        }
+        // if (! Session::has('user_2fa')) {
+        //     abort(404);
+        // }
 
         $this->record = Resort::with('items', 'entranceFees', 'userAdmin')->find($id);
 
@@ -229,7 +229,7 @@ class ViewResort extends Component implements HasForms
             'user_id' => auth()->user()->id,
             'resort_id' => $this->record->id,
             'status' => 'pending',
-            'amount_to_pay' => $total_amount * $this->dayCount(),
+            'amount_to_pay' => number_format($total_amount * $this->dayCount(), 2, '.', ''),
             'date' => $date,
             'date_to' => $date_to,
             'payment_type' => $this->payment_type,
@@ -265,18 +265,18 @@ class ViewResort extends Component implements HasForms
             }
         }
 
-        Notification::make()
-            ->success()
-            ->title('Booking Created')
-            ->icon('heroicon-o-check-circle')
-            ->body(auth()->user()->name.' has created a new booking.')
-            ->actions([
-                Action::make('view')
-                    ->label('View')
-                    ->url(fn () => BookingResource::getUrl('view', ['record' => $book->id]))
-                    ->markAsRead(),
-            ])
-            ->sendToDatabase(User::where('id', $this->record->userAdmin->id)->get());
+        // Notification::make()
+        //     ->success()
+        //     ->title('Booking Created')
+        //     ->icon('heroicon-o-check-circle')
+        //     ->body(auth()->user()->name.' has created a new booking.')
+        //     ->actions([
+        //         Action::make('view')
+        //             ->label('View')
+        //             ->url(fn () => BookingResource::getUrl('view', ['record' => $book->id]))
+        //             ->markAsRead(),
+        //     ])
+        //     ->sendToDatabase(User::where('id', $this->record->userAdmin->id)->get());
 
         return redirect('/view-booking/'.$book->id);
     }

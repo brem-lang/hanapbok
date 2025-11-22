@@ -54,11 +54,16 @@ class TwoFactor extends Component
             if (! is_null($find)) {
                 Session::put('user_2fa', auth()->user()->id);
 
-                if (auth()->user()->isGuest()) {
-                    redirect('index');
-                } else {
-                    redirect()->intended(Filament::getUrl());
-                }
+                auth()->user()->update([
+                    'is_2fa' => true,
+                ]);
+
+                redirect('index');
+                // if (auth()->user()->isGuest()) {
+                //     redirect('index');
+                // } else {
+                //     redirect()->intended(Filament::getUrl());
+                // }
 
                 // return redirect()->route('policy.index');
             } else {
