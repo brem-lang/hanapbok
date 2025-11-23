@@ -414,7 +414,7 @@
                                 {{-- Package Details --}}
                                 <h3 class="mb-0">₱ {{ $item['price'] }}</h3>
                                 <p>{{ ucfirst($item['name']) }} - <span
-                                        class="{{ $item['is_occupied'] ? 'text-danger' : 'text-success' }} fw-bold">{{ $item['is_occupied'] ? 'Occupied' : 'Free' }}</span>
+                                        class="{{ $item['is_occupied'] ? 'text-danger' : 'text-success' }} fw-bold">{{ $item['is_occupied'] ? 'Occupied' : 'Unoccupied' }}</span>
                                 </p>
                                 <p style="font-size: 12px;">
                                     {{ isset($item['type']) ? ($item['type'] == 'day_tour' ? 'Day Tour' : 'Night Tour') : '---' }}
