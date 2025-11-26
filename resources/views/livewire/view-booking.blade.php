@@ -396,82 +396,83 @@ $totalChargesSum = collect($additionalCharges)->sum('total_charges');
 
                     {{-- === 2. BOOKING AND PAYMENT SUMMARY === --}}
 
-                    @if ($record->status == 'completed')
-                        <div class="card mb-4 shadow-sm">
-                            <div class="card-header bg-primary text-white">
-                                <h6 class="mb-0">Summary & Payment Status</h6>
-                            </div>
-                            <div class="card-body p-3">
-                                <div class="row">
+                    {{-- @if ($record->status == 'completed') --}}
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0">Summary & Payment Status</h6>
+                        </div>
+                        <div class="card-body p-3">
+                            <div class="row">
 
-                                    {{-- Date and Payment Type Column --}}
-                                    <div class="col-md-6 border-end">
-                                        <p class="fw-bold mb-1">Booking Period:</p>
-                                        <p class="mb-2" style="font-size: 13px;">
-                                            <i class="fa fa-calendar-alt text-primary me-2"></i>
-                                            {{ \Carbon\Carbon::parse($record->date)->format('F j, Y h:i A') }}
-                                            to
-                                            <br>
-                                            <i class="fa fa-calendar-alt text-primary me-2"></i>
-                                            {{ \Carbon\Carbon::parse($record->date_to)->format('F j, Y h:i A') }}
-                                        </p>
-                                        <p class="fw-bold mb-1">Payment Method:</p>
-                                        <p class="mb-0" style="font-size: 13px;">
-                                            <i class="fa fa-credit-card text-primary me-2"></i>
-                                            <span
-                                                class="fw-bold">{{ $record->payment_type == 'gcash' ? 'GCash' : 'Walk In' }}</span>
-                                            @if ($record->payment_type == 'walk_in')
-                                                <br><small class="text-muted fst-italic">To secure your booking, please
-                                                    make a partial payment.</small>
-                                            @endif
-                                        </p>
-                                    </div>
-
-                                    {{-- Financial Summary Column --}}
-                                    <div class="col-md-6">
-                                        <table class="table table-borderless table-sm mb-0">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="fw-bold text-end">Total Amount:</td>
-                                                    <td class="text-end text-dark fw-bold">₱
-                                                        {{ number_format($record->amount_paid ?? 0, 2) }}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold text-end">Booking Amount:</td>
-                                                    <td class="text-end text-dark fw-bold">₱
-                                                        {{ number_format($record->amount_to_pay ?? 0, 2) }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold text-end text-success">Down Payment:</td>
-                                                    <td class="text-end text-success fw-bold">₱
-                                                        {{ number_format($record->amount_send ?? 0, 2) }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold text-end text-danger">Balance Due:</td>
-                                                    <td class="text-end text-danger fw-bolder">₱
-                                                        {{ number_format($record->balance ?? 0, 2) }}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        @if ($record->is_partial)
-                                            <div class="alert alert-warning p-2 mt-2" role="alert"
-                                                style="font-size: 12px;">
-                                                You paid a partial amount. Please pay the full balance on or before
-                                                check-in.
-                                            </div>
+                                {{-- Date and Payment Type Column --}}
+                                <div class="col-md-6 border-end">
+                                    <p class="fw-bold mb-1">Booking Period:</p>
+                                    <p class="mb-2" style="font-size: 13px;">
+                                        <i class="fa fa-calendar-alt text-primary me-2"></i>
+                                        {{ \Carbon\Carbon::parse($record->date)->format('F j, Y h:i A') }}
+                                        to
+                                        <br>
+                                        <i class="fa fa-calendar-alt text-primary me-2"></i>
+                                        {{ \Carbon\Carbon::parse($record->date_to)->format('F j, Y h:i A') }}
+                                    </p>
+                                    <p class="fw-bold mb-1">Payment Method:</p>
+                                    <p class="mb-0" style="font-size: 13px;">
+                                        <i class="fa fa-credit-card text-primary me-2"></i>
+                                        <span
+                                            class="fw-bold">{{ $record->payment_type == 'gcash' ? 'GCash' : 'Walk In' }}</span>
+                                        @if ($record->payment_type == 'walk_in')
+                                            <br><small class="text-muted fst-italic">To secure your booking, please
+                                                make a partial payment.</small>
                                         @endif
-                                        @if ($record->status == 'cancelled')
-                                            <p class="fw-bold mb-1 mt-3 text-danger">Cancel Reason:</p>
-                                            <p class="mb-0 text-danger" style="font-size: 13px;">
-                                                {{ $record->cancel_reason }}</p>
-                                        @endif
-                                    </div>
-
+                                    </p>
                                 </div>
+
+                                {{-- Financial Summary Column --}}
+                                <div class="col-md-6">
+                                    <table class="table table-borderless table-sm mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <td class="fw-bold text-end">Booking Amount:</td>
+                                                <td class="text-end text-dark fw-bold">₱
+                                                    {{ number_format($record->amount_to_pay ?? 0, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold text-end text-success">Down Payment:</td>
+                                                <td class="text-end text-success fw-bold">₱
+                                                    {{ number_format($record->amount_send ?? 0, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold text-end text-danger">Balance Due:</td>
+                                                <td class="text-end text-danger fw-bolder">₱
+                                                    {{ number_format($record->balance ?? 0, 2) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold text-end">Total Amount:</td>
+                                                <td class="text-end text-dark fw-bold">₱
+                                                    {{ number_format($record->amount_paid ?? 0, 2) }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    @if ($record->is_partial)
+                                        <div class="alert alert-warning p-2 mt-2" role="alert"
+                                            style="font-size: 12px;">
+                                            You paid a partial amount. Please pay the full balance on or before
+                                            check-in.
+                                        </div>
+                                    @endif
+
+                                    @if ($record->status == 'cancelled')
+                                        <p class="fw-bold mb-1 mt-3 text-danger">Cancel Reason:</p>
+                                        <p class="mb-0 text-danger" style="font-size: 13px;">
+                                            {{ $record->cancel_reason }}</p>
+                                    @endif
+                                </div>
+
                             </div>
                         </div>
-                    @endif
+                    </div>
+                    {{-- @endif --}}
 
                     {{-- === 3. PAYMENT PROOF & ACTIONS === --}}
                     <div class="card shadow-sm">
@@ -484,6 +485,15 @@ $totalChargesSum = collect($additionalCharges)->sum('total_charges');
                                 <img src="{{ asset('payments-photo/' . $record->proof_of_payment) }}"
                                     alt="Submitted Payment Proof" class="img-fluid rounded border p-1"
                                     style="max-width: 300px; height: auto;">
+
+
+                                @if ($record->status == 'confirmed')
+                                    <a href="#" class="btn btn-success py-1 px-3 mt-2 disabled">Confrim</a>
+                                @endif
+                                @if ($record->proof_of_payment && $record->status == 'pending')
+                                    <a href="#" class="btn btn-warning py-1 px-3 mt-2 disabled">Waiting for
+                                        Confirmation</a>
+                                @endif
                             @else
                                 <label for="formFile" class="form-label fw-bold">Upload Image (Required)</label>
                                 <input class="form-control @error('payment_image') is-invalid @enderror"
@@ -574,6 +584,7 @@ $totalChargesSum = collect($additionalCharges)->sum('total_charges');
                                         </div>
                                     @endif
                                 </div>
+
                             @endif
                         </div>
                     </div>
