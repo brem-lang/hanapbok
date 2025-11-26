@@ -43,7 +43,10 @@ class ReportLostItems extends Component
     {
         $this->resorts = Resort::get();
 
-        $this->record = LostItem::with('resort')->where('user_id', auth()->user()->id)->latest()->get();
+        $this->record = LostItem::with('resort')
+            ->where('user_id', auth()->user()->id)
+            ->orWhere('user_id', null)
+            ->latest()->get();
 
         if (Auth::check()) {
             if (! auth()->user()->isGuest()) {

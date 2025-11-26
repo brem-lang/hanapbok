@@ -23,6 +23,8 @@ class RevenueSummary extends Page implements HasTable
 
     protected static ?string $navigationGroup = 'Reports';
 
+    protected static ?string $title = 'Total Revenue';
+
     protected static ?int $navigationSort = 9;
 
     public static function canAccess(): bool

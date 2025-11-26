@@ -29,7 +29,7 @@ class PrintController extends Controller
             case 'daily':
                 $startDate = now()->subDays(30)->startOfDay();
                 $endDate = now()->endOfDay();
-                $title = 'Daily Revenue Report (Last 7 Days)';
+                $title = 'Daily Revenue Report';
                 $revenueColumn = 'amount_paid';
 
                 // The query now aliases columns to 'period' and 'total'

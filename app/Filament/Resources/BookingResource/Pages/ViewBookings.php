@@ -42,51 +42,51 @@ class ViewBookings extends Page
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('additional_charges')
-                ->label('Charges')
-                ->icon('heroicon-o-plus-circle')
-                ->form([
-                    Repeater::make('charges')
-                        ->formatStateUsing(fn () => $this->record->additional_charges)
-                        ->label('Additional Charges')
-                        ->reorderable(false)
-                        ->schema([
-                            Select::make('name')
-                                ->disableOptionsWhenSelectedInSiblingRepeaterItems()
-                                ->required()
-                                ->label('Charge Name')
-                                ->options(Charge::pluck('name', 'id'))
-                                ->live()
-                                ->afterStateUpdated(function (Set $set, ?string $state) {
-                                    $charge = Charge::find($state);
-                                    $set('amount', $charge?->amount);
-                                })
-                                ->searchable(),
+            // Action::make('additional_charges')
+            //     ->label('Charges')
+            //     ->icon('heroicon-o-plus-circle')
+            //     ->form([
+            // Repeater::make('charges')
+            //     ->formatStateUsing(fn () => $this->record->additional_charges)
+            //     ->label('Additional Charges')
+            //     ->reorderable(false)
+            //     ->schema([
+            //         Select::make('name')
+            //             ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+            //             ->required()
+            //             ->label('Charge Name')
+            //             ->options(Charge::pluck('name', 'id'))
+            //             ->live()
+            //             ->afterStateUpdated(function (Set $set, ?string $state) {
+            //                 $charge = Charge::find($state);
+            //                 $set('amount', $charge?->amount);
+            //             })
+            //             ->searchable(),
 
-                            TextInput::make('amount')
-                                ->label('Amount')
-                                ->prefix('PHP')
-                                ->numeric()
-                                ->readOnly(),
-                        ])
-                        ->columns(2),
-                ])->action(function ($data) {
+            //         TextInput::make('amount')
+            //             ->label('Amount')
+            //             ->prefix('PHP')
+            //             ->numeric()
+            //             ->readOnly(),
+            //     ])
+            //     ->columns(2),
+            //     ])->action(function ($data) {
 
-                    $this->record->additional_charges = $data['charges'];
-                    $this->record->save();
+            //         $this->record->additional_charges = $data['charges'];
+            //         $this->record->save();
 
-                    Notification::make()
-                        ->success()
-                        ->title('Charges Updated')
-                        ->icon('heroicon-o-check-circle')
-                        ->send();
-                })
-                ->visible(fn () => $this->record->is_checkin === 1),
+            //         Notification::make()
+            //             ->success()
+            //             ->title('Charges Updated')
+            //             ->icon('heroicon-o-check-circle')
+            //             ->send();
+            //     })
+            //     ->visible(fn () => $this->record->is_checkin === 1),
             Action::make('cancel')
                 ->icon('heroicon-o-trash')
                 ->color('danger')
                 ->label('Cancel')
-                ->hidden($this->record->status == 'cancelled')
+                ->hidden($this->record->status == 'confirmed' || $this->record->status == 'completed')
                 ->requiresConfirmation()
                 ->action(function ($data) {
 
@@ -122,46 +122,6 @@ class ViewBookings extends Page
                 ]),
         ];
     }
-
-    // protected function getHeaderActions(): array
-    // {
-    //     return [
-    //         Action::make('edit-status')
-    //             ->icon('heroicon-o-pencil')
-    //             ->label('Edit Booking')
-    //             ->requiresConfirmation()
-    //             ->action(function ($data) {
-
-    //                 $this->record->status = $data['status'];
-
-    //                 $this->record->is_partial = $data['is_partial'];
-
-    //                 $this->record->save();
-
-    //                 Notification::make()
-    //                     ->success()
-    //                     ->title('Booking Updated')
-    //                     ->icon('heroicon-o-check-circle')
-    //                     ->send();
-
-    //                 redirect(BookingResource::getUrl('view', ['record' => $this->record->id]));
-    //             })
-    //             ->form([
-    //                 Select::make('status')
-    //                     ->label('Status')
-    //                     ->options([
-    //                         'pending' => 'Pending',
-    //                         'confirmed' => 'Confirmed',
-    //                         'cancelled' => 'Cancelled',
-    //                         'moved' => 'Moved',
-    //                     ])
-    //                     ->default('pending')
-    //                     ->required(),
-    //                 Toggle::make('is_partial')
-    //                     ->label('Partial Payment'),
-    //             ]),
-    //     ];
-    // }
 
     public function form(Form $form): Form
     {
@@ -225,12 +185,19 @@ class ViewBookings extends Page
                     }),
                 TextEntry::make('date')->dateTime('F j, Y')->label('Date From'),
                 TextEntry::make('date_to')->dateTime('F j, Y')->label('Date To'),
-                TextEntry::make('amount_to_pay')->label('Amount')->prefix('₱ '),
+                TextEntry::make('amount_to_pay')->label('Amount')->prefix('₱ ')
+                    ->formatStateUsing(fn (string $state): string => number_format((float) $state, 2)),
                 TextEntry::make('amount_paid')->label('Amount Paid')->prefix('₱ '),
                 TextEntry::make('balance')->label('Balance')->prefix('₱ '),
                 TextEntry::make('resort.name')->label('Resort'),
                 TextEntry::make('payment_type')->label('Payment Type')
                     ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                TextEntry::make('reference_number')
+                    ->label('Reference Number'),
+                TextEntry::make('amount_send')
+                    ->label('Amount Sent')
+                    ->formatStateUsing(fn (string $state): string => number_format((float) $state, 2))
+                    ->prefix('₱ '),
                 // TextEntry::make('bookingItems'),
             ])
             ->columns(3);

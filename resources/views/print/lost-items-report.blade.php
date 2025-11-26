@@ -47,7 +47,7 @@
         }
 
         .totals {
-            text-align: right;
+            text-align: left;
             margin-top: 0;
             font-size: 10px;
             font-weight: bold;
@@ -110,7 +110,8 @@
         $overallTotal = $lostItems->count();
     @endphp
 
-    <div class="totals">
+    <div class="totals align-left">
+        <span style="font-size: 14px;">Summary</span><br>
         <span>Total Lost Items: {{ $totalLost }}</span><br>
         <span>Total Found Items: {{ $totalFound }}</span><br>
         <span>Overall Total: {{ $overallTotal }}</span>

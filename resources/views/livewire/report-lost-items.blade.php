@@ -28,7 +28,7 @@
                     <i class="fa fa-user fs-5"></i>
                 </a>
             </div>
-            <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a>
+            <a href="" class="btn btn-primary py-2 px-4" wire:click.prevent="logout">Logout</a>
         </nav>
 
         {{-- <div class="container-fluid bg-primary py-5 mb-5 hero-header">
@@ -72,11 +72,11 @@
 
             <!-- Hero Text Content -->
             <div class="hero-content container">
-                <h1 class="display-3 text-white animated slideInDown">Lost Items</h1>
+                <h1 class="display-3 text-white animated slideInDown">Lost and Found Items</h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb justify-content-center">
                         <li class="breadcrumb-item"><a href="{{ route('index') }}">Home</a></li>
-                        <li class="breadcrumb-item text-white active" aria-current="page">Lost Items</li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Lost and Found Items</li>
                     </ol>
                 </nav>
             </div>
@@ -239,7 +239,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="mt-4">
+                            {{-- <div class="mt-4">
                                 <div>
                                     <div class="form-floating">
                                         <input type="datetime-local" class="form-control" wire:model="date" required
@@ -250,6 +250,18 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+                            </div> --}}
+                            <div class="mt-4">
+                                <div class="form-floating">
+                                    <input type="datetime-local" class="form-control" id="date"
+                                        wire:model="date" required max="{{ now()->format('Y-m-d\TH:i') }}"
+                                        onchange="confirmDate(event)">
+                                    <label>Date</label>
+                                </div>
+
+                                @error('date')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="mt-4">
                                 <div>
@@ -405,34 +417,10 @@
                                             Unknown
                                     @endswitch
                                 </td>
-                                {{-- /************* ✨ Windsurf Command 🌟 *************/ --}}
                                 <td>
                                     <a href="{{ route('view-reports', $item->id) }}"
                                         class="btn btn-sm btn-primary me-2">View</a>
-                                    {{-- <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#remarksModal{{ $loop->index }}">
-                                        Remarks
-                                    </button> --}}
-
-                                    <!-- Modal -->
-                                    {{-- <div class="modal fade" id="remarksModal{{ $loop->index }}" tabindex="-1"
-                                        aria-labelledby="remarksModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="remarksModalLabel">Remarks</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {{ $item->remarks }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
                                 </td>
-                                {{-- <td>{{ $item->location }}</td> --}}
-                                {{-- /******* 491ce5fb-a7f5-4679-b6c9-a631ecdc99dc *******/ --}}
                             </tr>
                         @endforeach
                 </table>
@@ -442,28 +430,35 @@
     <!-- Package Start -->
 
     <!-- Package End -->
-    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-3">Contact</h4>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Anilao Port Anilao Proper , Mabini ,
-                        Davao De Oro , Philippines</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>0969 643 3420</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>icmomabini@gmail.com</p>
-                    <p class="mb-2"><i class="fab fa-facebook me-3"></i>Mabini ICM Tourism Office</p>
-                </div>
+    <div class="container-fluid bg-dark text-light text-center py-5 mt-5">
+        <h3 class="text-white mb-4">Contact Us</h3>
+
+        <div class="d-flex justify-content-center gap-4 mb-3">
+            <div>
+                <i class="fa fa-phone fa-2x text-primary mb-2"></i>
+                <p>0969 643 3420</p>
+            </div>
+            <div>
+                <i class="fa fa-envelope fa-2x text-primary mb-2"></i>
+                <p>icmomabini@gmail.com</p>
+            </div>
+            <div>
+                <i class="fa fa-map-marker-alt fa-2x text-primary mb-2"></i>
+                <p>Anilao Port, Mabini</p>
             </div>
         </div>
-        <div class="container">
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#">HANAPBOK</a>, All Right Reserved.
-                    </div>
-                </div>
-            </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-3">
+            <a class="btn btn-light rounded-circle" href="https://www.facebook.com/ICMOmabini2024"><i
+                    class="fab fa-facebook-f"></i></a>
+            <a class="btn btn-light rounded-circle"
+                href="https://www.pangasinan.gov.ph/city-municipalities/mabini/#:~:text=Tourism%2Dwise%2C%20the%20town%20of,formations%20of%20stalagmites%20and%20stalactites"><i
+                    class="fab fa-chrome"></i></a>
         </div>
+
+        <hr class="border-secondary w-50 mx-auto my-4">
+
+        <p class="mb-0">&copy; <strong>HANAPBOK</strong> — All Rights Reserved.</p>
     </div>
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
@@ -495,5 +490,15 @@
             const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
             modal.hide();
         });
+    </script>
+    <script>
+        function confirmDate(event) {
+            const selected = event.target.value;
+
+            if (!confirm("Use this date?\n\n" + selected)) {
+                event.target.value = "";
+                event.target.dispatchEvent(new Event('input'));
+            }
+        }
     </script>
 </div>

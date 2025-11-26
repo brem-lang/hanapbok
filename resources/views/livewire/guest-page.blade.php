@@ -96,11 +96,11 @@
             @endauth
 
             @auth
-                <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="logout">Logout</a>
+                <a href="" class="btn btn-primary  py-2 px-4" wire:click.prevent="logout">Logout</a>
             @endauth
 
             @guest
-                <a href="" class="btn btn-primary rounded-pill py-2 px-4" wire:click.prevent="login">Login</a>
+                <a href="" class="btn btn-primary py-2 px-4" wire:click.prevent="login">Login</a>
             @endguest
         </nav>
 
@@ -217,29 +217,34 @@
                 <h6 class="section-title bg-white text-center text-primary px-3">Services</h6>
                 <h1 class="mb-5">LOST AND FOUND ITEM TRACKING & RESORT MAP</h1>
             </div>
-            <div class="row g-4">
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item rounded pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5>Resort Reservation</h5>
-                            <p>Booking affordable resorts online</p>
+            <div class="row g-3">
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <a href="/app/login" class="text-decoration-none">
+                        <div class="service-item rounded pt-3">
+                            <div class="p-4 text-center">
+                                <i class="fa fa-3x fa-book text-primary mb-4"></i>
+                                <h5 class="text-dark">Resort Reservation</h5>
+                                <p>Booking affordable resorts online</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item rounded pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
-                            <h5>Tracking Lost Items</h5>
-                            <p>Track lost items</p>
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <a href="/app/login" style="text-decoration: none; color: inherit;">
+                        <div class="service-item rounded pt-3">
+                            <div class="p-4 text-center">
+                                <i class="fa fa-3x fa-file text-primary mb-4"></i>
+                                <h5>Tracking Lost Items</h5>
+                                <p>Tracking lost and found items</p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
-                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item rounded pt-3">
-                        <div class="p-4">
-                            <i class="fa fa-3x fa-globe text-primary mb-4"></i>
+
+                <div class="col-lg-4 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item rounded pt-3" onclick="scrollToLocation()" style="cursor:pointer;">
+                        <div class="p-4 text-center">
+                            <i class="fa fa-3x fa-map-pin text-primary mb-4"></i>
                             <h5>GPS</h5>
                             <p>Locate Resorts via GPS</p>
                         </div>
@@ -326,7 +331,7 @@
                             style="width: 100px; height: 100px;">
                             <i class="fa fa-globe fa-3x text-white"></i>
                         </div>
-                        <h5 class="mt-4">Choose A Resort</h5>
+                        <h5 class="mt-4">Choose a Resort</h5>
                         <hr class="w-25 mx-auto bg-primary mb-1">
                         <hr class="w-50 mx-auto bg-primary mt-0">
                         <p class="mb-0">
@@ -372,179 +377,54 @@
 
 
     {{-- gps --}}
-    <div class="container-xxl py-5">
+    <div class="container-xxl py-5" id="location-section">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h6 class="section-title bg-white text-center text-primary px-3">Location</h6>
                 <h1 class="mb-5">SEE MAP OR FIND LOCATION</h1>
             </div>
             <div class="row g-4">
-                {{-- <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <h5>Get In Touch</h5>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam
-                        et eos</p>
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
-                            style="width: 50px; height: 50px;">
-                            <i class="fa fa-map-marker-alt text-white"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="text-primary">Office</h5>
-                            <p class="mb-0">123 Street, New York, USA</p>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
-                            style="width: 50px; height: 50px;">
-                            <i class="fa fa-phone-alt text-white"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="text-primary">Mobile</h5>
-                            <p class="mb-0">+012 345 67890</p>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="d-flex align-items-center justify-content-center flex-shrink-0 bg-primary"
-                            style="width: 50px; height: 50px;">
-                            <i class="fa fa-envelope-open text-white"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="text-primary">Email</h5>
-                            <p class="mb-0">info@example.com</p>
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    {{-- <iframe class="position-relative rounded w-100 h-100"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3001156.4288297426!2d-78.01371936852176!3d42.72876761954724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4ccc4bf0f123a5a9%3A0xddcfc6c1de189567!2sNew%20York%2C%20USA!5e0!3m2!1sen!2sbd!4v1603794290143!5m2!1sen!2sbd"
-                        frameborder="0" style="min-height: 300px; border:0;" allowfullscreen="" aria-hidden="false"
-                        tabindex="0"></iframe> --}}
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1512.290641204875!2d125.85672823302018!3d7.280530837458852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32f95989f485358d%3A0xa763bdfd4defd8d2!2sMabini%20Davao%20de%20Oro!5e1!3m2!1sen!2sph!4v1752594915219!5m2!1sen!2sph"
                         width="1400" height="600" style="border:0;" allowfullscreen="" loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
-                {{-- <div class="col-lg-4 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
-                    <form>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="name"
-                                        placeholder="Your Name">
-                                    <label for="name">Your Name</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="email"
-                                        placeholder="Your Email">
-                                    <label for="email">Your Email</label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="subject" placeholder="Subject">
-                                    <label for="subject">Subject</label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <textarea class="form-control" placeholder="Leave a message here" id="message" style="height: 100px"></textarea>
-                                    <label for="message">Message</label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
-                            </div>
-                        </div>
-                    </form>
-                </div> --}}
             </div>
         </div>
     </div>
 
 
     <!-- Footer Start -->
-    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                {{-- <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-3">Company</h4>
-                    <a class="btn btn-link" href="">About Us</a>
-                    <a class="btn btn-link" href="">Contact Us</a>
-                    <a class="btn btn-link" href="">Privacy Policy</a>
-                    <a class="btn btn-link" href="">Terms & Condition</a>
-                    <a class="btn btn-link" href="">FAQs & Help</a>
-                </div> --}}
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-3">Contact</h4>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Anilao Port Anilao Proper , Mabini ,
-                        Davao De Oro , Philippines</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>0969 643 3420</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>icmomabini@gmail.com</p>
-                    <p class="mb-2"><i class="fab fa-facebook me-3"></i>Mabini ICM Tourism Office</p>
-                    {{-- <div class="d-flex pt-2">
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i
-                                class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i
-                                class="fab fa-linkedin-in"></i></a>
-                    </div> --}}
-                </div>
-                {{-- <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-3">Gallery</h4>
-                    <div class="row g-2 pt-2">
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/package-1.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/package-2.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/package-3.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/package-2.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/package-3.jpg" alt="">
-                        </div>
-                        <div class="col-4">
-                            <img class="img-fluid bg-light p-1" src="img/package-1.jpg" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-white mb-3">Newsletter</h4>
-                    <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
-                    <div class="position-relative mx-auto" style="max-width: 400px;">
-                        <input class="form-control border-primary w-100 py-3 ps-4 pe-5" type="text"
-                            placeholder="Your email">
-                        <button type="button"
-                            class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
-                    </div>
-                </div> --}}
+    <div class="container-fluid bg-dark text-light text-center py-5 mt-5">
+        <h3 class="text-white mb-4">Contact Us</h3>
+
+        <div class="d-flex justify-content-center gap-4 mb-3">
+            <div>
+                <i class="fa fa-phone fa-2x text-primary mb-2"></i>
+                <p>0969 643 3420</p>
+            </div>
+            <div>
+                <i class="fa fa-envelope fa-2x text-primary mb-2"></i>
+                <p>icmomabini@gmail.com</p>
+            </div>
+            <div>
+                <i class="fa fa-map-marker-alt fa-2x text-primary mb-2"></i>
+                <p>Anilao Port, Mabini</p>
             </div>
         </div>
-        <div class="container">
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#">HANAPBOK</a>, All Right Reserved.
-                        {{-- Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a> --}}
-                    </div>
-                    {{-- <div class="col-md-6 text-center text-md-end">
-                        <div class="footer-menu">
-                            <a href="">Home</a>
-                            <a href="">Cookies</a>
-                            <a href="">Help</a>
-                            <a href="">FQAs</a>
-                        </div>
-                    </div> --}}
-                </div>
-            </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-3">
+            <a class="btn btn-light rounded-circle" href="https://www.facebook.com/ICMOmabini2024"><i
+                    class="fab fa-facebook-f"></i></a>
+            <a class="btn btn-light rounded-circle"
+                href="https://www.pangasinan.gov.ph/city-municipalities/mabini/#:~:text=Tourism%2Dwise%2C%20the%20town%20of,formations%20of%20stalagmites%20and%20stalactites"><i
+                    class="fab fa-chrome"></i></a>
         </div>
+
+        <hr class="border-secondary w-50 mx-auto my-4">
+
+        <p class="mb-0">&copy; <strong>HANAPBOK</strong> — All Rights Reserved.</p>
     </div>
     <!-- Footer End -->
 
@@ -552,3 +432,11 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </div>
+
+<script>
+    function scrollToLocation() {
+        document.getElementById('location-section').scrollIntoView({
+            behavior: 'smooth'
+        });
+    }
+</script>

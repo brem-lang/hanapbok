@@ -3,6 +3,7 @@
 use App\Http\Controllers\GuestReviewController;
 use App\Http\Controllers\LostFoundController;
 use App\Http\Controllers\PrintController;
+use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\SocialiteController;
 use App\Livewire\Booking;
 use App\Livewire\GuestBook;
@@ -80,4 +81,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/lost-found/print/{resort_id}', [LostFoundController::class, 'export'])
         ->name('lostFound.print');
+
+    Route::get('/reports/revenue-trends/{resort_id}', [RevenueController::class, 'revenueTrends'])
+        ->name('reports.revenueTrends');
 });

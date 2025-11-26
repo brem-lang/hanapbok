@@ -32,4 +32,9 @@ class Resort extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(GuestReview::class);
+    }
 }

@@ -20,8 +20,14 @@ class ViewBooking extends Component
 
     public $payment_image;
 
+    public $reference_number;
+
+    public $amount_sent;
+
     protected $rules = [
         'payment_image' => 'required|image|max:2048', // Required, must be an image, max 2MB
+        'reference_number' => 'required|string',
+        'amount_sent' => 'required|numeric|min:0',
     ];
 
     public function mount($id)
@@ -60,6 +66,8 @@ class ViewBooking extends Component
 
         $this->record->update([
             'proof_of_payment' => $path,
+            'reference_number' => $this->reference_number,
+            'amount_send' => number_format($this->amount_sent, 2, '.', ''),
         ]);
 
         session()->flash('message', 'Payment confirmed. Your proof has been uploaded.');

@@ -45,7 +45,7 @@ class ViewResort extends Component implements HasForms
 
     public $date_to;
 
-    public $payment_type;
+    public $payment_type = 'gcash';
 
     public $activePage = 'view';
 
@@ -153,7 +153,7 @@ class ViewResort extends Component implements HasForms
 
     public function submit()
     {
-        $this->dispatch('close-modal');
+        // $this->dispatch('close-modal');
 
         $entranceFeesData = $this->items ?? [];
         $accomodationData = $this->cottageRooms ?? [];
@@ -163,14 +163,14 @@ class ViewResort extends Component implements HasForms
         $entranceFeeAmount = 0;
         $accomodationAmount = 0;
 
-        if (! $date) {
-            $this->addError('date', 'Please select start date.');
-
-            return;
+        if (! empty($this->cottageRooms)) {
+            $lastIndex = count($this->cottageRooms) - 1;
+            $this->resetValidation("cottageRooms.{$lastIndex}.cottage_id");
         }
 
-        if (! $date_to) {
-            $this->addError('date_to', 'Please select end date.');
+        if (! empty($this->cottageRooms) && empty(end($this->cottageRooms)['cottage_id'])) {
+            $lastIndex = count($this->cottageRooms) - 1;
+            $this->addError("cottageRooms.{$lastIndex}.cottage_id", 'Please select a cottage before adding another item.');
 
             return;
         }
@@ -187,24 +187,26 @@ class ViewResort extends Component implements HasForms
             return;
         }
 
-        // if (! empty($this->cottageRooms)) {
-        //     $lastIndex = count($this->cottageRooms) - 1;
-        //     $this->resetValidation("cottageRooms.{$lastIndex}.cottage_id");
-        // }
+        if (! $date) {
+            $this->addError('date', 'Please select start date.');
 
-        // if (! empty($this->cottageRooms) && empty(end($this->cottageRooms)['cottage_id'])) {
-        //     $lastIndex = count($this->cottageRooms) - 1;
-        //     $this->addError("cottageRooms.{$lastIndex}.cottage_id", 'Please select a cottage before adding another item.');
+            return;
+        }
 
-        //     return;
-        // }
+        if (! $date_to) {
+            $this->addError('date_to', 'Please select end date.');
+
+            return;
+        }
 
         $entranceFeeIds = collect($entranceFeesData)->pluck('entrance_fee_id')->unique()->toArray();
         $availableEntranceFees = EntranceFee::whereIn('id', $entranceFeeIds)->get()->keyBy('id');
+        $entranceQuantity = 0;
 
         foreach ($entranceFeesData as $feeSelection) {
             $entranceFeeId = $feeSelection['entrance_fee_id'];
             $quantity = $feeSelection['quantity'];
+            $entranceQuantity += $quantity;
 
             if (isset($availableEntranceFees[$entranceFeeId])) {
                 $entranceFeeAmount += $availableEntranceFees[$entranceFeeId]->price * $quantity;
@@ -225,13 +227,25 @@ class ViewResort extends Component implements HasForms
 
         $total_amount = $entranceFeeAmount + $accomodationAmount;
 
+        $itemData = Item::whereIn('id', $accomodationIds)->first();
+
+        if ($entranceQuantity > $itemData->number_person) {
+            $lastIndex = count($this->items) - 1;
+            $this->addError('overQuantity', 'Quantity of list of guests exceed the allowed number of persons for the selected cottage.');
+
+            return;
+        }
+
+        $checkInDate = $date.' '.$itemData->check_in;
+        $checkOutDate = $date_to.' '.$itemData->check_out;
+
         $book = Booking::create([
             'user_id' => auth()->user()->id,
             'resort_id' => $this->record->id,
             'status' => 'pending',
             'amount_to_pay' => number_format($total_amount * $this->dayCount(), 2, '.', ''),
-            'date' => $date,
-            'date_to' => $date_to,
+            'date' => $checkInDate,
+            'date_to' => $checkOutDate,
             'payment_type' => $this->payment_type,
         ]);
 

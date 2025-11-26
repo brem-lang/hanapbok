@@ -55,6 +55,21 @@ class LostandFoundChart extends ChartWidget
         ];
     }
 
+    protected function getOptions(): array
+    {
+        return [
+            // ... other options ...
+            'scales' => [
+                'y' => [ // Target the Y-axis
+                    'ticks' => [
+                        'precision' => 0, // Forces zero decimal places
+                    ],
+                ],
+                // ... other axes ...
+            ],
+        ];
+    }
+
     protected function getType(): string
     {
         return 'line';

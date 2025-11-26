@@ -9,6 +9,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
@@ -93,6 +94,19 @@ class Items extends Component implements HasForms, HasTable
                             ->required()
                             ->numeric()
                             ->maxLength(255),
+                        TimePicker::make('check_in')
+                            ->required()
+                            ->native(false)
+                            ->displayFormat('g A'),
+                        TimePicker::make('check_out')
+                            ->required()
+                            ->native(false)
+                            ->displayFormat('g A'),
+                        TextInput::make('number_person')
+                            ->label('Number of Person')
+                            ->required()
+                            ->numeric()
+                            ->maxLength(255),
                         Textarea::make('description')
                             ->columnSpanFull()
                             ->maxLength(255),
@@ -149,6 +163,19 @@ class Items extends Component implements HasForms, HasTable
                             ->required(),
                         TextInput::make('price')
                             ->prefix('₱')
+                            ->required()
+                            ->numeric()
+                            ->maxLength(255),
+                        TimePicker::make('check_in')
+                            ->required()
+                            ->native(false)
+                            ->displayFormat('g A'),
+                        TimePicker::make('check_out')
+                            ->required()
+                            ->native(false)
+                            ->displayFormat('g A'),
+                        TextInput::make('number_person')
+                            ->label('Number of Person')
                             ->required()
                             ->numeric()
                             ->maxLength(255),

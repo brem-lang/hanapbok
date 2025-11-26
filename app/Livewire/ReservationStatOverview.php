@@ -10,11 +10,14 @@ class ReservationStatOverview extends BaseWidget
 {
     protected function getStats(): array
     {
-        $numberTourist = Booking::query()->where('status', 'confirmed')->count();
-        $pendingBooking = Booking::query()->where('status', 'pending')->count();
+        $numberTourist = Booking::query()
+            ->whereIn('status', ['confirmed', 'completed'])
+            ->where('resort_id', auth()->user()?->AdminResort?->id)
+            ->sum('actual_check_guest');
+        $pendingBooking = Booking::query()->where('status', 'pending')->where('resort_id', auth()->user()?->AdminResort?->id)->count();
 
         return [
-            Stat::make('Number of Tourist', $numberTourist),
+            Stat::make('Number of Guest', $numberTourist),
             Stat::make('Number of Bookings', $pendingBooking),
         ];
     }

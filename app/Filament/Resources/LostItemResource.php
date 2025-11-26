@@ -6,7 +6,7 @@ use App\Filament\Resources\LostItemResource\Pages;
 use App\Mail\LostAndFoundMail;
 use App\Models\LostItem;
 use App\Models\User;
-use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section as ComponentsSection;
 use Filament\Forms\Components\Select;
@@ -20,9 +20,12 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Mail;
+
+use function Symfony\Component\Clock\now;
 
 class LostItemResource extends Resource
 {
@@ -34,6 +37,8 @@ class LostItemResource extends Resource
 
     protected static ?string $title = 'Lost and Found Items';
 
+    protected static ?string $modelLabel = 'lost and Found Item';
+
     protected static ?int $navigationSort = 5;
 
     public static function canAccess(): bool
@@ -43,7 +48,7 @@ class LostItemResource extends Resource
 
     public static function canCreate(): bool
     {
-        return false;
+        return true;
     }
 
     public static function form(Form $form): Form
@@ -52,15 +57,22 @@ class LostItemResource extends Resource
             ->schema([
                 ComponentsSection::make()
                     ->schema([
-                        TextInput::make('description'),
-                        DatePicker::make('date'),
-                        TextInput::make('location'),
+                        TextInput::make('description')
+                            ->required(),
+                        DateTimePicker::make('date')
+                            ->maxDate(now()->format('Y-m-d H:i'))
+                            ->required(),
+                        TextInput::make('location')
+                            ->required(),
                         Select::make('type')
+                            ->required()
                             ->options([
                                 'lost_item' => 'Lost Item',
                                 'found_item' => 'Found Item',
                             ]),
                         FileUpload::make('photo')
+                            ->required()
+                            ->image()
                             ->disk('public_uploads_lost_item'),
                     ])
                     ->columns(2),
@@ -107,6 +119,7 @@ class LostItemResource extends Resource
                         default => 'gray',
                     }),
             ])
+            ->filtersFormColumns(2)
             ->filters([
                 SelectFilter::make('type')
                     ->label('Type')
@@ -114,7 +127,7 @@ class LostItemResource extends Resource
                         'lost_item' => 'Lost Item',
                         'found_item' => 'Found Item',
                     ]),
-            ])
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Action::make('email_front_desk')
                     ->label('Mail')
@@ -149,6 +162,13 @@ class LostItemResource extends Resource
                             ->formatStateUsing(fn ($record) => $record->remarks),
                         Select::make('status')
                             ->label('Status')
+                            ->default(function ($record) {
+                                if ($record->type == 'lost_item') {
+                                    return 'found';
+                                } else {
+                                    return 'claimed';
+                                }
+                            })
                             ->options(
                                 function ($record) {
                                     if ($record->type == 'lost_item') {

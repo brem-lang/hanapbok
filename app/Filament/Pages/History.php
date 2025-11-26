@@ -4,12 +4,17 @@ namespace App\Filament\Pages;
 
 use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
+use App\Models\User;
+use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Page;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class History extends Page implements HasTable
 {
@@ -44,23 +49,58 @@ class History extends Page implements HasTable
                 TextColumn::make('user.name')
                     ->label('Guest Name')
                     ->sortable()
-                    ->toggleable()
+                    // ->toggleable()
                     ->searchable(),
                 TextColumn::make('date')
                     ->label('Check-In Date')
                     ->date('F d, Y h:i A')
                     ->searchable()
-                    ->toggleable()
+                    // ->toggleable()
                     ->sortable(),
                 TextColumn::make('date_to')
                     ->label('Check-Out Date')
                     ->date('F d, Y h:i A')
                     ->searchable()
-                    ->toggleable()
+                    // ->toggleable()
                     ->sortable(),
+                TextColumn::make('actual_check_in')
+                    ->label('Actual Check-In')
+                    ->date('F d, Y h:i A')
+                    ->timezone('Asia/Manila')
+                    ->searchable()
+                    // ->toggleable()
+                    ->sortable(),
+                TextColumn::make('actual_check_out')
+                    ->label('Actual Check-Out')
+                    ->date('F d, Y h:i A')
+                    ->timezone('Asia/Manila')
+                    ->searchable()
+                // ->toggleable()
+                ,
             ])
             ->filters([
-                //
+                SelectFilter::make('user_id')
+                    ->label('Guest')
+                    ->options(User::where('role', 'guest')->pluck('name', 'id'))->preload()
+                    ->searchable(),
+                Filter::make('createdated_at')
+                    ->form([
+                        DatePicker::make('date')
+                            ->label('Check-In Date'),
+                        DatePicker::make('date_to')
+                            ->label('Check-Out Date'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['date'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                            )
+                            ->when(
+                                $data['date_to'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('date_to', '<=', $date),
+                            );
+                    }),
             ])
             ->actions([
                 Action::make('view')

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\LostItemResource\Pages;
 
 use App\Filament\Resources\LostItemResource;
 use App\Livewire\StatsLostItemsOverview;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListLostItems extends ListRecords
@@ -14,6 +15,14 @@ class ListLostItems extends ListRecords
     {
         return [
             StatsLostItemsOverview::class,
+        ];
+    }
+
+    public function getHeaderActions(): array
+    {
+        return [
+            CreateAction::make()
+                ->label('Report'),
         ];
     }
 }
