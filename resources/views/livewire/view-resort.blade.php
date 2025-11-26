@@ -408,70 +408,70 @@
             </div>
             <div class="row g-4 justify-content-center">
                 @foreach ($record->items ?? [] as $item)
-                    @if ($item['is_occupied'] == true)
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="package-item">
-                                <div class="text-center p-4">
+                    {{-- @if ($item['is_occupied'] == true) --}}
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="package-item">
+                            <div class="text-center p-4">
 
-                                    <h3 class="mb-0">₱ {{ number_format($item['price'] ?? 0, 2) }}</h3>
-                                    <p>{{ ucfirst($item['name']) }} </p>
-                                    <span
-                                        class="{{ $item['is_occupied'] ? 'text-danger' : 'text-success' }} fw-bold">{{ $item['is_occupied'] ? 'Occupied' : 'Unoccupied' }}</span>
-                                    <p style="font-size: 12px;">
-                                        {{ isset($item['type']) ? ($item['type'] == 'day_tour' ? 'Day Tour' : 'Night Tour') : '---' }}
+                                <h3 class="mb-0">₱ {{ number_format($item['price'] ?? 0, 2) }}</h3>
+                                <p>{{ ucfirst($item['name']) }} </p>
+                                <span
+                                    class="{{ $item['is_occupied'] ? 'text-danger' : 'text-success' }} fw-bold">{{ $item['is_occupied'] ? 'Occupied' : '' }}</span>
+                                <p style="font-size: 12px;">
+                                    {{ isset($item['type']) ? ($item['type'] == 'day_tour' ? 'Day Tour' : 'Night Tour') : '---' }}
+                                </p>
+
+                                <button type="button" class="btn btn-sm btn-primary mt-2" data-bs-toggle="modal"
+                                    data-bs-target="#imageModal-{{ $loop->index }}">
+                                    View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="imageModal-{{ $loop->index }}" tabindex="-1"
+                        aria-labelledby="imageModalLabel-{{ $loop->index }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imageModalLabel-{{ $loop->index }}">
+                                        {{ ucfirst($item['name']) }} Image</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="p-2 mb-2">
+                                    <h1>{{ $item['description'] }}</h1>
+                                    <p>
+                                        Number of allowed guests:
+                                        <span class="fw-bold">
+                                            {{ $item['number_person'] }}
+                                        </span>
                                     </p>
-
-                                    <button type="button" class="btn btn-sm btn-primary mt-2" data-bs-toggle="modal"
-                                        data-bs-target="#imageModal-{{ $loop->index }}">
-                                        View
-                                    </button>
+                                    <p>
+                                        Check-in:
+                                        <span class="fw-bold">
+                                            {{ date('g:i A', strtotime($item['check_in'])) }}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        Check-out:
+                                        <span class="fw-bold">
+                                            {{ date('g:i A', strtotime($item['check_out'])) }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img src="{{ asset('accommodations-photo/' . $item->image) }}" class="img-fluid"
+                                        alt="{{ ucfirst($item['name']) }}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="modal fade" id="imageModal-{{ $loop->index }}" tabindex="-1"
-                            aria-labelledby="imageModalLabel-{{ $loop->index }}" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="imageModalLabel-{{ $loop->index }}">
-                                            {{ ucfirst($item['name']) }} Image</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="p-2 mb-2">
-                                        <h1>{{ $item['description'] }}</h1>
-                                        <p>
-                                            Number of allowed guests:
-                                            <span class="fw-bold">
-                                                {{ $item['number_person'] }}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Check-in:
-                                            <span class="fw-bold">
-                                                {{ date('g:i A', strtotime($item['check_in'])) }}
-                                            </span>
-                                        </p>
-                                        <p>
-                                            Check-out:
-                                            <span class="fw-bold">
-                                                {{ date('g:i A', strtotime($item['check_out'])) }}
-                                            </span>
-                                        </p>
-                                    </div>
-                                    <div class="modal-body text-center">
-                                        <img src="{{ asset('accommodations-photo/' . $item->image) }}"
-                                            class="img-fluid" alt="{{ ucfirst($item['name']) }}">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                    </div>
+                    {{-- @endif --}}
                 @endforeach
             </div>
         </div>
