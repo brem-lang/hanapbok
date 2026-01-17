@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Charge;
 use App\Models\User;
 use Filament\Actions\Action;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -20,6 +21,8 @@ use Filament\Infolists\Infolist;
 use Filament\Notifications\Actions\Action as ActionsAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
+
+use function Symfony\Component\Clock\now;
 
 class ViewBookings extends Page
 {
@@ -82,6 +85,68 @@ class ViewBookings extends Page
             //             ->send();
             //     })
             //     ->visible(fn () => $this->record->is_checkin === 1),
+            Action::make('reschedule')
+                ->icon('heroicon-o-calendar')
+                ->label('Reschedule')
+                ->requiresConfirmation()
+                ->hidden($this->record->status == 'confirmed' || $this->record->status == 'completed')
+                ->action(function ($data) {
+                    $dateFrom = $data['date'];
+                    $dateTo = $data['date_to'];
+
+                    // 1️⃣ Check conflicting pending bookings
+                    $hasConflict = Booking::where('resort_id', $this->record->resort_id)
+                        ->where('status', 'pending')
+                        ->where('id', '!=', $this->record->id) // exclude self
+                        ->where(function ($q) use ($dateFrom, $dateTo) {
+                            $q->where('date', '<', $dateTo)
+                                ->where('date_to', '>', $dateFrom);
+                        })
+                        ->exists();
+
+                    // 2️⃣ If conflict → notify & stop
+                    if ($hasConflict) {
+                        Notification::make()
+                            ->title('Date already reserved')
+                            ->body('The selected date range is already reserved. Please choose another date.')
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
+
+                    $this->record->update([
+                        'date' => $dateFrom,
+                        'date_to' => $dateTo,
+                    ]);
+
+                    Notification::make()
+                        ->title('Booking rescheduled')
+                        ->success()
+                        ->send();
+
+                    Notification::make()
+                        ->success()
+                        ->title('Booking Rescheduled')
+                        ->icon('heroicon-o-check-circle')
+                        ->actions([
+                            ActionsAction::make('view')
+                                ->label('View')
+                                ->url(fn () => route('view-booking', ['id' => $this->record->id]))
+                                ->markAsRead(),
+                        ])
+                        ->sendToDatabase(User::where('id', $this->record->user_id)->get());
+                })
+                ->form([
+                    DatePicker::make('date')
+                        ->label('Date From')
+                        ->minDate(now()->format('Y-m-d'))
+                        ->required(),
+                    DatePicker::make('date_to')
+                        ->label('Date To')
+                        ->minDate(now()->format('Y-m-d'))
+                        ->required(),
+                ]),
             Action::make('cancel')
                 ->icon('heroicon-o-trash')
                 ->color('danger')

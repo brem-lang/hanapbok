@@ -157,7 +157,6 @@
                 <div class="booking p-5">
                     <div class="row g-5 align-items-center">
                         <div class="col-md-6 text-white">
-                            {{-- <h6 class="text-white text-uppercase">Booking</h6> --}}
                             <h1 class="text-white mb-4">Online Booking</h1>
                             <p class="mb-4">{{ $record->description }}</p>
                             <a class="btn btn-outline-light py-3 px-5 mt-2" href=""
@@ -175,18 +174,25 @@
                                                 <select class="form-select" id="select-cottage-{{ $cottageIndex }}"
                                                     wire:model.live="cottageRooms.{{ $cottageIndex }}.cottage_id">
                                                     <option value="">Select Cottage</option>
-                                                    @foreach ($resort as $cottage)
-                                                        @if (
-                                                            !collect($cottageRooms)->where('cottage_id', $cottage->id)->where(function ($i, $key) use ($cottageIndex) {
-                                                                    return $key !== $cottageIndex;
-                                                                })->isNotEmpty())
+                                                    {{-- @foreach ($resort as $cottage)
+                                                        @if (!collect($cottageRooms)->where('cottage_id', $cottage->id)->where(function ($i, $key) use ($cottageIndex) {
+            return $key !== $cottageIndex;
+        })->isNotEmpty())
                                                             <option value="{{ $cottage->id }}">
                                                                 {{ $cottage->name }} -
                                                                 {{ $cottage->type }} -
                                                                 ₱{{ number_format($cottage->price ?? 0, 2) }}
                                                             </option>
                                                         @endif
+                                                    @endforeach --}}
+                                                    @foreach ($resort as $cottage)
+                                                        <option value="{{ $cottage->id }}">
+                                                            {{ $cottage->name }} -
+                                                            {{ $cottage->type }} -
+                                                            ₱{{ number_format($cottage->price ?? 0, 2) }}
+                                                        </option>
                                                     @endforeach
+
                                                 </select>
                                                 <label for="select-cottage-{{ $cottageIndex }}">Cottage</label>
                                             </div>

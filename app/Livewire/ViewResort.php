@@ -74,6 +74,56 @@ class ViewResort extends Component implements HasForms
             ->get();
     }
 
+    public function updated($property)
+    {
+        if (in_array($property, ['date', 'date_to'])) {
+            $this->loadAvailableCottages();
+        }
+    }
+
+    public function loadAvailableCottages()
+    {
+        if (! $this->date || ! $this->date_to) {
+            $this->resort = [];
+
+            return;
+        }
+
+        // 1️⃣ Get conflicting bookings
+        $bookings = Booking::where('resort_id', $this->record->id)
+            ->where('status', 'pending')
+            ->whereNotNull('proof_of_payment')
+            // ->where(function ($q) {
+            //     $q->whereBetween('date', [$this->date, $this->date_to])
+            //         ->orWhereBetween('date_to', [$this->date, $this->date_to])
+            //         ->orWhere(function ($q2) {
+            //             $q2->where('date', '<=', $this->date)
+            //                 ->where('date_to', '>=', $this->date_to);
+            //         });
+            // })
+            ->where(function ($q) {
+                $q->where('date', '<', $this->date_to)
+                    ->where('date_to', '>', $this->date);
+            })
+
+            ->with(['bookingItems' => function ($q) {
+                $q->whereNotNull('item_id')
+                    ->whereNull('entrance_fee_id');
+            }])
+            ->get();
+
+        $occupiedItemIds = $bookings
+            ->flatMap(fn ($booking) => $booking->bookingItems)
+            ->pluck('item_id')
+            ->unique()
+            ->toArray();
+
+        $this->resort = Item::where('resort_id', $this->record->id)
+            ->where('is_occupied', 0)
+            ->whereNotIn('id', $occupiedItemIds)
+            ->get();
+    }
+
     public function addItem()
     {
         if (! empty($this->items)) {

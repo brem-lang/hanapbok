@@ -12,12 +12,15 @@ class StatsOverview extends BaseWidget
     protected function getStats(): array
     {
         $numberTourist = Booking::query()->whereIn('status', ['confirmed', 'completed'])->sum('actual_check_guest');
-        $pendingBooking = Booking::query()->where('status', 'pending')->count();
+        $totalBookingsToday = Booking::query()
+            ->whereIn('status', ['confirmed', 'completed'])
+            ->whereDate('created_at', today())
+            ->count();
         // $lostItem = LostItem::query()->where('status', 'not_found')->count();
 
         return [
             Stat::make('Number of Guest', $numberTourist),
-            Stat::make('Number of Bookings', $pendingBooking),
+            Stat::make('Total Bookings Today', $totalBookingsToday),
             // Stat::make('Number of Lost Items', $lostItem),
         ];
     }

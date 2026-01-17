@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('lost_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->string('description')->nullable();
             $table->double('date')->default(0);
             $table->double('location')->default(0);
