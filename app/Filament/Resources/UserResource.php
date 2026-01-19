@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Forms\Components\DocumentScanner;
 use App\Models\User;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
@@ -72,42 +73,26 @@ class UserResource extends Resource
                         //     ->required()
                         //     ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
                         //     ->maxLength(255),
-                        FileUpload::make('front_id')
+                        // FileUpload::make('front_id')
+                        //     ->columnSpanFull()
+                        //     ->hint('Please avoid to upload blurry images.')
+                        //     ->openable()
+                        //     ->label('Valid ID')
+                        //     // ->required()
+                        //     ->maxSize(1024)
+                        //     ->disk('public_uploads_id')
+                        //     ->directory('/')
+                        //     ->image()
+                        //     ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
+                        DocumentScanner::make('back_id')
                             ->columnSpanFull()
-                            ->hint('Please avoid to upload blurry images.')
-                            ->openable()
-                            ->label('Valid ID')
-                            ->required()
-                            ->maxSize(1024)
-                            ->disk('public_uploads_id')
-                            ->directory('/')
-                            ->image()
-                            ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
-                        FileUpload::make('back_id')
-                            ->columnSpanFull()
-                            ->hint('ex. Business permits, ID, etc.')
+                            // ->columnSpan(3)
+                            ->hint('Use the camera scanner to capture documents. They will be saved as images.')
                             ->label('Attachments')
-                            ->multiple()
-                            ->openable()
-                            ->maxSize(10000)
-                            ->downloadable()
-                            ->required()
+                            // ->required()
                             ->disk('public_uploads_id')
                             ->directory('/')
-                        // ->acceptedFileTypes([
-                        //     // Images
-                        //     'image/jpeg',
-                        //     'image/png',
-                        //     'image/gif',
-                        //     'image/webp',
-                        //     // Documents
-                        //     'application/pdf',
-                        //     'application/msword', // for .doc files
-                        //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // for .docx files
-                        //     'application/vnd.ms-excel', // for .xls files
-                        //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // for .xlsx files
-                        // ])
-                        ,
+                            ->maxSize(10000),
                     ])
                     ->columns(2),
             ]);
