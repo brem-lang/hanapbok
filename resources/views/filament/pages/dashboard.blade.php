@@ -93,6 +93,29 @@
                 <canvas x-ref="canvas"></canvas>
             </div>
         </div>
+
+        {{-- Pie Charts Section --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+            {{-- User Booking Statistics Pie Chart --}}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="user-booking-stats-chart">
+                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">User Account Statistics</h3>
+                <div style="height: 400px; position: relative;" class="w-full"
+                     x-data="pieChartDataUserStats(@js($this->userBookingStats['labels'] ?? []), @js($this->userBookingStats['datasets'][0]['data'] ?? []), @js($this->userBookingStats['datasets'][0]['backgroundColor'] ?? []), @js($this->userBookingStats['datasets'][0]['borderColor'] ?? []))"
+                     x-init="initChart()">
+                    <canvas x-ref="canvas"></canvas>
+                </div>
+            </div>
+
+            {{-- Booking Status Statistics Pie Chart --}}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="booking-status-stats-chart">
+                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Booking Status Distribution</h3>
+                <div style="height: 400px; position: relative;" class="w-full"
+                     x-data="pieChartDataBookingStatus(@js($this->bookingStatusStats['labels'] ?? []), @js($this->bookingStatusStats['datasets'][0]['data'] ?? []), @js($this->bookingStatusStats['datasets'][0]['backgroundColor'] ?? []), @js($this->bookingStatusStats['datasets'][0]['borderColor'] ?? []))"
+                     x-init="initChart()">
+                    <canvas x-ref="canvas"></canvas>
+                </div>
+            </div>
+        </div>
     @endif
 
     @if (auth()->user()->isResortsAdmin())
@@ -140,11 +163,34 @@
             </div>
         </div>
 
-        {{-- Revenue Distribution Chart --}}
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 mb-6" wire:key="resort-admin-revenue-chart-{{ $this->resortAdminFilter }}">
-            <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Revenue Distribution</h3>
+        {{-- Pie Charts Section for Resort Admin --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+            {{-- Revenue Distribution Chart --}}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="resort-admin-revenue-chart-{{ $this->resortAdminFilter }}">
+                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Revenue Distribution</h3>
+                <div style="height: 400px; position: relative;" class="w-full"
+                     x-data="pieChartData(@js($this->revenueDistributionResortAdmin['labels'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['data'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['borderColor'] ?? []))"
+                     x-init="initChart()">
+                    <canvas x-ref="canvas"></canvas>
+                </div>
+            </div>
+
+            {{-- Booking Status Distribution Chart --}}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="resort-admin-booking-status-chart">
+                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Booking Status Distribution</h3>
+                <div style="height: 400px; position: relative;" class="w-full"
+                     x-data="pieChartDataBookingStatus(@js($this->bookingStatusStatsResortAdmin['labels'] ?? []), @js($this->bookingStatusStatsResortAdmin['datasets'][0]['data'] ?? []), @js($this->bookingStatusStatsResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->bookingStatusStatsResortAdmin['datasets'][0]['borderColor'] ?? []))"
+                     x-init="initChart()">
+                    <canvas x-ref="canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {{-- Walk-in vs Online Booking Chart --}}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 mb-6" wire:key="resort-admin-walkin-vs-online-chart">
+            <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Walk-in Guests vs Online Bookings</h3>
             <div style="height: 400px; position: relative;" class="w-full"
-                 x-data="pieChartData(@js($this->revenueDistributionResortAdmin['labels'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['data'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['borderColor'] ?? []))"
+                 x-data="pieChartDataWalkInVsOnline(@js($this->walkInVsOnlineBookingStatsResortAdmin['labels'] ?? []), @js($this->walkInVsOnlineBookingStatsResortAdmin['datasets'][0]['data'] ?? []), @js($this->walkInVsOnlineBookingStatsResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->walkInVsOnlineBookingStatsResortAdmin['datasets'][0]['borderColor'] ?? []))"
                  x-init="initChart()">
                 <canvas x-ref="canvas"></canvas>
             </div>
@@ -452,6 +498,195 @@
                     }
                 };
             }
+
+            function pieChartDataUserStats(labels, data, backgroundColor, borderColor) {
+                return {
+                    chart: null,
+                    labels: labels,
+                    data: data,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    initChart() {
+                        const self = this;
+                        function initialize() {
+                            if (typeof Chart === 'undefined') {
+                                setTimeout(initialize, 100);
+                                return;
+                            }
+                            if (self.chart) {
+                                self.chart.destroy();
+                            }
+                            const ctx = self.$refs.canvas;
+                            if (!ctx) {
+                                setTimeout(initialize, 100);
+                                return;
+                            }
+                            
+                            self.chart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: self.labels,
+                                    datasets: [{
+                                        label: 'Number of Users',
+                                        data: self.data,
+                                        backgroundColor: self.backgroundColor,
+                                        borderColor: self.borderColor,
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            display: true,
+                                            position: 'right'
+                                        },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    const label = context.label || '';
+                                                    const value = context.parsed || 0;
+                                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                                    return label + ': ' + value.toLocaleString('en-US') + ' users (' + percentage + '%)';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        initialize();
+                    }
+                };
+            }
+
+            function pieChartDataBookingStatus(labels, data, backgroundColor, borderColor) {
+                return {
+                    chart: null,
+                    labels: labels,
+                    data: data,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    initChart() {
+                        const self = this;
+                        function initialize() {
+                            if (typeof Chart === 'undefined') {
+                                setTimeout(initialize, 100);
+                                return;
+                            }
+                            if (self.chart) {
+                                self.chart.destroy();
+                            }
+                            const ctx = self.$refs.canvas;
+                            if (!ctx) {
+                                setTimeout(initialize, 100);
+                                return;
+                            }
+                            
+                            self.chart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: self.labels,
+                                    datasets: [{
+                                        label: 'Number of Bookings',
+                                        data: self.data,
+                                        backgroundColor: self.backgroundColor,
+                                        borderColor: self.borderColor,
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            display: true,
+                                            position: 'right'
+                                        },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    const label = context.label || '';
+                                                    const value = context.parsed || 0;
+                                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                                    return label + ': ' + value.toLocaleString('en-US') + ' bookings (' + percentage + '%)';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        initialize();
+                    }
+                };
+            }
+
+            function pieChartDataWalkInVsOnline(labels, data, backgroundColor, borderColor) {
+                return {
+                    chart: null,
+                    labels: labels,
+                    data: data,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    initChart() {
+                        const self = this;
+                        function initialize() {
+                            if (typeof Chart === 'undefined') {
+                                setTimeout(initialize, 100);
+                                return;
+                            }
+                            if (self.chart) {
+                                self.chart.destroy();
+                            }
+                            const ctx = self.$refs.canvas;
+                            if (!ctx) {
+                                setTimeout(initialize, 100);
+                                return;
+                            }
+                            
+                            self.chart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: self.labels,
+                                    datasets: [{
+                                        label: 'Number of Bookings',
+                                        data: self.data,
+                                        backgroundColor: self.backgroundColor,
+                                        borderColor: self.borderColor,
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            display: true,
+                                            position: 'right'
+                                        },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    const label = context.label || '';
+                                                    const value = context.parsed || 0;
+                                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                                    return label + ': ' + value.toLocaleString('en-US') + ' bookings (' + percentage + '%)';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        initialize();
+                    }
+                };
+            }
         </script>
     @endpush
 </x-filament-panels::page>
@@ -461,7 +696,7 @@
         const timeElement = document.getElementById('time');
         if (timeElement) {
             timeElement.innerHTML = 'Today is ' + today;
-            setTimeout(startTime, 1000);
+        setTimeout(startTime, 1000);
         }
     }
     if (document.readyState === 'loading') {

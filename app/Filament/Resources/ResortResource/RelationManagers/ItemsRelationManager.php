@@ -53,7 +53,8 @@ class ItemsRelationManager extends RelationManager
                     ->reorderable(false)
                     ->columnSpanFull()
                     ->schema([
-                        TextInput::make('info'),
+                        TextInput::make('info')
+                            ->label('Information'),
                     ]),
             ]);
     }

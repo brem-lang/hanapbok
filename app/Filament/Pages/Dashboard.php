@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\Booking;
 use App\Models\Resort;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -576,6 +577,330 @@ class Dashboard extends Page implements HasForms
     }
 
     /**
+     * Get user booking statistics (users with bookings vs users without bookings)
+     */
+    #[Computed()]
+    public function userBookingStats(): array
+    {
+        $user = Auth::user();
+        
+        // Only admins can see this data
+        if (!$user->isAdmin()) {
+            return [
+                'labels' => [],
+                'datasets' => [
+                    [
+                        'label' => 'Users',
+                        'data' => [],
+                        'backgroundColor' => [],
+                        'borderColor' => [],
+                        'borderWidth' => 1,
+                    ],
+                ],
+            ];
+        }
+
+        // Get total number of users (excluding admins and resort admins)
+        $totalUsers = User::whereIn('role', ['guest'])
+            ->count();
+
+        // Get users who have at least one booking
+        $usersWithBookings = User::whereIn('role', ['guest'])
+            ->whereHas('bookings')
+            ->count();
+
+        // Calculate users without bookings
+        $usersWithoutBookings = $totalUsers - $usersWithBookings;
+
+        return [
+            'labels' => ['Users with Bookings', 'Users without Bookings'],
+            'datasets' => [
+                [
+                    'label' => 'Number of Users',
+                    'data' => [$usersWithBookings, $usersWithoutBookings],
+                    'backgroundColor' => [
+                        'rgba(34, 197, 94, 0.7)',  // Green for users with bookings
+                        'rgba(239, 68, 68, 0.7)',  // Red for users without bookings
+                    ],
+                    'borderColor' => [
+                        'rgba(34, 197, 94, 1)',
+                        'rgba(239, 68, 68, 1)',
+                    ],
+                    'borderWidth' => 1,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get booking status statistics
+     */
+    #[Computed()]
+    public function bookingStatusStats(): array
+    {
+        $user = Auth::user();
+        
+        // Only admins can see this data
+        if (!$user->isAdmin()) {
+            return [
+                'labels' => [],
+                'datasets' => [
+                    [
+                        'label' => 'Bookings',
+                        'data' => [],
+                        'backgroundColor' => [],
+                        'borderColor' => [],
+                        'borderWidth' => 1,
+                    ],
+                ],
+            ];
+        }
+
+        // Get booking counts by status
+        $statusCounts = Booking::select('status', DB::raw('COUNT(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Define all possible statuses with their display names and colors
+        $statusConfig = [
+            'pending' => [
+                'label' => 'Pending',
+                'backgroundColor' => 'rgba(251, 146, 60, 0.7)',  // Orange
+                'borderColor' => 'rgba(251, 146, 60, 1)',
+            ],
+            'confirmed' => [
+                'label' => 'Confirmed',
+                'backgroundColor' => 'rgba(34, 197, 94, 0.7)',  // Green
+                'borderColor' => 'rgba(34, 197, 94, 1)',
+            ],
+            'completed' => [
+                'label' => 'Completed',
+                'backgroundColor' => 'rgba(59, 130, 246, 0.7)',  // Blue
+                'borderColor' => 'rgba(59, 130, 246, 1)',
+            ],
+            'cancelled' => [
+                'label' => 'Cancelled',
+                'backgroundColor' => 'rgba(239, 68, 68, 0.7)',  // Red
+                'borderColor' => 'rgba(239, 68, 68, 1)',
+            ],
+            'moved' => [
+                'label' => 'Moved',
+                'backgroundColor' => 'rgba(168, 85, 247, 0.7)',  // Purple
+                'borderColor' => 'rgba(168, 85, 247, 1)',
+            ],
+        ];
+
+        // Build arrays for chart data
+        $labels = [];
+        $data = [];
+        $backgroundColors = [];
+        $borderColors = [];
+
+        // Only include statuses that have bookings
+        foreach ($statusConfig as $status => $config) {
+            $count = $statusCounts[$status] ?? 0;
+            if ($count > 0) {
+                $labels[] = $config['label'];
+                $data[] = $count;
+                $backgroundColors[] = $config['backgroundColor'];
+                $borderColors[] = $config['borderColor'];
+            }
+        }
+
+        return [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Number of Bookings',
+                    'data' => $data,
+                    'backgroundColor' => $backgroundColors,
+                    'borderColor' => $borderColors,
+                    'borderWidth' => 1,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get walk-in vs online booking statistics for resort admin
+     */
+    #[Computed()]
+    public function walkInVsOnlineBookingStatsResortAdmin(): array
+    {
+        $user = Auth::user();
+        
+        // Only resort admins can see this data
+        if (!$user->isResortsAdmin()) {
+            return [
+                'labels' => [],
+                'datasets' => [
+                    [
+                        'label' => 'Bookings',
+                        'data' => [],
+                        'backgroundColor' => [],
+                        'borderColor' => [],
+                        'borderWidth' => 1,
+                    ],
+                ],
+            ];
+        }
+
+        $resortId = $user->AdminResort?->id;
+        
+        if (!$resortId) {
+            return [
+                'labels' => [],
+                'datasets' => [
+                    [
+                        'label' => 'Bookings',
+                        'data' => [],
+                        'backgroundColor' => [],
+                        'borderColor' => [],
+                        'borderWidth' => 1,
+                    ],
+                ],
+            ];
+        }
+
+        // Get booking counts by payment type for this resort
+        $onlineBookings = Booking::where('resort_id', $resortId)
+            ->where('payment_type', 'gcash')
+            ->count();
+
+        $walkInBookings = Booking::where('resort_id', $resortId)
+            ->whereIn('payment_type', ['walk_in', 'cash'])
+            ->count();
+
+        return [
+            'labels' => ['Online Bookings', 'Walk-in Guests'],
+            'datasets' => [
+                [
+                    'label' => 'Number of Bookings',
+                    'data' => [$onlineBookings, $walkInBookings],
+                    'backgroundColor' => [
+                        'rgba(59, 130, 246, 0.7)',  // Blue for online bookings
+                        'rgba(251, 146, 60, 0.7)',  // Orange for walk-in guests
+                    ],
+                    'borderColor' => [
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(251, 146, 60, 1)',
+                    ],
+                    'borderWidth' => 1,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get booking status statistics for resort admin
+     */
+    #[Computed()]
+    public function bookingStatusStatsResortAdmin(): array
+    {
+        $user = Auth::user();
+        
+        // Only resort admins can see this data
+        if (!$user->isResortsAdmin()) {
+            return [
+                'labels' => [],
+                'datasets' => [
+                    [
+                        'label' => 'Bookings',
+                        'data' => [],
+                        'backgroundColor' => [],
+                        'borderColor' => [],
+                        'borderWidth' => 1,
+                    ],
+                ],
+            ];
+        }
+
+        $resortId = $user->AdminResort?->id;
+        
+        if (!$resortId) {
+            return [
+                'labels' => [],
+                'datasets' => [
+                    [
+                        'label' => 'Bookings',
+                        'data' => [],
+                        'backgroundColor' => [],
+                        'borderColor' => [],
+                        'borderWidth' => 1,
+                    ],
+                ],
+            ];
+        }
+
+        // Get booking counts by status for this resort
+        $statusCounts = Booking::where('resort_id', $resortId)
+            ->select('status', DB::raw('COUNT(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Define all possible statuses with their display names and colors
+        $statusConfig = [
+            'pending' => [
+                'label' => 'Pending',
+                'backgroundColor' => 'rgba(251, 146, 60, 0.7)',  // Orange
+                'borderColor' => 'rgba(251, 146, 60, 1)',
+            ],
+            'confirmed' => [
+                'label' => 'Confirmed',
+                'backgroundColor' => 'rgba(34, 197, 94, 0.7)',  // Green
+                'borderColor' => 'rgba(34, 197, 94, 1)',
+            ],
+            'completed' => [
+                'label' => 'Completed',
+                'backgroundColor' => 'rgba(59, 130, 246, 0.7)',  // Blue
+                'borderColor' => 'rgba(59, 130, 246, 1)',
+            ],
+            'cancelled' => [
+                'label' => 'Cancelled',
+                'backgroundColor' => 'rgba(239, 68, 68, 0.7)',  // Red
+                'borderColor' => 'rgba(239, 68, 68, 1)',
+            ],
+            'moved' => [
+                'label' => 'Moved',
+                'backgroundColor' => 'rgba(168, 85, 247, 0.7)',  // Purple
+                'borderColor' => 'rgba(168, 85, 247, 1)',
+            ],
+        ];
+
+        // Build arrays for chart data
+        $labels = [];
+        $data = [];
+        $backgroundColors = [];
+        $borderColors = [];
+
+        // Only include statuses that have bookings
+        foreach ($statusConfig as $status => $config) {
+            $count = $statusCounts[$status] ?? 0;
+            if ($count > 0) {
+                $labels[] = $config['label'];
+                $data[] = $count;
+                $backgroundColors[] = $config['backgroundColor'];
+                $borderColors[] = $config['borderColor'];
+            }
+        }
+
+        return [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Number of Bookings',
+                    'data' => $data,
+                    'backgroundColor' => $backgroundColors,
+                    'borderColor' => $borderColors,
+                    'borderWidth' => 1,
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Get revenue distribution for resort admin
      */
     #[Computed()]
@@ -667,9 +992,13 @@ class Dashboard extends Page implements HasForms
             'bookingsOverTime' => $this->bookingsOverTime(),
             'salesOverTime' => $this->salesOverTime(),
             'topResortsChart' => $this->topResortsChart(),
+            'userBookingStats' => $this->userBookingStats(),
+            'bookingStatusStats' => $this->bookingStatusStats(),
             'salesOverTimeResortAdmin' => $this->salesOverTimeResortAdmin(),
             'bookingCountOverTimeResortAdmin' => $this->bookingCountOverTimeResortAdmin(),
             'revenueDistributionResortAdmin' => $this->revenueDistributionResortAdmin(),
+            'bookingStatusStatsResortAdmin' => $this->bookingStatusStatsResortAdmin(),
+            'walkInVsOnlineBookingStatsResortAdmin' => $this->walkInVsOnlineBookingStatsResortAdmin(),
         ];
     }
 }

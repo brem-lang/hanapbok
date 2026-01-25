@@ -474,6 +474,23 @@ $totalChargesSum = collect($additionalCharges)->sum('total_charges');
                     </div>
                     {{-- @endif --}}
 
+                    {{-- === NO REFUND POLICY NOTICE === --}}
+                    <div class="alert alert-warning border-warning mb-4 shadow-sm" role="alert">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-shrink-0 me-3">
+                                <i class="fa fa-exclamation-triangle fa-2x text-warning"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="alert-heading mb-2 fw-bold">
+                                    <i class="fa fa-info-circle me-2"></i>No Refund Policy
+                                </h5>
+                                <p class="mb-0" style="font-size: 14px; line-height: 1.6;">
+                                    Please note that all bookings are final and non-refundable. Once a booking is confirmed, refunds will not be issued under any circumstances, including but not limited to cancellation, changes in plans, or no-shows. By confirming this booking and submitting your payment, you acknowledge and agree to this no refund policy.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- === 3. PAYMENT PROOF & ACTIONS === --}}
                     <div class="card shadow-sm">
                         <div class="card-header bg-light">

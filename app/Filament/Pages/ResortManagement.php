@@ -64,7 +64,7 @@ class ResortManagement extends Page implements HasForms
                         Section::make()
                             ->schema([
                                 TextInput::make('name')
-                                    ->label('Name')
+                                    ->label('Resort Name')
                                     ->required()
                                     ->maxLength(255),
                                 Textarea::make('description')

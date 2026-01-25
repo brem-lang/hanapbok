@@ -114,11 +114,12 @@ class Items extends Component implements HasForms, HasTable
                             ->reorderable(false)
                             ->columnSpanFull()
                             ->schema([
-                                TextInput::make('info'),
+                                TextInput::make('info')
+                                    ->label('Information'),
                             ]),
                         FileUpload::make('image')
                             ->openable()
-                            ->label('Image')
+                            ->label('Accommodation Image')
                             ->required()
                             ->maxSize(1024)
                             ->disk('public_uploads_accommodations')
@@ -186,7 +187,8 @@ class Items extends Component implements HasForms, HasTable
                             ->reorderable(false)
                             ->columnSpanFull()
                             ->schema([
-                                TextInput::make('info'),
+                                TextInput::make('info')
+                                    ->label('Information'),
                             ]),
                         FileUpload::make('image')
                             ->openable()
