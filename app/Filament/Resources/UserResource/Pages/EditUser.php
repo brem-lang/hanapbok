@@ -49,6 +49,11 @@ class EditUser extends EditRecord
         ];
     }
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('edit', ['record' => $this->getRecord()]);
+    }
+
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         if ($data['is_validated'] == 1) {

@@ -177,65 +177,6 @@ class DocumentScanner extends Field
 
         $this->dehydrated(true);
         $this->live();
-        
-        // Add validation rule to ensure at least one document exists
-        $this->rules([
-            function (DocumentScanner $component) {
-                return function (string $attribute, $value, \Closure $fail) use ($component) {
-                    // Get the actual state value
-                    $state = $component->getState();
-                    
-                    // Handle different state formats
-                    $documents = [];
-                    if (is_array($state)) {
-                        $documents = $state;
-                    } elseif (is_string($state) && !empty($state)) {
-                        // Check if it's base64 or JSON
-                        if (str_starts_with($state, 'data:image/')) {
-                            $documents = [$state]; // Single base64 image
-                        } else {
-                            $decoded = json_decode($state, true);
-                            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                                $documents = $decoded;
-                            }
-                        }
-                    }
-                    
-                    // Filter out deletion markers and invalid documents
-                    $validDocuments = array_filter($documents, function($doc) {
-                        // Skip deletion markers (strings starting with __DELETE__)
-                        if (is_string($doc) && str_starts_with($doc, '__DELETE__')) {
-                            return false;
-                        }
-                        
-                        // Skip objects with paths marked for deletion
-                        if (is_array($doc) && isset($doc['path']) && str_starts_with($doc['path'], '__DELETE__')) {
-                            return false;
-                        }
-                        
-                        // Valid document if:
-                        // 1. It's a string (file path or base64) that's not a deletion marker
-                        // 2. It's an object with 'path' (existing document)
-                        // 3. It's an object with 'data' (new captured image)
-                        if (is_string($doc)) {
-                            return !str_starts_with($doc, '__DELETE__');
-                        }
-                        
-                        if (is_array($doc)) {
-                            // Must have either 'path' (existing) or 'data' (new capture)
-                            return isset($doc['path']) || isset($doc['data']);
-                        }
-                        
-                        return false;
-                    });
-                    
-                    // Check if valid documents array is empty
-                    if (empty($validDocuments) || count($validDocuments) === 0) {
-                        $fail('The attachments field is required. Please capture a document using the scanner.');
-                    }
-                };
-            },
-        ]);
     }
 
     protected function saveBase64Image(string $base64Data): ?string

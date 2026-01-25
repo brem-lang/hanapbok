@@ -26,16 +26,16 @@
                                 <p class="text-xs font-medium text-gray-700 dark:text-gray-300 truncate" :title="document.name || document.path" x-text="document.name || getDocumentName(document.path || document)"></p>
                             </div>
                             <div class="flex items-center gap-2 ml-2">
-                                <a 
-                                    :href="getDocumentUrl(document.path || document)" 
-                                    target="_blank"
+                                <button 
+                                    type="button"
+                                    @click="viewExistingDocument(index)"
                                     class="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 rounded transition-colors"
                                     title="View document">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                     </svg>
-                                </a>
+                                </button>
                                 <button 
                                     type="button"
                                     @click="editExistingDocumentName(index)"
@@ -68,7 +68,15 @@
                 <button 
                     type="button"
                     @click="toggleScanner()"
+                    x-show="capturedImages.length === 0"
                     x-text="isScanning ? 'Stop Scanner' : 'Start Scanner'"
+                    class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors">
+                </button>
+                <button 
+                    type="button"
+                    @click="toggleScanner()"
+                    x-show="isScanning && capturedImages.length > 0"
+                    x-text="'Stop Scanner'"
                     class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors">
                 </button>
             </div>
@@ -322,6 +330,32 @@
                                     });
                                 });
                             }
+                            
+                            // Reload page after successful save
+                            // Listen for Livewire component updates that indicate successful save
+                            Livewire.hook('morph.updated', ({ el, component }) => {
+                                // Check if this is a Filament form and if save was successful
+                                const form = this.$el.closest('form');
+                                if (form && component && component.__instance) {
+                                    // Check for redirect or success indicators
+                                    const hasRedirect = form.querySelector('[wire\\:loading\\.remove]');
+                                    if (hasRedirect) {
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 500);
+                                    }
+                                }
+                            });
+                            
+                            // Also listen for navigation events (Filament redirects)
+                            window.addEventListener('popstate', () => {
+                                // If we're still on the edit page after save, reload
+                                if (window.location.pathname.includes('/edit')) {
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 300);
+                                }
+                            });
                             
                             // Stop scanner when Livewire component updates
                             document.addEventListener('livewire:before-update', () => {
@@ -591,6 +625,15 @@
                         const image = this.capturedImages[index];
                         this.previewImageData = image.data;
                         this.previewImageName = image.name;
+                        this.showImagePreview = true;
+                    },
+
+                    viewExistingDocument(index) {
+                        const doc = this.existingDocuments[index];
+                        const docPath = typeof doc === 'object' ? doc.path : doc;
+                        const docName = typeof doc === 'object' ? doc.name : this.getDocumentName(docPath);
+                        this.previewImageData = this.getDocumentUrl(docPath);
+                        this.previewImageName = docName;
                         this.showImagePreview = true;
                     },
 
