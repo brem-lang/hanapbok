@@ -272,7 +272,7 @@
                                                     id="quantity-guest-{{ $index }}" placeholder="Quantity"
                                                     wire:model="items.{{ $index }}.quantity" min="1"
                                                     {{ $showEntranceFees ? '' : 'disabled' }}>
-                                                <label for="quantity-guest-{{ $index }}">Quantity</label>
+                                                <label for="quantity-guest-{{ $index }}">Head Count</label>
                                             </div>
                                             @error('items.' . $index . '.quantity')
                                                 <span class="text-danger">{{ $message }}</span>
@@ -375,7 +375,7 @@
                                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            Are you sure you would like to do this?
+                                                            Would you like to proceed?
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-danger"

@@ -56,10 +56,10 @@ class Items extends Component implements HasForms, HasTable
             ->filters([
                 //
             ])
-            ->heading('Accommodations')
+            ->heading('Rooms/Cottages')
             ->headerActions([
                 Action::make('create')
-                    ->label('New Accommodation ')
+                    ->label('New Rooms/Cottages')
                     ->form([
                         TextInput::make('name')
                             ->required()
@@ -119,7 +119,7 @@ class Items extends Component implements HasForms, HasTable
                             ]),
                         FileUpload::make('image')
                             ->openable()
-                            ->label('Accommodation Image')
+                            ->label('Rooms/Cottages Image')
                             ->required()
                             ->maxSize(1024)
                             ->disk('public_uploads_accommodations')

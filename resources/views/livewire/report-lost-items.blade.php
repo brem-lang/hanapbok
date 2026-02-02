@@ -351,7 +351,7 @@
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                Are you sure you would like to do this?
+                                                Would you like to proceed?
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-danger"

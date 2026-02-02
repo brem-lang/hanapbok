@@ -13,18 +13,15 @@
 
         {{-- Filter Buttons --}}
         <div class="mb-4 md:mb-6 flex flex-wrap gap-2">
-            <button
-                wire:click="setFilter('weekly')"
+            <button wire:click="setFilter('weekly')"
                 class="px-3 py-2 md:px-4 md:py-2 text-sm md:text-base rounded-lg font-medium transition-colors {{ $this->filter === 'weekly' ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
                 Weekly
             </button>
-            <button
-                wire:click="setFilter('monthly')"
+            <button wire:click="setFilter('monthly')"
                 class="px-3 py-2 md:px-4 md:py-2 text-sm md:text-base rounded-lg font-medium transition-colors {{ $this->filter === 'monthly' ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
                 Monthly
             </button>
-            <button
-                wire:click="setFilter('annually')"
+            <button wire:click="setFilter('annually')"
                 class="px-3 py-2 md:px-4 md:py-2 text-sm md:text-base rounded-lg font-medium transition-colors {{ $this->filter === 'annually' ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
                 Annually
             </button>
@@ -37,23 +34,44 @@
                 <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-900">
                         <tr>
-                            <th class="w-16 text-left py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Rank</th>
-                            <th class="text-left py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Resort Name</th>
-                            <th class="w-32 text-right py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Total Bookings</th>
-                            <th class="w-40 text-right py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Total Sales</th>
+                            <th
+                                class="w-16 text-left py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                Rank</th>
+                            <th
+                                class="text-left py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                Resort Name</th>
+                            <th
+                                class="text-left py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                Ratings</th>
+                            <th
+                                class="w-32 text-right py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                Total Bookings</th>
+                            <th
+                                class="w-40 text-right py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                Total Sales</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($this->topResorts as $index => $resort)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">#{{ $index + 1 }}</td>
-                                <td class="py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-100">{{ $resort['name'] }}</td>
-                                <td class="py-3 px-4 whitespace-nowrap text-sm text-right text-gray-700 dark:text-gray-300">{{ number_format($resort['total_bookings']) }}</td>
-                                <td class="py-3 px-4 whitespace-nowrap text-sm text-right font-semibold text-gray-900 dark:text-gray-100">₱ {{ number_format($resort['total_sales'], 2) }}</td>
+                                <td class="py-3 px-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                                    #{{ $index + 1 }}</td>
+                                <td class="py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-100">
+                                    {{ $resort['name'] }}</td>
+                                <td class="py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-100">
+                                    {{ number_format($resort['avg_rating'], 1) }}
+                                </td>
+                                <td
+                                    class="py-3 px-4 whitespace-nowrap text-sm text-right text-gray-700 dark:text-gray-300">
+                                    {{ number_format($resort['total_bookings']) }}</td>
+                                <td
+                                    class="py-3 px-4 whitespace-nowrap text-sm text-right font-semibold text-gray-900 dark:text-gray-100">
+                                    ₱ {{ number_format($resort['total_sales'], 2) }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">No resort data available for the selected period.</td>
+                                <td colspan="4" class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">No
+                                    resort data available for the selected period.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -64,32 +82,33 @@
         {{-- Charts Section --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
             {{-- Bookings Over Time Chart --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="bookings-chart-{{ $this->filter }}">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6"
+                wire:key="bookings-chart-{{ $this->filter }}">
                 <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Bookings Over Time</h3>
-                <div style="height: 300px; position: relative;" class="w-full" 
-                     x-data="chartData(@js($this->bookingsOverTime['labels'] ?? []), @js($this->bookingsOverTime['datasets'][0]['data'] ?? []), 'line', 'bookingsChart')"
-                     x-init="initChart()">
+                <div style="height: 300px; position: relative;" class="w-full" x-data="chartData(@js($this->bookingsOverTime['labels'] ?? []), @js($this->bookingsOverTime['datasets'][0]['data'] ?? []), 'line', 'bookingsChart')"
+                    x-init="initChart()">
                     <canvas x-ref="canvas"></canvas>
                 </div>
             </div>
 
             {{-- Sales Over Time Chart --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="sales-chart-{{ $this->filter }}">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6"
+                wire:key="sales-chart-{{ $this->filter }}">
                 <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Sales Over Time</h3>
-                <div style="height: 300px; position: relative;" class="w-full"
-                     x-data="chartData(@js($this->salesOverTime['labels'] ?? []), @js($this->salesOverTime['datasets'][0]['data'] ?? []), 'line', 'salesChart')"
-                     x-init="initChart()">
+                <div style="height: 300px; position: relative;" class="w-full" x-data="chartData(@js($this->salesOverTime['labels'] ?? []), @js($this->salesOverTime['datasets'][0]['data'] ?? []), 'line', 'salesChart')"
+                    x-init="initChart()">
                     <canvas x-ref="canvas"></canvas>
                 </div>
             </div>
         </div>
 
         {{-- Top Resorts Performance Chart --}}
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 mb-6" wire:key="top-resorts-chart-{{ $this->filter }}">
-            <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Top Resorts Performance</h3>
-            <div style="height: 400px; position: relative;" class="w-full"
-                 x-data="barChartData(@js($this->topResortsChart['labels'] ?? []), @js($this->topResortsChart['datasets'][0]['data'] ?? []), @js($this->topResortsChart['datasets'][1]['data'] ?? []))"
-                 x-init="initChart()">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 mb-6"
+            wire:key="top-resorts-chart-{{ $this->filter }}">
+            <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Top Resorts Performance
+            </h3>
+            <div style="height: 400px; position: relative;" class="w-full" x-data="barChartData(@js($this->topResortsChart['labels'] ?? []), @js($this->topResortsChart['datasets'][0]['data'] ?? []), @js($this->topResortsChart['datasets'][1]['data'] ?? []))"
+                x-init="initChart()">
                 <canvas x-ref="canvas"></canvas>
             </div>
         </div>
@@ -98,20 +117,21 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
             {{-- User Booking Statistics Pie Chart --}}
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="user-booking-stats-chart">
-                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">User Account Statistics</h3>
-                <div style="height: 400px; position: relative;" class="w-full"
-                     x-data="pieChartDataUserStats(@js($this->userBookingStats['labels'] ?? []), @js($this->userBookingStats['datasets'][0]['data'] ?? []), @js($this->userBookingStats['datasets'][0]['backgroundColor'] ?? []), @js($this->userBookingStats['datasets'][0]['borderColor'] ?? []))"
-                     x-init="initChart()">
+                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">User Account Statistics
+                </h3>
+                <div style="height: 400px; position: relative;" class="w-full" x-data="pieChartDataUserStats(@js($this->userBookingStats['labels'] ?? []), @js($this->userBookingStats['datasets'][0]['data'] ?? []), @js($this->userBookingStats['datasets'][0]['backgroundColor'] ?? []), @js($this->userBookingStats['datasets'][0]['borderColor'] ?? []))"
+                    x-init="initChart()">
                     <canvas x-ref="canvas"></canvas>
                 </div>
             </div>
 
             {{-- Booking Status Statistics Pie Chart --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="booking-status-stats-chart">
-                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Booking Status Distribution</h3>
-                <div style="height: 400px; position: relative;" class="w-full"
-                     x-data="pieChartDataBookingStatus(@js($this->bookingStatusStats['labels'] ?? []), @js($this->bookingStatusStats['datasets'][0]['data'] ?? []), @js($this->bookingStatusStats['datasets'][0]['backgroundColor'] ?? []), @js($this->bookingStatusStats['datasets'][0]['borderColor'] ?? []))"
-                     x-init="initChart()">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6"
+                wire:key="booking-status-stats-chart">
+                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Booking Status
+                    Distribution</h3>
+                <div style="height: 400px; position: relative;" class="w-full" x-data="pieChartDataBookingStatus(@js($this->bookingStatusStats['labels'] ?? []), @js($this->bookingStatusStats['datasets'][0]['data'] ?? []), @js($this->bookingStatusStats['datasets'][0]['backgroundColor'] ?? []), @js($this->bookingStatusStats['datasets'][0]['borderColor'] ?? []))"
+                    x-init="initChart()">
                     <canvas x-ref="canvas"></canvas>
                 </div>
             </div>
@@ -123,18 +143,15 @@
 
         {{-- Filter Buttons for Resort Admin --}}
         <div class="mb-4 md:mb-6 flex flex-wrap gap-2">
-            <button
-                wire:click="setResortAdminFilter('weekly')"
+            <button wire:click="setResortAdminFilter('weekly')"
                 class="px-3 py-2 md:px-4 md:py-2 text-sm md:text-base rounded-lg font-medium transition-colors {{ $this->resortAdminFilter === 'weekly' ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
                 Weekly
             </button>
-            <button
-                wire:click="setResortAdminFilter('monthly')"
+            <button wire:click="setResortAdminFilter('monthly')"
                 class="px-3 py-2 md:px-4 md:py-2 text-sm md:text-base rounded-lg font-medium transition-colors {{ $this->resortAdminFilter === 'monthly' ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
                 Monthly
             </button>
-            <button
-                wire:click="setResortAdminFilter('annually')"
+            <button wire:click="setResortAdminFilter('annually')"
                 class="px-3 py-2 md:px-4 md:py-2 text-sm md:text-base rounded-lg font-medium transition-colors {{ $this->resortAdminFilter === 'annually' ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600' }}">
                 Annually
             </button>
@@ -143,21 +160,22 @@
         {{-- Charts Section for Resort Admin --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
             {{-- Sales Over Time Chart --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="resort-admin-sales-chart-{{ $this->resortAdminFilter }}">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6"
+                wire:key="resort-admin-sales-chart-{{ $this->resortAdminFilter }}">
                 <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Sales Over Time</h3>
-                <div style="height: 300px; position: relative;" class="w-full" 
-                     x-data="chartData(@js($this->salesOverTimeResortAdmin['labels'] ?? []), @js($this->salesOverTimeResortAdmin['datasets'][0]['data'] ?? []), 'line', 'resortSalesChart')"
-                     x-init="initChart()">
+                <div style="height: 300px; position: relative;" class="w-full" x-data="chartData(@js($this->salesOverTimeResortAdmin['labels'] ?? []), @js($this->salesOverTimeResortAdmin['datasets'][0]['data'] ?? []), 'line', 'resortSalesChart')"
+                    x-init="initChart()">
                     <canvas x-ref="canvas"></canvas>
                 </div>
             </div>
 
             {{-- Booking Count Over Time Chart --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="resort-admin-bookings-chart-{{ $this->resortAdminFilter }}">
-                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Booking Count Over Time</h3>
-                <div style="height: 300px; position: relative;" class="w-full"
-                     x-data="barChartDataResortAdmin(@js($this->bookingCountOverTimeResortAdmin['labels'] ?? []), @js($this->bookingCountOverTimeResortAdmin['datasets'][0]['data'] ?? []))"
-                     x-init="initChart()">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6"
+                wire:key="resort-admin-bookings-chart-{{ $this->resortAdminFilter }}">
+                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Booking Count Over Time
+                </h3>
+                <div style="height: 300px; position: relative;" class="w-full" x-data="barChartDataResortAdmin(@js($this->bookingCountOverTimeResortAdmin['labels'] ?? []), @js($this->bookingCountOverTimeResortAdmin['datasets'][0]['data'] ?? []))"
+                    x-init="initChart()">
                     <canvas x-ref="canvas"></canvas>
                 </div>
             </div>
@@ -166,32 +184,35 @@
         {{-- Pie Charts Section for Resort Admin --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
             {{-- Revenue Distribution Chart --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="resort-admin-revenue-chart-{{ $this->resortAdminFilter }}">
-                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Revenue Distribution</h3>
-                <div style="height: 400px; position: relative;" class="w-full"
-                     x-data="pieChartData(@js($this->revenueDistributionResortAdmin['labels'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['data'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['borderColor'] ?? []))"
-                     x-init="initChart()">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6"
+                wire:key="resort-admin-revenue-chart-{{ $this->resortAdminFilter }}">
+                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Revenue Distribution
+                </h3>
+                <div style="height: 400px; position: relative;" class="w-full" x-data="pieChartData(@js($this->revenueDistributionResortAdmin['labels'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['data'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->revenueDistributionResortAdmin['datasets'][0]['borderColor'] ?? []))"
+                    x-init="initChart()">
                     <canvas x-ref="canvas"></canvas>
                 </div>
             </div>
 
             {{-- Booking Status Distribution Chart --}}
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6" wire:key="resort-admin-booking-status-chart">
-                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Booking Status Distribution</h3>
-                <div style="height: 400px; position: relative;" class="w-full"
-                     x-data="pieChartDataBookingStatus(@js($this->bookingStatusStatsResortAdmin['labels'] ?? []), @js($this->bookingStatusStatsResortAdmin['datasets'][0]['data'] ?? []), @js($this->bookingStatusStatsResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->bookingStatusStatsResortAdmin['datasets'][0]['borderColor'] ?? []))"
-                     x-init="initChart()">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6"
+                wire:key="resort-admin-booking-status-chart">
+                <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Booking Status
+                    Distribution</h3>
+                <div style="height: 400px; position: relative;" class="w-full" x-data="pieChartDataBookingStatus(@js($this->bookingStatusStatsResortAdmin['labels'] ?? []), @js($this->bookingStatusStatsResortAdmin['datasets'][0]['data'] ?? []), @js($this->bookingStatusStatsResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->bookingStatusStatsResortAdmin['datasets'][0]['borderColor'] ?? []))"
+                    x-init="initChart()">
                     <canvas x-ref="canvas"></canvas>
                 </div>
             </div>
         </div>
 
         {{-- Walk-in vs Online Booking Chart --}}
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 mb-6" wire:key="resort-admin-walkin-vs-online-chart">
-            <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Walk-in Guests vs Online Bookings</h3>
-            <div style="height: 400px; position: relative;" class="w-full"
-                 x-data="pieChartDataWalkInVsOnline(@js($this->walkInVsOnlineBookingStatsResortAdmin['labels'] ?? []), @js($this->walkInVsOnlineBookingStatsResortAdmin['datasets'][0]['data'] ?? []), @js($this->walkInVsOnlineBookingStatsResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->walkInVsOnlineBookingStatsResortAdmin['datasets'][0]['borderColor'] ?? []))"
-                 x-init="initChart()">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6 mb-6"
+            wire:key="resort-admin-walkin-vs-online-chart">
+            <h3 class="text-base md:text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Walk-in Guests vs Online
+                Bookings</h3>
+            <div style="height: 400px; position: relative;" class="w-full" x-data="pieChartDataWalkInVsOnline(@js($this->walkInVsOnlineBookingStatsResortAdmin['labels'] ?? []), @js($this->walkInVsOnlineBookingStatsResortAdmin['datasets'][0]['data'] ?? []), @js($this->walkInVsOnlineBookingStatsResortAdmin['datasets'][0]['backgroundColor'] ?? []), @js($this->walkInVsOnlineBookingStatsResortAdmin['datasets'][0]['borderColor'] ?? []))"
+                x-init="initChart()">
                 <canvas x-ref="canvas"></canvas>
             </div>
         </div>
@@ -210,6 +231,7 @@
                     chartId: chartId,
                     initChart() {
                         const self = this;
+
                         function initialize() {
                             if (typeof Chart === 'undefined') {
                                 setTimeout(initialize, 100);
@@ -223,7 +245,7 @@
                                 setTimeout(initialize, 100);
                                 return;
                             }
-                            
+
                             const config = {
                                 type: self.type,
                                 data: {
@@ -231,8 +253,10 @@
                                     datasets: [{
                                         label: self.chartId === 'bookingsChart' ? 'Bookings' : 'Sales (₱)',
                                         data: self.data,
-                                        backgroundColor: self.chartId === 'bookingsChart' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                                        borderColor: self.chartId === 'bookingsChart' ? 'rgba(59, 130, 246, 1)' : 'rgba(34, 197, 94, 1)',
+                                        backgroundColor: self.chartId === 'bookingsChart' ?
+                                            'rgba(59, 130, 246, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                                        borderColor: self.chartId === 'bookingsChart' ? 'rgba(59, 130, 246, 1)' :
+                                            'rgba(34, 197, 94, 1)',
                                         borderWidth: 2,
                                         fill: true,
                                         tension: 0.4
@@ -249,7 +273,10 @@
                                         tooltip: (self.chartId === 'salesChart' || self.chartId === 'resortSalesChart') ? {
                                             callbacks: {
                                                 label: function(context) {
-                                                    return '₱ ' + context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                                                    return '₱ ' + context.parsed.y.toLocaleString('en-US', {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2
+                                                    });
                                                 }
                                             }
                                         } : {}
@@ -257,7 +284,8 @@
                                     scales: {
                                         y: {
                                             beginAtZero: true,
-                                            ticks: (self.chartId === 'salesChart' || self.chartId === 'resortSalesChart') ? {
+                                            ticks: (self.chartId === 'salesChart' || self.chartId === 'resortSalesChart') ?
+                                            {
                                                 callback: function(value) {
                                                     return '₱ ' + value.toLocaleString('en-US');
                                                 }
@@ -268,7 +296,7 @@
                                     }
                                 }
                             };
-                            
+
                             self.chart = new Chart(ctx, config);
                         }
                         initialize();
@@ -284,6 +312,7 @@
                     salesData: salesData,
                     initChart() {
                         const self = this;
+
                         function initialize() {
                             if (typeof Chart === 'undefined') {
                                 setTimeout(initialize, 100);
@@ -297,7 +326,7 @@
                                 setTimeout(initialize, 100);
                                 return;
                             }
-                            
+
                             self.chart = new Chart(ctx, {
                                 type: 'bar',
                                 data: {
@@ -330,7 +359,10 @@
                                             callbacks: {
                                                 label: function(context) {
                                                     if (context.datasetIndex === 1) {
-                                                        return '₱ ' + context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                                                        return '₱ ' + context.parsed.y.toLocaleString('en-US', {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2
+                                                        });
                                                     }
                                                     return context.parsed.y;
                                                 }
@@ -385,6 +417,7 @@
                     data: data,
                     initChart() {
                         const self = this;
+
                         function initialize() {
                             if (typeof Chart === 'undefined') {
                                 setTimeout(initialize, 100);
@@ -398,7 +431,7 @@
                                 setTimeout(initialize, 100);
                                 return;
                             }
-                            
+
                             self.chart = new Chart(ctx, {
                                 type: 'bar',
                                 data: {
@@ -445,6 +478,7 @@
                     borderColor: borderColor,
                     initChart() {
                         const self = this;
+
                         function initialize() {
                             if (typeof Chart === 'undefined') {
                                 setTimeout(initialize, 100);
@@ -458,7 +492,7 @@
                                 setTimeout(initialize, 100);
                                 return;
                             }
-                            
+
                             self.chart = new Chart(ctx, {
                                 type: 'pie',
                                 data: {
@@ -486,7 +520,10 @@
                                                     const value = context.parsed || 0;
                                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                                     const percentage = ((value / total) * 100).toFixed(1);
-                                                    return label + ': ₱ ' + value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' (' + percentage + '%)';
+                                                    return label + ': ₱ ' + value.toLocaleString('en-US', {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2
+                                                    }) + ' (' + percentage + '%)';
                                                 }
                                             }
                                         }
@@ -508,6 +545,7 @@
                     borderColor: borderColor,
                     initChart() {
                         const self = this;
+
                         function initialize() {
                             if (typeof Chart === 'undefined') {
                                 setTimeout(initialize, 100);
@@ -521,7 +559,7 @@
                                 setTimeout(initialize, 100);
                                 return;
                             }
-                            
+
                             self.chart = new Chart(ctx, {
                                 type: 'pie',
                                 data: {
@@ -548,8 +586,10 @@
                                                     const label = context.label || '';
                                                     const value = context.parsed || 0;
                                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                                    return label + ': ' + value.toLocaleString('en-US') + ' users (' + percentage + '%)';
+                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(
+                                                        1) : 0;
+                                                    return label + ': ' + value.toLocaleString('en-US') +
+                                                        ' users (' + percentage + '%)';
                                                 }
                                             }
                                         }
@@ -571,6 +611,7 @@
                     borderColor: borderColor,
                     initChart() {
                         const self = this;
+
                         function initialize() {
                             if (typeof Chart === 'undefined') {
                                 setTimeout(initialize, 100);
@@ -584,7 +625,7 @@
                                 setTimeout(initialize, 100);
                                 return;
                             }
-                            
+
                             self.chart = new Chart(ctx, {
                                 type: 'pie',
                                 data: {
@@ -611,8 +652,10 @@
                                                     const label = context.label || '';
                                                     const value = context.parsed || 0;
                                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                                    return label + ': ' + value.toLocaleString('en-US') + ' bookings (' + percentage + '%)';
+                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(
+                                                        1) : 0;
+                                                    return label + ': ' + value.toLocaleString('en-US') +
+                                                        ' bookings (' + percentage + '%)';
                                                 }
                                             }
                                         }
@@ -634,6 +677,7 @@
                     borderColor: borderColor,
                     initChart() {
                         const self = this;
+
                         function initialize() {
                             if (typeof Chart === 'undefined') {
                                 setTimeout(initialize, 100);
@@ -647,7 +691,7 @@
                                 setTimeout(initialize, 100);
                                 return;
                             }
-                            
+
                             self.chart = new Chart(ctx, {
                                 type: 'pie',
                                 data: {
@@ -674,8 +718,10 @@
                                                     const label = context.label || '';
                                                     const value = context.parsed || 0;
                                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                                    return label + ': ' + value.toLocaleString('en-US') + ' bookings (' + percentage + '%)';
+                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(
+                                                        1) : 0;
+                                                    return label + ': ' + value.toLocaleString('en-US') +
+                                                        ' bookings (' + percentage + '%)';
                                                 }
                                             }
                                         }
@@ -696,7 +742,7 @@
         const timeElement = document.getElementById('time');
         if (timeElement) {
             timeElement.innerHTML = 'Today is ' + today;
-        setTimeout(startTime, 1000);
+            setTimeout(startTime, 1000);
         }
     }
     if (document.readyState === 'loading') {

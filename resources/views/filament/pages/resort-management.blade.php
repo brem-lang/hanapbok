@@ -12,7 +12,7 @@
             </x-slot>
 
             <x-slot name="description">
-                Are you sure you would like to do this?
+                Would you like to proceed?
             </x-slot>
             <x-slot name="footerActions">
                 <x-filament::button size="md" color="primary" class="w-full" wire:click.prevent="submit">
@@ -84,7 +84,7 @@
                     class="fi-tabs-item group inline-flex items-center justify-center gap-x-2 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium outline-none transition duration-75"
                     role="tab">
                     <span class="fi-tabs-item-label transition duration-75">
-                        Accommodation
+                        Rooms/Cottages
                     </span>
                 </button>
             </nav>

@@ -115,4 +115,9 @@ class EditLostItem extends EditRecord
 
         return parent::handleRecordUpdate($record, $data);
     }
+
+    public function getFormActionsAlignment(): string
+    {
+        return 'end'; // Save Changes & Cancel on the RIGHT
+    }
 }

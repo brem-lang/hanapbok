@@ -16,4 +16,9 @@ class EditCharge extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    public function getFormActionsAlignment(): string
+    {
+        return 'end'; // Save Changes & Cancel on the RIGHT
+    }
 }

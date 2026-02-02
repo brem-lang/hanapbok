@@ -70,7 +70,17 @@ class ResortManagement extends Page implements HasForms
                                 Textarea::make('description')
                                     ->label('Description')
                                     ->required(),
+                                TextInput::make('contact_number')
+                                    ->label('Contact Number')
+                                    ->required()
+                                    ->formatStateUsing(fn ($record) => auth()->user()?->contact_number)
+                                    ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
+                                    ->maxLength(255),
+                                Toggle::make('is_active')
+                                    ->default(true)
+                                    ->inline(false),
                                 FileUpload::make('image')
+                                    ->columnSpanFull()
                                     ->openable()
                                     ->label('Image')
                                     // ->required()
@@ -79,10 +89,17 @@ class ResortManagement extends Page implements HasForms
                                     ->directory('/')
                                     ->image()
                                     ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
-                                Toggle::make('is_active')
-                                    ->default(true)
-                                    ->inline(false),
+                                FileUpload::make('qr')
+                                    ->label('QR Code')
+                                    ->openable()
+                                    ->maxSize(1024)
+                                    ->columnSpanFull()
+                                    ->disk('public_uploads_qr')
+                                    ->directory('/')
+                                    ->required()
+                                    ->image(),
                                 Repeater::make('others')
+                                    ->columnSpanFull()
                                     ->label('Other Details')
                                     ->schema([
                                         Textarea::make('name')->required(),
@@ -92,29 +109,29 @@ class ResortManagement extends Page implements HasForms
                             ->columns(2),
                     ])
                     ->columnSpan(2),
-                Group::make()
-                    ->schema([
-                        Section::make('QR Code')
-                            ->schema([
-                                FileUpload::make('qr')
-                                    ->label('')
-                                    ->openable()
-                                    ->maxSize(1024)
-                                    ->disk('public_uploads_qr')
-                                    ->directory('/')
-                                    ->required()
-                                    ->image(),
-                                TextInput::make('contact_number')
-                                    ->label('Contact Number')
-                                    ->required()
-                                    ->formatStateUsing(fn ($record) => auth()->user()?->contact_number)
-                                    ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
-                                    ->maxLength(255),
-                            ])
-                            ->columns(1),
-                    ]),
+                // Group::make()
+                //     ->schema([
+                //         Section::make('QR Code')
+                //             ->schema([
+                //                 FileUpload::make('qr')
+                //                     ->label('')
+                //                     ->openable()
+                //                     ->maxSize(1024)
+                //                     ->disk('public_uploads_qr')
+                //                     ->directory('/')
+                //                     ->required()
+                //                     ->image(),
+                //                 TextInput::make('contact_number')
+                //                     ->label('Contact Number')
+                //                     ->required()
+                //                     ->formatStateUsing(fn ($record) => auth()->user()?->contact_number)
+                //                     ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
+                //                     ->maxLength(255),
+                //             ])
+                //             ->columns(1),
+                //     ]),
             ])
-            ->columns(3)
+            // ->columns(3)
             ->statePath('data');
     }
 

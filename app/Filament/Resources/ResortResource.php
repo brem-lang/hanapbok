@@ -52,7 +52,9 @@ class ResortResource extends Resource
                                     ->required(),
                                 FileUpload::make('image')
                                     ->openable()
+                                    ->columnSpanFull()
                                     ->label('Image')
+                                    ->placeholder('You can drag and drop files here to add them.')
                                     // ->required()
                                     ->maxSize(1024)
                                     ->disk('public_uploads_resorts')
@@ -63,8 +65,21 @@ class ResortResource extends Resource
                                     ->default(true)
                                     ->inline(false),
                                 TextInput::make('barangay')
-                                    ->label('Barangay')
+                                    ->label('Complete Address')
                                     ->required()
+                                    ->maxLength(255),
+                                TextInput::make('resort_admin')
+                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->name ?? null)
+                                    // ->readOnly()
+                                    ->required()
+                                    ->label('Resort Admin Name')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('resort_admin_email')
+                                    ->label('Resort Admin Email')
+                                    ->required()
+                                    // ->readOnly()
+                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->email ?? null)
                                     ->maxLength(255),
                                 Repeater::make('others')
                                     ->columnSpanFull()
@@ -76,39 +91,8 @@ class ResortResource extends Resource
                             ])
                             ->columns(2),
                     ])
-                    ->columnSpan(2),
-                Group::make()
-                    ->schema([
-                        Section::make('Resort Admin')
-                            ->schema([
-                                TextInput::make('resort_admin')
-                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->name ?? null)
-                                    // ->readOnly()
-                                    ->required()
-                                    ->label('Name')
-                                    ->required()
-                                    ->maxLength(255),
-                                TextInput::make('resort_admin_email')
-                                    ->label('Email')
-                                    ->required()
-                                    // ->readOnly()
-                                    ->formatStateUsing(fn ($record) => $record?->userAdmin->email ?? null)
-                                    ->maxLength(255),
-                                // TextInput::make('contact_number')
-                                //     ->label('Contact Number')
-                                //     ->required()
-                                //     ->formatStateUsing(fn ($record) => $record?->userAdmin->contact_number ?? null)
-                                //     ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
-                                //     ->maxLength(255),
-                                // Toggle::make('is_validated')
-                                //     ->formatStateUsing(fn ($record) => $record?->userAdmin->is_validated ?? false)
-                                //     ->label('Validated')
-                                //     ->disabled(),
-                            ])
-                            ->columns(1),
-                    ]),
-            ])
-            ->columns(3);
+                    ->columnSpanFull(),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -152,8 +136,8 @@ class ResortResource extends Resource
     public static function getRelations(): array
     {
         return [
-            EntranceFeesRelationManager::class,
-            ItemsRelationManager::class,
+            // EntranceFeesRelationManager::class,
+            // ItemsRelationManager::class,
         ];
     }
 

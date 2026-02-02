@@ -80,8 +80,8 @@ class Dashboard extends Page implements HasForms
     protected function getResortAdminBookingQuery()
     {
         $resortId = Auth::user()?->AdminResort?->id;
-        
-        if (!$resortId) {
+
+        if (! $resortId) {
             return Booking::query()->whereRaw('1 = 0');
         }
 
@@ -152,6 +152,7 @@ class Dashboard extends Page implements HasForms
 
         // Get bookings in the date range
         $bookingsQuery = Booking::query()
+            ->with('resort')
             ->whereIn('status', ['confirmed', 'completed'])
             ->whereBetween('created_at', [$dateRange['start'], $dateRange['end']]);
 
@@ -186,11 +187,13 @@ class Dashboard extends Page implements HasForms
         // Combine data
         $result = $resortStats->map(function ($stat) use ($resorts) {
             $resort = $resorts->get($stat->resort_id);
+
             return [
                 'id' => $stat->resort_id,
                 'name' => $resort->name ?? 'Unnamed Resort',
                 'total_bookings' => (int) $stat->total_bookings,
                 'total_sales' => (float) ($stat->total_sales ?? 0),
+                'avg_rating' => $resort->reviews->avg('rating'),
             ];
         })->toArray();
 
@@ -447,7 +450,7 @@ class Dashboard extends Page implements HasForms
                 while ($current->lte($endDate) && $weekCount < 6) {
                     $weekNum = (int) $current->format('oW');
                     $weekData = $weeklyData->get($weekNum);
-                    $labels[] = 'Week ' . ($weekCount + 1) . ' (' . $current->format('M d') . ')';
+                    $labels[] = 'Week '.($weekCount + 1).' ('.$current->format('M d').')';
                     $data[] = (float) ($weekData->total_sales ?? 0);
                     $current->addWeek();
                     $weekCount++;
@@ -537,7 +540,7 @@ class Dashboard extends Page implements HasForms
                 while ($current->lte($endDate) && $weekCount < 6) {
                     $weekNum = (int) $current->format('oW');
                     $weekData = $weeklyData->get($weekNum);
-                    $labels[] = 'Week ' . ($weekCount + 1) . ' (' . $current->format('M d') . ')';
+                    $labels[] = 'Week '.($weekCount + 1).' ('.$current->format('M d').')';
                     $data[] = (int) ($weekData->total_bookings ?? 0);
                     $current->addWeek();
                     $weekCount++;
@@ -583,9 +586,9 @@ class Dashboard extends Page implements HasForms
     public function userBookingStats(): array
     {
         $user = Auth::user();
-        
+
         // Only admins can see this data
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             return [
                 'labels' => [],
                 'datasets' => [
@@ -639,9 +642,9 @@ class Dashboard extends Page implements HasForms
     public function bookingStatusStats(): array
     {
         $user = Auth::user();
-        
+
         // Only admins can see this data
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             return [
                 'labels' => [],
                 'datasets' => [
@@ -729,9 +732,9 @@ class Dashboard extends Page implements HasForms
     public function walkInVsOnlineBookingStatsResortAdmin(): array
     {
         $user = Auth::user();
-        
+
         // Only resort admins can see this data
-        if (!$user->isResortsAdmin()) {
+        if (! $user->isResortsAdmin()) {
             return [
                 'labels' => [],
                 'datasets' => [
@@ -747,8 +750,8 @@ class Dashboard extends Page implements HasForms
         }
 
         $resortId = $user->AdminResort?->id;
-        
-        if (!$resortId) {
+
+        if (! $resortId) {
             return [
                 'labels' => [],
                 'datasets' => [
@@ -799,9 +802,9 @@ class Dashboard extends Page implements HasForms
     public function bookingStatusStatsResortAdmin(): array
     {
         $user = Auth::user();
-        
+
         // Only resort admins can see this data
-        if (!$user->isResortsAdmin()) {
+        if (! $user->isResortsAdmin()) {
             return [
                 'labels' => [],
                 'datasets' => [
@@ -817,8 +820,8 @@ class Dashboard extends Page implements HasForms
         }
 
         $resortId = $user->AdminResort?->id;
-        
-        if (!$resortId) {
+
+        if (! $resortId) {
             return [
                 'labels' => [],
                 'datasets' => [
@@ -922,13 +925,13 @@ class Dashboard extends Page implements HasForms
             foreach ($booking->bookingItems as $item) {
                 if ($item->item_id && $item->item) {
                     $type = $item->item->type ?? 'Accommodation';
-                    if (!isset($revenueByType[$type])) {
+                    if (! isset($revenueByType[$type])) {
                         $revenueByType[$type] = 0;
                     }
                     $revenueByType[$type] += (float) $item->amount;
                 } elseif ($item->entrance_fee_id && $item->entranceFee) {
                     $type = 'Entrance Fee';
-                    if (!isset($revenueByType[$type])) {
+                    if (! isset($revenueByType[$type])) {
                         $revenueByType[$type] = 0;
                     }
                     $revenueByType[$type] += (float) $item->amount;
@@ -941,7 +944,7 @@ class Dashboard extends Page implements HasForms
                 $totalCharges = collect($additionalCharges)->sum('total_charges');
                 if ($totalCharges > 0) {
                     $type = 'Additional Services';
-                    if (!isset($revenueByType[$type])) {
+                    if (! isset($revenueByType[$type])) {
                         $revenueByType[$type] = 0;
                     }
                     $revenueByType[$type] += (float) $totalCharges;

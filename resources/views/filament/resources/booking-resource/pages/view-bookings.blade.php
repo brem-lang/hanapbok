@@ -89,7 +89,7 @@
                                                 </x-slot>
 
                                                 <x-slot name="description">
-                                                    Are you sure you would like to do this?
+                                                    Would you like to proceed?
                                                 </x-slot>
 
                                                 <x-slot name="footerActions">

@@ -77,4 +77,9 @@ class EditUser extends EditRecord
 
         return $record;
     }
+
+    public function getFormActionsAlignment(): string
+    {
+        return 'end'; // Save Changes & Cancel on the RIGHT
+    }
 }
