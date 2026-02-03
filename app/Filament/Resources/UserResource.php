@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Forms\Components\DocumentScanner;
+use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
@@ -88,7 +88,7 @@ class UserResource extends Resource
                             ->columnSpanFull()
                             // ->columnSpan(3)
                             ->hint('Use the camera scanner to capture documents. They will be saved as images.')
-                            ->label('Attachments')
+                            ->label('BIR')
                             // ->required()
                             ->disk('public_uploads_id')
                             ->directory('/')
