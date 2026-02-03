@@ -57,6 +57,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'back_id' => 'array',
+            'barangay_clearance' => 'array',
+            'waste_management' => 'array',
+            'valid_id' => 'array',
+            'mayors_permit' => 'array',
         ];
     }
 

@@ -6,7 +6,7 @@
         $currentState = $viewData['state'] ?? [];
     @endphp
 
-    <div x-data="documentScanner({
+    <div x-data="wasteManagementDocumentScanner({
         statePath: @js($statePath),
         existingDocuments: @js($existingDocuments),
         currentState: @js($currentState)
@@ -109,14 +109,8 @@
             class="bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <div class="flex items-center gap-3">
-                    {{-- <div class="p-3 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </div> --}}
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">BIR Documents Scanner</h3>
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200">Waste Management Documents Scanner</h3>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Capture documents using your camera
                         </p>
                     </div>
@@ -327,14 +321,6 @@
                     <div class="mt-2">
                         <div class="flex items-center gap-3 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                             <div class="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-                                <!-- <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                    </path>
-                                </svg> -->
                             </div>
                             <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100" x-text="previewImageName">
                             </h3>
@@ -360,14 +346,6 @@
                     x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                     @click.stop>
                     <div class="flex items-center gap-3 mb-6">
-                        {{-- <div class="p-3 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-lg">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                </path>
-                            </svg>
-                        </div> --}}
                         <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">Name Your Document</h3>
                     </div>
                     <div class="mb-6">
@@ -406,7 +384,7 @@
 
     @push('scripts')
         <script>
-            function documentScanner({
+            function wasteManagementDocumentScanner({
                 statePath,
                 existingDocuments,
                 currentState

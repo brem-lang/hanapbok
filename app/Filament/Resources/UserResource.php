@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Forms\Components\BarangayClearanceDocumentScanner;
 use App\Filament\Forms\Components\DocumentScanner;
+use App\Filament\Forms\Components\MayorsPermitDocumentScanner;
+use App\Filament\Forms\Components\ValidIdDocumentScanner;
+use App\Filament\Forms\Components\WasteManagementDocumentScanner;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -60,36 +62,34 @@ class UserResource extends Resource
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                             ->dehydrated(fn ($state) => filled($state))
                             ->hidden(fn (string $context): bool => $context === 'create'),
-                        // Select::make('role')
-                        //     ->label('Role')
-                        //     ->options([
-                        //         'guest' => 'Guest',
-                        //         'resorts_admin' => 'Resorts Admin',
-                        //     ])
-                        //     ->required(),
                         Toggle::make('is_validated'),
-                        // TextInput::make('contact_number')
-                        //     ->label('Contact Number')
-                        //     ->required()
-                        //     ->rules(['nullable', 'regex:/^(09|\+639)\d{9}$/'])
-                        //     ->maxLength(255),
-                        // FileUpload::make('front_id')
-                        //     ->columnSpanFull()
-                        //     ->hint('Please avoid to upload blurry images.')
-                        //     ->openable()
-                        //     ->label('Valid ID')
-                        //     // ->required()
-                        //     ->maxSize(1024)
-                        //     ->disk('public_uploads_id')
-                        //     ->directory('/')
-                        //     ->image()
-                        //     ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
                         DocumentScanner::make('back_id')
                             ->columnSpanFull()
-                            // ->columnSpan(3)
-                            ->hint('Use the camera scanner to capture documents. They will be saved as images.')
                             ->label('BIR')
-                            // ->required()
+                            ->disk('public_uploads_id')
+                            ->directory('/')
+                            ->maxSize(10000),
+                        BarangayClearanceDocumentScanner::make('barangay_clearance')
+                            ->columnSpanFull()
+                            ->label('Barangay Clearance')
+                            ->disk('public_uploads_id')
+                            ->directory('/')
+                            ->maxSize(10000),
+                        WasteManagementDocumentScanner::make('waste_management')
+                            ->columnSpanFull()
+                            ->label('Waste Management')
+                            ->disk('public_uploads_id')
+                            ->directory('/')
+                            ->maxSize(10000),
+                        ValidIdDocumentScanner::make('valid_id')
+                            ->columnSpanFull()
+                            ->label('Valid ID')
+                            ->disk('public_uploads_id')
+                            ->directory('/')
+                            ->maxSize(10000),
+                        MayorsPermitDocumentScanner::make('mayors_permit')
+                            ->columnSpanFull()
+                            ->label("Mayor's Permit")
                             ->disk('public_uploads_id')
                             ->directory('/')
                             ->maxSize(10000),

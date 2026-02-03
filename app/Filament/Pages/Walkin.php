@@ -120,7 +120,7 @@ class Walkin extends Page implements HasForms
 
                 Group::make()
                     ->schema([
-                        Section::make()->columns(3)
+                        Section::make()->columns(4)
                             ->schema([
                                 DatePicker::make('date_from')
                                     ->minDate(now()->format('Y-m-d'))
@@ -135,6 +135,9 @@ class Walkin extends Page implements HasForms
                                         'gcash' => 'Gcash',
                                         'cash' => 'Cash',
                                     ]),
+                                TextInput::make('contact_number')
+                                    ->required(),
+
                             ]),
                     ])
                     ->columnSpan(4),
@@ -183,6 +186,7 @@ class Walkin extends Page implements HasForms
             'date' => $data['date_from'],
             'date_to' => $data['date_to'],
             'payment_type' => $data['payment_type'],
+            'contact_number' => $data['contact_number'],
         ]);
 
         foreach ($data['list_of_person'] as $feeSelection) {
