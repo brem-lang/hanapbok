@@ -1,6 +1,6 @@
 <x-filament-panels::page>
     {{ $this->form }}
-    <div class="fi-ac gap-3 flex flex-wrap items-center justify-start">
+    <div class="fi-ac gap-3 flex flex-wrap items-center justify-end">
         <x-filament::modal id="submit-modal" width="md" alignment="center" icon="heroicon-o-check" icon-color="success">
             <x-slot name="trigger">
                 <x-filament::button x-cloak>
