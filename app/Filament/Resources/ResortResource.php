@@ -55,7 +55,7 @@ class ResortResource extends Resource
                                     ->columnSpanFull()
                                     ->label('Image')
                                     ->placeholder('You can drag and drop files here to add them.')
-                                    // ->required()
+                                    ->required()
                                     ->maxSize(1024)
                                     ->disk('public_uploads_resorts')
                                     ->directory('/')
