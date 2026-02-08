@@ -6,6 +6,10 @@
              class="mb-3 d-block mx-auto" style="height: 90px;"> --}}
             <h4 class="mb-1">Two Factor Authentication</h4>
             <p class="text-muted">Please check your email and enter the code below.</p>
+            <div id="otp-timer" class="mt-2 mb-2" style="font-size: 1rem; font-weight: 600;">
+                <span id="timer-display" class="text-primary">Time remaining: 2:00</span>
+                <span id="timer-expired" class="text-danger" style="display: none;">OTP expired</span>
+            </div>
         </div>
 
         <form wire:submit.prevent="submit">
@@ -50,6 +54,60 @@
                     inputs[index - 1].focus();
                 }
             });
+        });
+
+        // OTP Countdown Timer
+        let otpTimerInterval = null;
+        const timerDisplay = document.getElementById('timer-display');
+        const timerExpired = document.getElementById('timer-expired');
+        const otpExpiryTime = @json($otpExpiryTime);
+
+        function startTimer(expiryTimestamp) {
+            // Clear any existing timer
+            if (otpTimerInterval) {
+                clearInterval(otpTimerInterval);
+            }
+
+            function updateTimer() {
+                const now = Date.now();
+                const remaining = expiryTimestamp - now;
+
+                if (remaining <= 0) {
+                    // Timer expired
+                    timerDisplay.style.display = 'none';
+                    timerExpired.style.display = 'inline';
+                    clearInterval(otpTimerInterval);
+                    otpTimerInterval = null;
+                } else {
+                    // Calculate minutes and seconds
+                    const minutes = Math.floor(remaining / 60000);
+                    const seconds = Math.floor((remaining % 60000) / 1000);
+                    const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    timerDisplay.textContent = `Time remaining: ${formattedTime}`;
+                    timerDisplay.style.display = 'inline';
+                    timerExpired.style.display = 'none';
+                }
+            }
+
+            // Update immediately
+            updateTimer();
+
+            // Update every second
+            otpTimerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Start timer if expiry time is available
+        if (otpExpiryTime) {
+            startTimer(otpExpiryTime);
+        }
+
+        // Listen for OTP resent event from Livewire
+        window.addEventListener('otp-resent', function(event) {
+            // Livewire dispatches events with data in event.detail array
+            const data = Array.isArray(event.detail) ? event.detail[0] : event.detail;
+            if (data && data.expiryTime) {
+                startTimer(data.expiryTime);
+            }
         });
     });
 

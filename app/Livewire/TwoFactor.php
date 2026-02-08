@@ -28,15 +28,26 @@ class TwoFactor extends Component
         'otp.5' => 'required|numeric',
     ];
 
+    public $otpExpiryTime = null;
+
     public function mount()
     {
         // Initialize empty otp array
         $this->otp = array_fill(0, 6, '');
+
+        // Fetch the current OTP's updated_at timestamp
+        $userCode = UserCodes::where('user_id', auth()->user()->id)->first();
+        if ($userCode) {
+            // Calculate expiry time: updated_at + 2 minutes
+            $this->otpExpiryTime = $userCode->updated_at->copy()->addMinutes(2)->timestamp * 1000; // Convert to milliseconds for JavaScript
+        }
     }
 
     public function render(): View
     {
-        return view('livewire.two-factor');
+        return view('livewire.two-factor', [
+            'otpExpiryTime' => $this->otpExpiryTime,
+        ]);
     }
 
     public function submit()
@@ -89,10 +100,18 @@ class TwoFactor extends Component
 
             $code = rand(100000, 999999);
 
-            UserCodes::updateOrCreate(
+            $userCode = UserCodes::updateOrCreate(
                 ['user_id' => auth()->user()->id],
                 ['code' => $code]
             );
+
+            // Update expiry time for the new OTP
+            $this->otpExpiryTime = $userCode->updated_at->copy()->addMinutes(2)->timestamp * 1000;
+
+            // Dispatch event to reset timer on frontend (OTP is created, so timer should reset)
+            $this->dispatch('otp-resent', [
+                'expiryTime' => $this->otpExpiryTime,
+            ]);
 
             try {
                 $details = [
