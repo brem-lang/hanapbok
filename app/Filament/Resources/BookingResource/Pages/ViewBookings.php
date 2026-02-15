@@ -225,7 +225,17 @@ class ViewBookings extends Page
         return $infolist
             ->record($this->record)
             ->schema([
-                TextEntry::make('user.name'),
+                TextEntry::make('name') // You can name this anything, but 'name' is logical here
+                    ->label('Name')
+                    ->formatStateUsing(function ($record) {
+                        // If the 'name' column in the current row is not empty, use it
+                        if (! empty($record->name)) {
+                            return $record->name;
+                        }
+
+                        // Otherwise, fall back to the related user's name
+                        return $record->user?->name;
+                    }),
                 TextEntry::make('user.contact_number')
                     ->label('Contact Number'),
                 TextEntry::make('status')

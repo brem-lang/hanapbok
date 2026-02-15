@@ -119,8 +119,8 @@
 
     <div class="totals align-left" style="margin-top:10px;">
         <span style="font-size: 14px;">Prepared By: {{ auth()->user()->name ?? 'System' }}</span><br>
-        <span>Position: {{ ucfirst(auth()->user()->role) }}</span><br>
-        <span>Date and Time: {{ now()->format('F d, Y h:i A') }}</span>
+        <span>{{ ucfirst(auth()->user()->role) }}</span><br>
+        <span>{{ now()->format('F d, Y h:i A') }}</span>
     </div>
 </body>
 

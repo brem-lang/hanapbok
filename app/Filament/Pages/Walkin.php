@@ -120,7 +120,8 @@ class Walkin extends Page implements HasForms
 
                 Group::make()
                     ->schema([
-                        Section::make()->columns(4)
+                        Section::make()
+                            ->columns(5)
                             ->schema([
                                 DatePicker::make('date_from')
                                     ->minDate(now()->format('Y-m-d'))
@@ -135,6 +136,8 @@ class Walkin extends Page implements HasForms
                                         'gcash' => 'Gcash',
                                         'cash' => 'Cash',
                                     ]),
+                                TextInput::make('name')
+                                    ->required(),
                                 TextInput::make('contact_number')
                                     ->required(),
 
@@ -179,6 +182,7 @@ class Walkin extends Page implements HasForms
         $total_amount = $entranceFeeAmount + $accomodationAmount;
 
         $book = ModelsBooking::create([
+            'name' => $data['name'],
             'user_id' => auth()->user()->id,
             'resort_id' => auth()->user()->AdminResort->id,
             'status' => 'pending',

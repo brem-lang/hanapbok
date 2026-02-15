@@ -136,6 +136,44 @@
                 </div>
             </div>
         </div>
+
+        {{-- Guest Users Table Section --}}
+        <div class="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6">
+            <h2 class="text-lg md:text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Guest Users</h2>
+            <div class="overflow-x-auto -mx-4 md:mx-0">
+                <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
+                        <tr>
+                            <th
+                                class="text-left py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                Name</th>
+                            <th
+                                class="text-left py-3 px-4 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                Email</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        @forelse($this->guestUsers as $guestUser)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                <td class="py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-100">
+                                    {{ $guestUser->name }}</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">
+                                    {{ $guestUser->email }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="2" class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">No
+                                    guest users found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            {{-- Pagination Links --}}
+            <div class="mt-4">
+                {{ $this->guestUsers->links() }}
+            </div>
+        </div>
     @endif
 
     @if (auth()->user()->isResortsAdmin())

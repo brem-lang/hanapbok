@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
     {
         FilamentView::registerRenderHook(
             PanelsRenderHook::USER_MENU_BEFORE,
-            fn (): string => ucfirst(auth()->user()->role),
+            fn (): string => ucfirst(auth()->user()->name),
         );
 
         Filament::serving(function () {

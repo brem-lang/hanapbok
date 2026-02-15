@@ -12,10 +12,12 @@ use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
+use Livewire\WithPagination;
 
 class Dashboard extends Page implements HasForms
 {
     use InteractsWithForms;
+    use WithPagination;
 
     public ?array $userValidateIDData = [];
 
@@ -39,6 +41,9 @@ class Dashboard extends Page implements HasForms
 
     // Filter for resort admin (separate from admin filter)
     public string $resortAdminFilter = 'monthly';
+
+    // Pagination items per page for guest users table
+    public int $perPage = 15;
 
     // Method to change the active filter.
     public function setFilter(string $filter): void
@@ -981,6 +986,23 @@ class Dashboard extends Page implements HasForms
                 ],
             ],
         ];
+    }
+
+    /**
+     * Get paginated guest users
+     */
+    public function getGuestUsersProperty()
+    {
+        $user = Auth::user();
+
+        // Only admins can see guest users
+        if (! $user->isAdmin()) {
+            return User::whereRaw('1 = 0')->paginate($this->perPage);
+        }
+
+        return User::where('role', 'guest')
+            ->latest()
+            ->paginate($this->perPage);
     }
 
     /**
