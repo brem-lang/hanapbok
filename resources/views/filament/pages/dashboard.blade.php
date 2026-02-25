@@ -28,7 +28,7 @@
         </div>
 
         {{-- Top Performing Resorts Section --}}
-        <div class="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6">
+        {{-- <div class="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 md:p-6">
             <h2 class="text-lg md:text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Top Performing Resorts</h2>
             <div class="overflow-x-auto -mx-4 md:mx-0">
                 <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -77,7 +77,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div> --}}
 
         {{-- Charts Section --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">

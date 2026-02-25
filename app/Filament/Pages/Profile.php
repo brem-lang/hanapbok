@@ -57,13 +57,9 @@ class Profile extends Page implements HasForms
                     ->schema([
                         TextInput::make('name')
                             ->label('Name')
-                            ->readOnly()
-                            ->dehydrated(false)
                             ->maxLength(255),
                         TextInput::make('email')
                             ->label('Email')
-                            ->readOnly()
-                            ->dehydrated(false)
                             ->maxLength(255),
                         TextInput::make('password')
                             ->password()
