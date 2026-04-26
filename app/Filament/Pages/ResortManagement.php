@@ -91,6 +91,7 @@ class ResortManagement extends Page implements HasForms
                                     ->rules(['nullable', 'mimes:jpg,jpeg,png', 'max:1024']),
                                 FileUpload::make('qr')
                                     ->label('QR Code')
+                                    ->validationAttribute('QR')
                                     ->openable()
                                     ->maxSize(1024)
                                     ->columnSpanFull()

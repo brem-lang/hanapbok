@@ -42,11 +42,11 @@ class Items extends Component implements HasForms, HasTable
                     ->searchable(),
                 TextColumn::make('type')
                     ->label('Tour Type')
-                    ->formatStateUsing(fn ($state) => $state === 'night_tour' ? 'Night Tour' : 'Day Tour')
+                    ->formatStateUsing(fn($state) => $state === 'night_tour' ? 'Night Tour' : 'Day Tour')
                     ->searchable(),
                 TextColumn::make('accommodations.name')
                     ->label('Accommodation Type')
-                    ->formatStateUsing(fn ($state) => ucfirst($state))
+                    ->formatStateUsing(fn($state) => ucfirst($state))
                     ->searchable(),
                 TextColumn::make('price')
                     ->money('PHP', true)
@@ -73,7 +73,7 @@ class Items extends Component implements HasForms, HasTable
                             ]),
                         Select::make('room_cottage_type')
                             ->label('Accommodation Type')
-                            ->options(fn () => Accommodation::pluck('name', 'id')) // closure for lazy load
+                            ->options(fn() => Accommodation::pluck('name', 'id')) // closure for lazy load
                             ->searchable()
                             ->required()
                             ->createOptionForm([
@@ -108,8 +108,7 @@ class Items extends Component implements HasForms, HasTable
                             ->numeric()
                             ->maxLength(255),
                         Textarea::make('description')
-                            ->columnSpanFull()
-                            ->maxLength(255),
+                            ->columnSpanFull(),
                         Repeater::make('otherInfo')
                             ->reorderable(false)
                             ->columnSpanFull()
@@ -159,7 +158,7 @@ class Items extends Component implements HasForms, HasTable
                             ]),
                         Select::make('room_cottage_type')
                             ->label('Accommodation Type')
-                            ->options(fn () => Accommodation::pluck('name', 'id')) // closure for lazy load
+                            ->options(fn() => Accommodation::pluck('name', 'id')) // closure for lazy load
                             ->searchable()
                             ->required(),
                         TextInput::make('price')
