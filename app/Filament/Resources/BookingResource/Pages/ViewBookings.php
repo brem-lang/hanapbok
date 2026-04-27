@@ -89,23 +89,17 @@ class ViewBookings extends Page
                 ->icon('heroicon-o-calendar')
                 ->label('Reschedule')
                 ->requiresConfirmation()
-                ->hidden($this->record->status == 'confirmed' || $this->record->status == 'completed')
+                ->hidden(! in_array($this->record->status, ['pending', 'confirmed'], true))
                 ->action(function ($data) {
                     $dateFrom = $data['date'];
                     $dateTo = $data['date_to'];
 
-                    // 1️⃣ Check conflicting pending bookings
-                    $hasConflict = Booking::where('resort_id', $this->record->resort_id)
-                        ->where('status', 'pending')
-                        ->where('id', '!=', $this->record->id) // exclude self
-                        ->where(function ($q) use ($dateFrom, $dateTo) {
-                            $q->where('date', '<', $dateTo)
-                                ->where('date_to', '>', $dateFrom);
-                        })
-                        ->exists();
-
-                    // 2️⃣ If conflict → notify & stop
-                    if ($hasConflict) {
+                    if (Booking::hasPendingRangeOverlap(
+                        $this->record->resort_id,
+                        $dateFrom,
+                        $dateTo,
+                        $this->record->id
+                    )) {
                         Notification::make()
                             ->title('Date already reserved')
                             ->body('The selected date range is already reserved. Please choose another date.')

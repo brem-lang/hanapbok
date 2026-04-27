@@ -4,12 +4,17 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BookingResource\Pages;
 use App\Models\Booking;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Carbon;
+
+use function Symfony\Component\Clock\now;
 
 class BookingResource extends Resource
 {
@@ -98,6 +103,56 @@ class BookingResource extends Resource
             ])
             ->actions([
                 // Tables\Actions\EditAction::make(),
+                Action::make('change_dates')
+                    ->label('Change')
+                    ->icon('heroicon-o-calendar')
+                    ->modalHeading('Change booking dates')
+                    ->hidden(fn (Booking $record): bool => ! in_array($record->status, ['pending', 'confirmed'], true))
+                    ->fillForm(function (Booking $record): array {
+                        return [
+                            'date' => $record->date ? Carbon::parse($record->date)->format('Y-m-d') : null,
+                            'date_to' => $record->date_to ? Carbon::parse($record->date_to)->format('Y-m-d') : null,
+                        ];
+                    })
+                    ->form([
+                        DatePicker::make('date')
+                            ->label('Date From')
+                            ->minDate(now()->format('Y-m-d'))
+                            ->required(),
+                        DatePicker::make('date_to')
+                            ->label('Date To')
+                            ->minDate(now()->format('Y-m-d'))
+                            ->required(),
+                    ])
+                    ->action(function (array $data, Booking $record): void {
+                        $dateFrom = $data['date'];
+                        $dateTo = $data['date_to'];
+
+                        if (Booking::hasPendingRangeOverlap(
+                            $record->resort_id,
+                            $dateFrom,
+                            $dateTo,
+                            $record->id
+                        )) {
+                            Notification::make()
+                                ->title('Date already reserved')
+                                ->body('The selected date range is already reserved. Please choose another date.')
+                                ->danger()
+                                ->send();
+
+                            return;
+                        }
+
+                        $record->update([
+                            'date' => $dateFrom,
+                            'date_to' => $dateTo,
+                        ]);
+
+                        Notification::make()
+                            ->title('Booking dates updated')
+                            ->success()
+                            ->send();
+                    }),
                 Action::make('view')
                     ->label('View')
                     ->icon('heroicon-o-eye')
