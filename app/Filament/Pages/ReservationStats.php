@@ -15,7 +15,7 @@ class ReservationStats extends Page
 
     protected static ?int $navigationSort = 8;
 
-    protected static ?string $title = 'Reservation Trends';
+    protected static ?string $title = 'Revenue Trends';
 
     public static function canAccess(): bool
     {
@@ -28,7 +28,7 @@ class ReservationStats extends Page
             Action::make('print')
                 ->label('Print')
                 ->icon('heroicon-o-printer')
-                ->url(fn () => route('reports.revenueTrends', [
+                ->url(fn() => route('reports.revenueTrends', [
                     'resort_id' => auth()->user()?->AdminResort?->id,
                 ]))
                 ->openUrlInNewTab(),

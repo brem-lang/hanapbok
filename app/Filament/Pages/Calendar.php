@@ -27,6 +27,8 @@ class Calendar extends Page
         }
 
         $this->calendarEvents = ModelsBooking::query()
+            ->where('resort_id', auth()->user()?->AdminResort?->id)
+            ->with('user')
             ->get()
             ->map(
                 fn (ModelsBooking $booking) => [
