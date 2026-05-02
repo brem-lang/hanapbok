@@ -71,7 +71,11 @@
                                 </div>
 
                                 <div class="text-right">
-                                    @if ($record->status == 'confirmed')
+                                    @if ($record->status == 'completed')
+                                        <x-filament::button size="md" color="success" disabled>
+                                            Completed
+                                        </x-filament::button>
+                                    @elseif ($record->status == 'confirmed')
                                         <x-filament::button size="md" color="primary" disabled>
                                             Booking Confirm
                                         </x-filament::button>
