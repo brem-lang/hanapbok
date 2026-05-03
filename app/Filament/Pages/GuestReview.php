@@ -42,7 +42,7 @@ class GuestReview extends Page implements HasForms, HasTable
                 Action::make('print')
                     ->label('Print')
                     ->icon('heroicon-o-printer')
-                    ->url(fn () => route('reports.print', ['resort_id' => auth()->user()?->AdminResort?->id]))
+                    ->url(fn() => route('reports.print', ['resort_id' => auth()->user()?->AdminResort?->id]))
                     ->openUrlInNewTab(),
             ])
             ->query(ModelsGuestReview::query()->with('user')->where('resort_id', auth()->user()?->AdminResort?->id)->latest())
@@ -58,12 +58,12 @@ class GuestReview extends Page implements HasForms, HasTable
                     ->limit(50)
                 // ->toggleable()
                 ,
-                TextColumn::make('created_at')
-                    ->label('Date')
-                    ->date('F d, Y h:i A')
-                    ->searchable()
-                    // ->toggleable()
-                    ->sortable(),
+                // TextColumn::make('created_at')
+                //     ->label('Date')
+                //     ->date('F d, Y h:i A')
+                //     ->searchable()
+                //     // ->toggleable()
+                //     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('user_id')
@@ -79,7 +79,7 @@ class GuestReview extends Page implements HasForms, HasTable
                         return $query
                             ->when(
                                 $data['date'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                             );
                     }),
             ])

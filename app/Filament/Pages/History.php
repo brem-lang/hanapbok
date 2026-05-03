@@ -6,6 +6,7 @@ use App\Filament\Resources\BookingResource;
 use App\Models\Booking;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Tables\Actions\Action;
@@ -17,8 +18,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
-
-use function Symfony\Component\Clock\now;
 
 class History extends Page implements HasTable
 {
@@ -98,11 +97,11 @@ class History extends Page implements HasTable
                         return $query
                             ->when(
                                 $data['date'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
                             )
                             ->when(
                                 $data['date_to'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('date_to', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('date_to', '<=', $date),
                             );
                     }),
             ])
@@ -110,12 +109,14 @@ class History extends Page implements HasTable
                 Action::make('change_dates')
                     ->label('Change')
                     ->icon('heroicon-o-calendar')
-                    ->modalHeading('Change booking dates')
-                    ->hidden(fn(Booking $record): bool => $record->status !== 'completed')
+                    ->modalHeading('Change dates & actual check-in/out')
+                    ->hidden(fn (Booking $record): bool => $record->status !== 'completed')
                     ->fillForm(function (Booking $record): array {
                         return [
                             'date' => $record->date ? Carbon::parse($record->date)->format('Y-m-d') : null,
                             'date_to' => $record->date_to ? Carbon::parse($record->date_to)->format('Y-m-d') : null,
+                            'actual_check_in' => $record->actual_check_in,
+                            'actual_check_out' => $record->actual_check_out,
                         ];
                     })
                     ->form([
@@ -125,6 +126,16 @@ class History extends Page implements HasTable
                         DatePicker::make('date_to')
                             ->label('Date To')
                             ->required(),
+                        DateTimePicker::make('actual_check_in')
+                            ->label('Actual Check-In')
+                            ->nullable()
+                            ->timezone('Asia/Manila')
+                            ->seconds(false),
+                        DateTimePicker::make('actual_check_out')
+                            ->label('Actual Check-Out')
+                            ->nullable()
+                            ->timezone('Asia/Manila')
+                            ->seconds(false),
                     ])
                     ->action(function (array $data, Booking $record): void {
                         $dateFrom = $data['date'];
@@ -133,17 +144,19 @@ class History extends Page implements HasTable
                         $record->update([
                             'date' => $dateFrom,
                             'date_to' => $dateTo,
+                            'actual_check_in' => $data['actual_check_in'] ?? null,
+                            'actual_check_out' => $data['actual_check_out'] ?? null,
                         ]);
 
                         Notification::make()
-                            ->title('Booking dates updated')
+                            ->title('Booking updated')
                             ->success()
                             ->send();
                     }),
                 Action::make('view')
                     ->icon('heroicon-o-eye')
                     ->color('primary')
-                    ->url(fn($record) => BookingResource::getUrl('view', ['record' => $record->id]))
+                    ->url(fn ($record) => BookingResource::getUrl('view', ['record' => $record->id]))
                     ->openUrlInNewTab(),
             ])
             ->bulkActions([

@@ -88,26 +88,26 @@
                 <th>Reviewer</th>
                 <th>Rating</th>
                 <th>Review</th>
-                <th>Date</th>
+                <!-- <th>Date</th> -->
             </tr>
         </thead>
         <tbody style="font-size: 12px;">
             @forelse ($reviews as $index => $review)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $review->user?->name ?? 'Guest' }}</td>
-                    <td>
-                        @for ($i = 1; $i <= 5; $i++)
-                            <span class="rating">{{ $i <= $review->rating ? '★' : '☆' }}</span>
+            <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ $review->user?->name ?? 'Guest' }}</td>
+                <td>
+                    @for ($i = 1; $i <= 5; $i++)
+                        <span class="rating">{{ $i <= $review->rating ? '★' : '☆' }}</span>
                         @endfor
-                    </td>
-                    <td>{{ $review->review ?? 'No comment.' }}</td>
-                    <td>{{ $review->created_at->format('M d, Y') }}</td>
-                </tr>
+                </td>
+                <td>{{ $review->review ?? 'No comment.' }}</td>
+                <!-- <td>{{ $review->created_at->format('M d, Y') }}</td> -->
+            </tr>
             @empty
-                <tr>
-                    <td colspan="5" style="text-align:center;">No reviews found.</td>
-                </tr>
+            <tr>
+                <td colspan="5" style="text-align:center;">No reviews found.</td>
+            </tr>
             @endforelse
         </tbody>
     </table>
