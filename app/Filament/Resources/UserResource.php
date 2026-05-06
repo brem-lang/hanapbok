@@ -9,12 +9,15 @@ use App\Filament\Forms\Components\ValidIdDocumentScanner;
 use App\Filament\Forms\Components\WasteManagementDocumentScanner;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Columns\TextColumn;
@@ -59,9 +62,9 @@ class UserResource extends Resource
                         TextInput::make('password')
                             ->password()
                             ->minLength(8)
-                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                            ->dehydrated(fn ($state) => filled($state))
-                            ->hidden(fn (string $context): bool => $context === 'create'),
+                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
+                            ->dehydrated(fn($state) => filled($state))
+                            ->hidden(fn(string $context): bool => $context === 'create'),
                         Toggle::make('is_validated'),
                         DocumentScanner::make('back_id')
                             ->columnSpanFull()
@@ -106,20 +109,20 @@ class UserResource extends Resource
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('role')
-                    ->badge()->color(fn (string $state): string => match ($state) {
+                    ->badge()->color(fn(string $state): string => match ($state) {
                         'resorts_admin' => 'success',
                         'admin' => 'warning',
                         'guest' => 'gray',
-                    })->formatStateUsing(fn (string $state): string => __(ucfirst($state)))
+                    })->formatStateUsing(fn(string $state): string => __(ucfirst($state)))
                     ->searchable(),
                 TextColumn::make('is_validated')
                     ->label('Validated')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         '1' => 'success',
                         '0' => 'gray',
                     })
-                    ->formatStateUsing(fn ($state) => $state ? 'Yes' : 'No')
+                    ->formatStateUsing(fn($state) => $state ? 'Yes' : 'No')
                     ->searchable(),
             ])
             ->filters([
@@ -133,8 +136,26 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('changeDateCreation')
+                    ->label('Change date creation')
+                    ->icon('heroicon-o-calendar')
+                    ->form([
+                        DateTimePicker::make('created_at')
+                            ->label('Date creation')
+                            ->required()
+                            ->default(fn (User $record) => $record->created_at),
+                    ])
+                    ->action(function (User $record, array $data): void {
+                        $record->forceFill(['created_at' => $data['created_at']])->save(['timestamps' => false]);
+
+                        Notification::make()
+                            ->title('Date creation updated')
+                            ->success()
+                            ->send();
+                    }),
                 RestoreAction::make(),
                 DeleteAction::make(),
+
                 // Impersonate::make(),
             ])
             ->bulkActions([
@@ -143,7 +164,10 @@ class UserResource extends Resource
                 // ]),
             ])
             ->modifyQueryUsing(function ($query) {
-                return $query->where('role', 'resorts_admin')->latest();
+                // return $query->where('role', 'resorts_admin')->latest();
+                return $query
+                    ->whereIn('role', ['resorts_admin', 'guest'])
+                    ->latest();
             });
     }
 

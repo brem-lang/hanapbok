@@ -153,6 +153,23 @@ class History extends Page implements HasTable
                             ->success()
                             ->send();
                     }),
+                Action::make('changeCreatedAt')
+                    ->label('Change created at')
+                    ->icon('heroicon-o-clock')
+                    ->form([
+                        DateTimePicker::make('created_at')
+                            ->label('Created at')
+                            ->required()
+                            ->default(fn (Booking $record) => $record->created_at),
+                    ])
+                    ->action(function (Booking $record, array $data): void {
+                        $record->forceFill(['created_at' => $data['created_at']])->save(['timestamps' => false]);
+
+                        Notification::make()
+                            ->title('Created at updated')
+                            ->success()
+                            ->send();
+                    }),
                 Action::make('view')
                     ->icon('heroicon-o-eye')
                     ->color('primary')
